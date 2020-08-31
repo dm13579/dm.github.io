@@ -18,8 +18,8 @@
   
   <entry>
     <title>article title</title>
-    <link href="https://dm13579.github.io/2020/08/30/article-title/"/>
-    <id>https://dm13579.github.io/2020/08/30/article-title/</id>
+    <link href="https://dm13579.github.io/article-title/"/>
+    <id>https://dm13579.github.io/article-title/</id>
     <published>2020-08-30T14:05:59.000Z</published>
     <updated>2020-08-30T14:05:59.834Z</updated>
     
@@ -43,8 +43,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="https://dm13579.github.io/2020/08/30/hello-world/"/>
-    <id>https://dm13579.github.io/2020/08/30/hello-world/</id>
+    <link href="https://dm13579.github.io/hello-world/"/>
+    <id>https://dm13579.github.io/hello-world/</id>
     <published>2020-08-30T13:46:12.612Z</published>
     <updated>2020-08-17T06:55:08.000Z</updated>
     
