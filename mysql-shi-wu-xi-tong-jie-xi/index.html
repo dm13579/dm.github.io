@@ -585,7 +585,7 @@
 </ul>
 <p>事务id的生成是在对innodb进行了写操作而生成的。在InnoDB看来所有的事务在启动时候都是只读状态是只读事务此时不会生成事务编号。<a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2017/12">数据库内核月报 － 2017 / 12</a></p>
 <p>undo log记录过程：首先表里有一个数据，伴随着隐藏字段DATA_TRX_ID，DATA_ROLL_PTR，然后有一个事务100对其进行了修改，这时候我们会把原先的数据copy一份到undo log中去，然后把修改后的数据也放进undo log,但这条数据的DATA_TRX_ID = 100，DATA_ROLL_PTR指向原来的数据。如果这时候又来了一个事务200，此时事务100还没提交，事务200又进行了一次更新会把新数据写进undo log并且DATA_TRX_ID = 200，DATA_ROLL_PTR指向事务100的那条数据。</p>
-<p><img src="..%5Cimages%5Cimage-20200903001101627.png" alt="image-20200903001101627"></p>
+<p><img src="https://github.com/dm13579/dm13579.github.com/blob/master/images/image-20200903001101627.png" alt="image-20200903001101627"></p>
 <p>最后在undo log中的日志版本链就是</p>
 <p><img src="..%5Cimages%5Cimage-20200903001035075.png" alt="image-20200903001035075"></p>
 <h3 id="read-view（快照）"><a href="#read-view（快照）" class="headerlink" title="read view（快照）"></a>read view（快照）</h3><p>read view在MVCC里面主要做的就是可见性判断，read view 的生成时机就是RR,RC两种隔离级别的主要区别</p>
