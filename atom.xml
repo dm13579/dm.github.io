@@ -6,7 +6,7 @@
   <link href="https://dm13579.github.io/atom.xml" rel="self"/>
   
   <link href="https://dm13579.github.io/"/>
-  <updated>2020-08-30T14:05:59.834Z</updated>
+  <updated>2020-09-02T18:16:45.223Z</updated>
   <id>https://dm13579.github.io/</id>
   
   <author>
@@ -17,27 +17,21 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>article title</title>
-    <link href="https://dm13579.github.io/article-title/"/>
-    <id>https://dm13579.github.io/article-title/</id>
-    <published>2020-08-30T14:05:59.000Z</published>
-    <updated>2020-08-30T14:05:59.834Z</updated>
+    <title>MySQL事务系统解析</title>
+    <link href="https://dm13579.github.io/mysql-shi-wu-xi-tong-jie-xi/"/>
+    <id>https://dm13579.github.io/mysql-shi-wu-xi-tong-jie-xi/</id>
+    <published>2020-09-02T17:52:54.037Z</published>
+    <updated>2020-09-02T18:16:45.223Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;script&gt;
-        document.querySelectorAll(&#39;.github-emoji&#39;)
-          .forEach(el =&gt; {
-            if (!el.dataset.src) { return; }
-       </summary>
-        
-      
+    <summary type="html">一个超详细的2Mysql事务系统的解析笔记，从基础知识到事务的实现原理以最直观的方式表达出来，图文并茂</summary>
     
     
     
+    <category term="笔记" scheme="https://dm13579.github.io/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="MySQL" scheme="https://dm13579.github.io/tags/MySQL/"/>
     
   </entry>
   
