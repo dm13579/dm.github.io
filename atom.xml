@@ -6,7 +6,7 @@
   <link href="https://dm13579.github.io/atom.xml" rel="self"/>
   
   <link href="https://dm13579.github.io/"/>
-  <updated>2020-09-04T12:53:18.822Z</updated>
+  <updated>2020-09-04T13:26:09.954Z</updated>
   <id>https://dm13579.github.io/</id>
   
   <author>
@@ -20,8 +20,8 @@
     <title>Java多线程介绍与线程池底层实现原理</title>
     <link href="https://dm13579.github.io/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/"/>
     <id>https://dm13579.github.io/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/</id>
-    <published>2020-09-04T12:53:17.738Z</published>
-    <updated>2020-09-04T12:53:18.822Z</updated>
+    <published>2020-09-04T12:15:00.000Z</published>
+    <updated>2020-09-04T13:26:09.954Z</updated>
     
     
       
@@ -35,6 +35,12 @@
     
     
     
+    <category term="笔记" scheme="https://dm13579.github.io/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="并发" scheme="https://dm13579.github.io/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+    <category term="线程池" scheme="https://dm13579.github.io/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/"/>
     
   </entry>
   
