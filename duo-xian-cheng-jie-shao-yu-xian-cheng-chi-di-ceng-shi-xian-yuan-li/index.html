@@ -480,14 +480,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-09-04
+                    2020-09-07
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.4k
+                    3.6k
                 </div>
                 
 
@@ -854,24 +854,36 @@
             <span class="token punctuation">}</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span></code></pre>
-<h3 id="processWorkerExit方法"><a href="#processWorkerExit方法" class="headerlink" title="processWorkerExit方法"></a>processWorkerExit方法</h3><p>TODO</p>
+<h3 id="processWorkerExit方法"><a href="#processWorkerExit方法" class="headerlink" title="processWorkerExit方法"></a>processWorkerExit方法</h3><p>processWorkerExit方法在于runWorker的finally代码块里面的，执行任务发生异常或正常结束任务会走的方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">processWorkerExit</span><span class="token punctuation">(</span>Worker w<span class="token punctuation">,</span> <span class="token keyword">boolean</span> completedAbruptly<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// completedAbruptly这个参数在runWorker里面传入的，</span>
+        <span class="token comment" spellcheck="true">// true说明发生了异常,我们要将workcount减一；所以走了decrementWorkerCount方法</span>
+        <span class="token comment" spellcheck="true">// false说明正常结束任务，怎么结束？getTask方法为null.说明我们已经将wordcount已经减一了。</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span>completedAbruptly<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// If abrupt, then workerCount wasn't adjusted</span>
             <span class="token function">decrementWorkerCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
         <span class="token keyword">final</span> ReentrantLock mainLock <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>mainLock<span class="token punctuation">;</span>
         mainLock<span class="token punctuation">.</span><span class="token function">lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 统计完成的任务数</span>
             completedTaskCount <span class="token operator">+=</span> w<span class="token punctuation">.</span>completedTasks<span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 从workers中移除，说明从线程池移除了一个工作线程</span>
             workers<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>w<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
             mainLock<span class="token punctuation">.</span><span class="token function">unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
 
+        <span class="token comment" spellcheck="true">// 根据线程池状态判断是否要终止线程池</span>
         <span class="token function">tryTerminate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
         <span class="token keyword">int</span> c <span class="token operator">=</span> ctl<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 如果当前线程池状态是RUNNING,或SHUTDOWN状态</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">runStateLessThan</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> STOP<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 如果不是异常终止</span>
+            <span class="token comment" spellcheck="true">// allowCoreThreadTimeOut = true 而且阻塞队列为空时，一个线程不留</span>
+            <span class="token comment" spellcheck="true">// allowCoreThreadTimeOut = true 而且阻塞队列不为空时，就保留最少一个线程</span>
+            <span class="token comment" spellcheck="true">// allowCoreThreadTimeOut = false 就保留最少线程小于核心线程数</span>
+            <span class="token comment" spellcheck="true">// min值有0,1，corePoolSize三种</span>
             <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>completedAbruptly<span class="token punctuation">)</span> <span class="token punctuation">{</span>
                 <span class="token keyword">int</span> min <span class="token operator">=</span> allowCoreThreadTimeOut <span class="token operator">?</span> <span class="token number">0</span> <span class="token operator">:</span> corePoolSize<span class="token punctuation">;</span>
                 <span class="token keyword">if</span> <span class="token punctuation">(</span>min <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span> workQueue<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -879,6 +891,7 @@
                 <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">workerCountOf</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span> <span class="token operator">>=</span> min<span class="token punctuation">)</span>
                     <span class="token keyword">return</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// replacement not needed</span>
             <span class="token punctuation">}</span>
+            <span class="token comment" spellcheck="true">// 如果是异常终止的会 addWorker(null, false)加一个null任务的线程</span>
             <span class="token function">addWorker</span><span class="token punctuation">(</span>null<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span></code></pre>
@@ -1419,7 +1432,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">5.3k</span>
+            <span class="white-color">5.6k</span>
             
 
             <br>
