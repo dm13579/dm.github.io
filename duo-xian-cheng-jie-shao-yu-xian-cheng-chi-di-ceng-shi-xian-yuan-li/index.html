@@ -487,14 +487,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.6k
+                    3.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    14 分
+                    15 分
                 </div>
                 
 
@@ -509,8 +509,7 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>大家都知道Java是第一个在语言级别对多线程设计的语言，也由于Java对多线程天生的支持也导致了Java存在着并发问题。</p>
-<h2 id="Java线程跟操作系统的关系"><a href="#Java线程跟操作系统的关系" class="headerlink" title="Java线程跟操作系统的关系"></a>Java线程跟操作系统的关系</h2><p>CPU一般有4个安全等级ring0,ring1,ring2,ring3,操作系统的内部程序指令一般运行在ring0级别，而我们的应用程序会运行在ring3上面，比如JVM进程。为什么说JVM线程的创建是一个比较重的操作。下面是一个线程创建的过程：</p>
+                <h2 id="Java线程跟操作系统的关系"><a href="#Java线程跟操作系统的关系" class="headerlink" title="Java线程跟操作系统的关系"></a>Java线程跟操作系统的关系</h2><p>CPU一般有4个安全等级ring0,ring1,ring2,ring3,操作系统的内部程序指令一般运行在ring0级别，而我们的应用程序会运行在ring3上面，比如JVM进程。为什么说JVM线程的创建是一个比较重的操作。下面是一个线程创建的过程：</p>
 <ol>
 <li>ring3级别切换到ring0去创建线程</li>
 <li>从ring0切回ring3,然后线程去执行程序</li>
@@ -533,7 +532,7 @@
 <p>那么现在有个问题就是多线程运行程序一定比单线程快吗？</p>
 <p>其实不一定，多线程运行程序必然会存在着大量的线程上下文切换还有线程的创建和销毁，这些操作也是会耗时间的，而单线程不会有这样过的问题，所以是有可能多线程没有单线程要快的。</p>
 <h3 id="如何减少线程的上下文切换"><a href="#如何减少线程的上下文切换" class="headerlink" title="如何减少线程的上下文切换"></a>如何减少线程的上下文切换</h3><ul>
-<li>无锁并发编程：线程竞争锁的时候是会引起上下文切换的，用多线程处理数据可以分段处理，将数据拆分处理比如thread1处理0<del>100，thread2处理101</del>200，减少线程间资源的竞争</li>
+<li>无锁并发编程：线程竞争锁的时候是会引起上下文切换的，用多线程处理数据可以分段处理，将数据拆分处理比如thread1处理0到100，thread2处理101到200，减少线程间资源的竞争</li>
 <li>CAS算法：用CAS来对数据进行更新不需要加锁，Doug lea的AQS框架大量的运用到了这种算法。</li>
 <li>尽量不要创建不必要的线程，用多少创建多少。</li>
 </ul>
@@ -570,6 +569,18 @@
 <li>CallerRunsPolicy：主线程自己去执行任务</li>
 <li>DiscardOldestPolicy：从阻塞队列里面踢掉最先进的那个元素，然后自己入队</li>
 <li>DiscardPolicy：不作任何处理</li>
+</ul>
+<h3 id="线程池状态"><a href="#线程池状态" class="headerlink" title="线程池状态"></a>线程池状态</h3><pre class=" language-java"><code class="language-java">    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> RUNNING    <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> COUNT_BITS<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> SHUTDOWN   <span class="token operator">=</span>  <span class="token number">0</span> <span class="token operator">&lt;&lt;</span> COUNT_BITS<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> STOP       <span class="token operator">=</span>  <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> COUNT_BITS<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> TIDYING    <span class="token operator">=</span>  <span class="token number">2</span> <span class="token operator">&lt;&lt;</span> COUNT_BITS<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> TERMINATED <span class="token operator">=</span>  <span class="token number">3</span> <span class="token operator">&lt;&lt;</span> COUNT_BITS<span class="token punctuation">;</span></code></pre>
+<ul>
+<li>RUNNING：线程池在RUNNING状态，可以接受新任务，和处理所有任务，线程刚创建就是RUNNING状态</li>
+<li>SHUTDOWN：不接受新任务，但处理已经有的任务，**shutdown()**方法将RUNNING-&gt;SHUTDOWN</li>
+<li>STOP：不接受新任务，不处理已有任务，并且中断正在执行的任务，**shutdownNow()**切换到STOP状态</li>
+<li>TIDYING：所有的任务已终止，ctl记录的”任务数量”为0，线程池会变为TIDYING状态，而且还会执行**terminated()**钩子函数，执行逻辑可以自己实现。阻塞队列为空并且线程池中执行的任务也为空时会转变为TIDYING</li>
+<li>TERMINATED：线程池彻底终止。线程池处在TIDYING状态时，执行完terminated()之后，就会由 TIDYING -&gt; TERMINATED。</li>
 </ul>
 <h3 id="excute方法源码分析"><a href="#excute方法源码分析" class="headerlink" title="excute方法源码分析"></a>excute方法源码分析</h3><p>这里有个重要参数ctl，ctl存储的是线程状态位和活跃线程数，他是一个ArtomicInteger,利用了int类型32位的特性，就32位中的前3位用来存储线程的状态后28位存储活跃线程数。</p>
 <pre class=" language-java"><code class="language-java">
@@ -1432,7 +1443,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">5.6k</span>
+            <span class="white-color">5.8k</span>
             
 
             <br>
