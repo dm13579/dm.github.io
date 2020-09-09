@@ -473,28 +473,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-07
+                    2020-09-01
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-09-07
+                    2020-09-09
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    81
+                    2.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    9 分
                 </div>
                 
 
@@ -510,7 +510,171 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <p>在Java集合框架中最熟悉又最陌生的便是HashMap,HashMap是Map体系的一种集合框架。</p>
-<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p>TODO</p>
+<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p><strong>put过程</strong>：它会hash传入的key值，将hash的值&amp;上map长度减一（这里用的是&amp;而不是取模运算，应该是考虑到性能问题，这里是length-1是应为这样可以取到0到map.length-1的值）插入到对应的数组下标上面去。这时产生了一个问题就是2个key值hash到一个位置怎么办？这就是Hash碰撞，产生了Hash碰撞在当前数组位置产生一个链表，如果链表过长查询效率可能会减低，在jdk1.8上面达到了一定的程度会链表转红黑树增强查询效率。</p>
+<p><strong>get过程</strong>：hash传入的key值，将hash的值&amp;上map长度减一在数组里面去找找到对应的数组位置如果不是传入的key值就顺着链表或红黑树继续往里面找，所以他的时间复杂度是O(1)。</p>
+<p><strong>扩容</strong>：当数据达到map总长度的加载因子倍数就会开始扩容</p>
+<h3 id="基本参数介绍"><a href="#基本参数介绍" class="headerlink" title="基本参数介绍"></a>基本参数介绍</h3><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 数组默认大小，默认为16，必须设值为2的n次幂，如果设值不是2的n次幂它会往大于你的值的最近的2次幂</span>
+<span class="token comment" spellcheck="true">// 比如你设map长度为9它会修改map长度为2的4次，也就是16</span>
+<span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> DEFAULT_INITIAL_CAPACITY <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">4</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// aka 16</span>
+<span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> MAXIMUM_CAPACITY <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">30</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 加载因子，数组长度大于容量的0.75就会扩容，为什么是9.75？基于空间与时间的考虑，如果太满了可能会有很多的hash碰撞，hash碰撞越多，链表就会越长，查询效率就会太低，加载因子如果太小了就会导致扩容频繁，通过牛顿二项式推导得出，0.693是最为合适的值，java选择了0.75</span>
+<span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">float</span> DEFAULT_LOAD_FACTOR <span class="token operator">=</span> <span class="token number">0.75f</span><span class="token punctuation">;</span></code></pre>
+<h3 id="jdk1-7和jdk1-8对比"><a href="#jdk1-7和jdk1-8对比" class="headerlink" title="jdk1.7和jdk1.8对比"></a>jdk1.7和jdk1.8对比</h3><ul>
+<li><p>jdk1.7</p>
+<p>数据结构：数组+链表</p>
+<p>扩容：1.7的扩容会先把当前数组长度乘2生成一个新数组，然后对原来的Map里面的值进行reHash.重新落入到新数组中。</p>
+<p>链表插入方式：尾插法</p>
+</li>
+<li><p>jdk1.8</p>
+<p>数据结构：数组+链表+红黑树</p>
+<p>扩容：1.8的扩容有个高低位的概念，它将原来的key Hash过后&amp;map长度,这时候会生成2种值要么是0，要么是数组长度，这时候是0的我们算作低位，数组长度的算作高位，这时候我们有2个链表一个低位链表一个高位链表，低位链表还是在原来的位置，高位链表移到原来位置加上数组长度的位置。</p>
+<p>链表插入方式：尾插法</p>
+<p>链表转红黑树判定：链表长度<strong>大于8,也就是第9个元素</strong>，还有一个条件是容量大于64</p>
+<p>​    为什么要把阈值设为8呢？</p>
+<p>​    下面是HashMap源码里面的注释。大致意思就是数组中链表长度达到相应的数字概率是多少（这里是通过泊松分布计算得出），前提是随机hash码和加载因子是0.75.可以看出来到8的时候概率是很低了。从这一方面可以看出HashMap正常情况下转红黑树的几率是极其小的。也可以侧面的反映出HashMap在1.7到1.8性能上的提升其实并不大，数据量极大的情况下是有提升的。</p>
+<pre class=" language-java"><code class="language-java"><span class="token operator">*</span> Because TreeNodes are about twice the size of regular nodes<span class="token punctuation">,</span> we
+<span class="token operator">*</span> use them only when bins contain enough nodes to warrant use
+<span class="token operator">*</span> <span class="token punctuation">(</span>see TREEIFY_THRESHOLD<span class="token punctuation">)</span><span class="token punctuation">.</span> And when they become too <span class="token function">small</span> <span class="token punctuation">(</span>due to
+<span class="token operator">*</span> removal or resizing<span class="token punctuation">)</span> they are converted back to plain bins<span class="token punctuation">.</span>  In
+<span class="token operator">*</span> usages with well<span class="token operator">-</span>distributed user hashCodes<span class="token punctuation">,</span> tree bins are
+<span class="token operator">*</span> rarely used<span class="token punctuation">.</span>  Ideally<span class="token punctuation">,</span> under random hashCodes<span class="token punctuation">,</span> the frequency of
+<span class="token operator">*</span> nodes in bins follows a Poisson distribution
+<span class="token operator">*</span> <span class="token punctuation">(</span>http<span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span>en<span class="token punctuation">.</span>wikipedia<span class="token punctuation">.</span>org<span class="token operator">/</span>wiki<span class="token operator">/</span>Poisson_distribution<span class="token punctuation">)</span> with a
+<span class="token operator">*</span> parameter of about <span class="token number">0.5</span> on average <span class="token keyword">for</span> the <span class="token keyword">default</span> resizing
+<span class="token operator">*</span> threshold of <span class="token number">0.75</span><span class="token punctuation">,</span> although with a large variance because of
+<span class="token operator">*</span> resizing granularity<span class="token punctuation">.</span> Ignoring variance<span class="token punctuation">,</span> the expected
+<span class="token operator">*</span> occurrences of list size k <span class="token function">are</span> <span class="token punctuation">(</span><span class="token function">exp</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.5</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token function">pow</span><span class="token punctuation">(</span><span class="token number">0.5</span><span class="token punctuation">,</span> k<span class="token punctuation">)</span> <span class="token operator">/</span>
+<span class="token operator">*</span> <span class="token function">factorial</span><span class="token punctuation">(</span>k<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span> The first values are<span class="token operator">:</span>
+<span class="token operator">*</span>
+<span class="token operator">*</span> <span class="token number">0</span><span class="token operator">:</span>    <span class="token number">0.60653066</span>
+<span class="token operator">*</span> <span class="token number">1</span><span class="token operator">:</span>    <span class="token number">0.30326533</span>
+<span class="token operator">*</span> <span class="token number">2</span><span class="token operator">:</span>    <span class="token number">0.07581633</span>
+<span class="token operator">*</span> <span class="token number">3</span><span class="token operator">:</span>    <span class="token number">0.01263606</span>
+<span class="token operator">*</span> <span class="token number">4</span><span class="token operator">:</span>    <span class="token number">0.00157952</span>
+<span class="token operator">*</span> <span class="token number">5</span><span class="token operator">:</span>    <span class="token number">0.00015795</span>
+<span class="token operator">*</span> <span class="token number">6</span><span class="token operator">:</span>    <span class="token number">0.00001316</span>
+<span class="token operator">*</span> <span class="token number">7</span><span class="token operator">:</span>    <span class="token number">0.00000094</span>
+<span class="token operator">*</span> <span class="token number">8</span><span class="token operator">:</span>    <span class="token number">0.00000006</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 链表转红黑树阈值</span>
+<span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> TREEIFY_THRESHOLD <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 红黑树转链表阈值</span>
+<span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> UNTREEIFY_THRESHOLD <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 链表转红黑树，map最小容量</span>
+<span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> MIN_TREEIFY_CAPACITY <span class="token operator">=</span> <span class="token number">64</span><span class="token punctuation">;</span></code></pre>
+</li>
+</ul>
+<h3 id="HashMap-jdk1-7源码解析"><a href="#HashMap-jdk1-7源码解析" class="headerlink" title="HashMap jdk1.7源码解析"></a>HashMap jdk1.7源码解析</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> V <span class="token function">put</span><span class="token punctuation">(</span>K key<span class="token punctuation">,</span> V value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 第一次开始put值的时候，hash表是空的</span>
+    <span class="token comment" spellcheck="true">// threshold是传进来的长度</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>table <span class="token operator">==</span> EMPTY_TABLE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">inflateTable</span><span class="token punctuation">(</span>threshold<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 这里证明了HashMap的key可以为空</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>key <span class="token operator">==</span> null<span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true">// 空就往第一个数组位置里面插</span>
+        <span class="token keyword">return</span> <span class="token function">putForNullKey</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> hash <span class="token operator">=</span> <span class="token function">hash</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token function">indexFor</span><span class="token punctuation">(</span>hash<span class="token punctuation">,</span> table<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> e <span class="token operator">=</span> table<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span> e <span class="token operator">!=</span> null<span class="token punctuation">;</span> e <span class="token operator">=</span> e<span class="token punctuation">.</span>next<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Object k<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 这里判断传进来的key是不是已经写过了，写过了就把value修改掉</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>e<span class="token punctuation">.</span>hash <span class="token operator">==</span> hash <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>k <span class="token operator">=</span> e<span class="token punctuation">.</span>key<span class="token punctuation">)</span> <span class="token operator">==</span> key <span class="token operator">||</span> key<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>k<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            V oldValue <span class="token operator">=</span> e<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+            e<span class="token punctuation">.</span>value <span class="token operator">=</span> value<span class="token punctuation">;</span>
+            e<span class="token punctuation">.</span><span class="token function">recordAccess</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> oldValue<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    modCount<span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// put进去</span>
+    <span class="token function">addEntry</span><span class="token punctuation">(</span>hash<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> null<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">inflateTable</span><span class="token punctuation">(</span><span class="token keyword">int</span> toSize<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Find a power of 2 >= toSize</span>
+    <span class="token comment" spellcheck="true">// 这里就是空间修正代码，找到当前传的值，大于值且是2的指数次幂</span>
+    <span class="token keyword">int</span> capacity <span class="token operator">=</span> <span class="token function">roundUpToPowerOf2</span><span class="token punctuation">(</span>toSize<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 这里是扩容指标</span>
+    threshold <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span> Math<span class="token punctuation">.</span><span class="token function">min</span><span class="token punctuation">(</span>capacity <span class="token operator">*</span> loadFactor<span class="token punctuation">,</span> MAXIMUM_CAPACITY <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    table <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Entry</span><span class="token punctuation">[</span>capacity<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">initHashSeedAsNeeded</span><span class="token punctuation">(</span>capacity<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> <span class="token function">addEntry</span><span class="token punctuation">(</span><span class="token keyword">int</span> hash<span class="token punctuation">,</span> K key<span class="token punctuation">,</span> V value<span class="token punctuation">,</span> <span class="token keyword">int</span> bucketIndex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 这里判断是判断是否需要扩容</span>
+    <span class="token comment" spellcheck="true">// 判断条件是map长度大于扩容阈值，而且当前数组下标必须放了值</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>size <span class="token operator">>=</span> threshold<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>null <span class="token operator">!=</span> table<span class="token punctuation">[</span>bucketIndex<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 扩容大小 -> map长度的2倍 </span>
+        <span class="token function">resize</span><span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> table<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 这里就是keu为null的时候会往数组第一个位置放</span>
+        hash <span class="token operator">=</span> <span class="token punctuation">(</span>null <span class="token operator">!=</span> key<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token function">hash</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// indexFor就是&amp;数组长度-1</span>
+        bucketIndex <span class="token operator">=</span> <span class="token function">indexFor</span><span class="token punctuation">(</span>hash<span class="token punctuation">,</span> table<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 元素放进去了</span>
+    <span class="token function">createEntry</span><span class="token punctuation">(</span>hash<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> bucketIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// ========================================扩容方法===============================</span>
+<span class="token keyword">void</span> <span class="token function">resize</span><span class="token punctuation">(</span><span class="token keyword">int</span> newCapacity<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 容错不管它</span>
+    Entry<span class="token punctuation">[</span><span class="token punctuation">]</span> oldTable <span class="token operator">=</span> table<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> oldCapacity <span class="token operator">=</span> oldTable<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>oldCapacity <span class="token operator">==</span> MAXIMUM_CAPACITY<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        threshold <span class="token operator">=</span> Integer<span class="token punctuation">.</span>MAX_VALUE<span class="token punctuation">;</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// new 一个新的hash表</span>
+    Entry<span class="token punctuation">[</span><span class="token punctuation">]</span> newTable <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Entry</span><span class="token punctuation">[</span>newCapacity<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 核心方法</span>
+    <span class="token function">transfer</span><span class="token punctuation">(</span>newTable<span class="token punctuation">,</span> <span class="token function">initHashSeedAsNeeded</span><span class="token punctuation">(</span>newCapacity<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 把新的table,扩容阈值重新写入</span>
+    table <span class="token operator">=</span> newTable<span class="token punctuation">;</span>
+    threshold <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span>Math<span class="token punctuation">.</span><span class="token function">min</span><span class="token punctuation">(</span>newCapacity <span class="token operator">*</span> loadFactor<span class="token punctuation">,</span> MAXIMUM_CAPACITY <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> <span class="token function">transfer</span><span class="token punctuation">(</span>Entry<span class="token punctuation">[</span><span class="token punctuation">]</span> newTable<span class="token punctuation">,</span> <span class="token keyword">boolean</span> rehash<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 新的数组容量</span>
+    <span class="token keyword">int</span> newCapacity <span class="token operator">=</span> newTable<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 遍历原来的table表</span>
+    <span class="token comment" spellcheck="true">// 这里使用双重循环是因为我们的hashmap数据结构是数组加链表，第一重遍历数组第二重遍历链表找到元素开始reHash</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> e <span class="token operator">:</span> table<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">while</span><span class="token punctuation">(</span>null <span class="token operator">!=</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// next为当前链表的下一个元素，为了后面的循环</span>
+            <span class="token comment" spellcheck="true">// 1</span>
+            Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> next <span class="token operator">=</span> e<span class="token punctuation">.</span>next<span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>rehash<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">// rehash当前节点</span>
+                e<span class="token punctuation">.</span>hash <span class="token operator">=</span> null <span class="token operator">==</span> e<span class="token punctuation">.</span>key <span class="token operator">?</span> <span class="token number">0</span> <span class="token operator">:</span> <span class="token function">hash</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+               <span class="token comment" spellcheck="true">// 用扩容后的hashmap长度计算出当前节点应该落到哪个节点上面去。</span>
+            <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token function">indexFor</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>hash<span class="token punctuation">,</span> newCapacity<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 当前节点与别的节点指针断开指向新的节点位置</span>
+            <span class="token comment" spellcheck="true">// 2</span>
+            e<span class="token punctuation">.</span>next <span class="token operator">=</span> newTable<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 把值赋给新的节点位置，从这可以看出它是使用的是头插法</span>
+            <span class="token comment" spellcheck="true">// 3</span>
+            newTable<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> e<span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 为了新一轮的遍历</span>
+            e <span class="token operator">=</span> next<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>之前有看过一个HashMap并发场景下的死锁问题（吐槽：在并发场景使用HashMap，想什么呢，HashMap本身是线程不安全的还敢在并发下用？）。</p>
+<p>我们想一下现在有2个线程thread1,thread2,这2个线程都在进行扩容，都走到了transfer方法的2重循环内，这完全是可能的吧，因为它全程没有锁，因为它是线程不安全的。现在thread1走到了transfer代码段1（上面源码解析标注）的位置，已经把next节点定下来了时间片轮转到thread2了。thread2执行到代码段3，这时候thread1在继续往下走，最后会发现2个节点会出现循环链表。说不清，画个图来说吧。</p>
+<p>​    <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/20200909112458.png" alt="原hashMap"></p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/20200909115304.png"></p>
+<p>HashMap多线程丢数据情况分析：</p>
+<p>代码定位到addEntry()-&gt;createEntry()方法中</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">void</span> <span class="token function">createEntry</span><span class="token punctuation">(</span><span class="token keyword">int</span> hash<span class="token punctuation">,</span> K key<span class="token punctuation">,</span> V value<span class="token punctuation">,</span> <span class="token keyword">int</span> bucketIndex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> e <span class="token operator">=</span> table<span class="token punctuation">[</span>bucketIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    table<span class="token punctuation">[</span>bucketIndex<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Entry</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span>hash<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    size<span class="token operator">++</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>如果有多个线程同时拿的e,e应该是当前table[i]链表的第一个元素，然后你这时候拿到多个元素就会出现元素覆盖的请况，thread1头插法排到了第一个元素，而thread2拿到的e是第二个元素，用头插法，一插好家伙，吧我thread1插入的数据给顶掉了，最后thread1写的数据就丢失了，在jdk1.8这种情况也在发生，因为他是线程不安全的。<strong>注意，多线程不要用HashMap，请用ConcurrentHashMap</strong>            </p>
+<h3 id="HashMap-jdk1-8源码解析"><a href="#HashMap-jdk1-8源码解析" class="headerlink" title="HashMap jdk1.8源码解析"></a>HashMap jdk1.8源码解析</h3><p>TODO</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -787,7 +951,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-07
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-01
                             </span>
                         <span class="publish-author">
                             
@@ -841,7 +1005,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-04
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-27
                             </span>
                         <span class="publish-author">
                             
@@ -1048,7 +1212,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">7.6k</span>
+            <span class="white-color">10k</span>
             
 
             <br>
