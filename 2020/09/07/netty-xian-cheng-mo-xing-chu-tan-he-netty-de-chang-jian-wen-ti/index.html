@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 	<meta name="baidu-site-verification" content="lElrePz9Qe" />
 	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
-    <meta name="keywords" content="ZooKeeper">
+    <meta name="keywords" content="Netty,IO模型">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,7 +29,7 @@
 </script>
 
 
-    <title>ZooKeeper初探及使用场景 | Coisini</title>
+    <title>Netty线程模型初探和Netty的常见问题 | Coisini</title>
     <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -322,12 +322,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/12.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">ZooKeeper初探及使用场景</h1>
+                    <h1 class="description center-align post-title">Netty线程模型初探和Netty的常见问题</h1>
                 </div>
             </div>
         </div>
@@ -444,8 +444,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/ZooKeeper/">
-                                <span class="chip bg-color">ZooKeeper</span>
+                            <a href="/tags/Netty/">
+                                <span class="chip bg-color">Netty</span>
+                            </a>
+                        
+                            <a href="/tags/IO%E6%A8%A1%E5%9E%8B/">
+                                <span class="chip bg-color">IO模型</span>
                             </a>
                         
                     </div>
@@ -469,7 +473,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-08
+                    2020-09-07
                 </div>
                 
 
@@ -483,14 +487,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.1k
+                    2.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    8 分
+                    9 分
                 </div>
                 
 
@@ -505,199 +509,133 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="认识ZooKeeper"><a href="#认识ZooKeeper" class="headerlink" title="认识ZooKeeper"></a>认识ZooKeeper</h2><p>ZooKeeper是一个分布式调度协调服务，分布式应用的产生必定会带来多节点之间的协调问题，这个时候ZooKeeper就出现了。很多开源中间件都用到了ZooKeeper,比如KafKa就是强依赖于ZooKeeper.它自身也是一个分布式应用。</p>
-<h2 id="ZooKeeper节点特性"><a href="#ZooKeeper节点特性" class="headerlink" title="ZooKeeper节点特性"></a>ZooKeeper节点特性</h2><p>ZooKeeper共有4种节点，分别是持久节点，持久序号节点，临时节点，临时序号节点</p>
-<table>
-<thead>
-<tr>
-<th align="left"></th>
-<th>特性</th>
-<th>创建命令</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">持久节点</td>
-<td>持久化保存的节点，默认创建</td>
-<td>create /test</td>
-</tr>
-<tr>
-<td align="left">持久序号节点</td>
-<td>持久化保存的节点，创建的时候会在路径上加上序号作为后缀比如/test会创建出/test00000001</td>
-<td>create -s /test</td>
-</tr>
-<tr>
-<td align="left">临时节点</td>
-<td>临时节点会在客户端删除的时候自动删除</td>
-<td>create -e /test</td>
-</tr>
-<tr>
-<td align="left">临时序号节点</td>
-<td>临时节点会在客户端删除的时候自动删除，创建的时候会在路径上加上序号作为后缀比如/test会创建出/test00000001</td>
-<td>create -e -s /test</td>
-</tr>
-</tbody></table>
-<h2 id="ZooKeeper集群"><a href="#ZooKeeper集群" class="headerlink" title="ZooKeeper集群"></a>ZooKeeper集群</h2><p>ZooKeeper集群主要解决的是<strong>高可用</strong>、<strong>读写分离提高承载能力</strong>。ZooKeeper集群必须保证有<strong>至少三个节点</strong>，不然部署失败</p>
-<p>集群角色</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>角色名称</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>leader</td>
-<td>主节点，领导者</td>
-<td>写数据，通过选举产生</td>
-</tr>
-<tr>
-<td>follower</td>
-<td>从节点，追随者</td>
-<td>读数据，主节点的备选节点，拥有投票权</td>
-</tr>
-<tr>
-<td>observer</td>
-<td>次级子节点，观察者</td>
-<td>读数据，无投票权，不能选举为主节点，计算集群可用状态不会将其计算在内</td>
-</tr>
-</tbody></table>
-<h3 id="数据提交机制"><a href="#数据提交机制" class="headerlink" title="数据提交机制"></a>数据提交机制</h3><p>ZooKeeper是一个CP架构，它专注于的是一致性，为什么它拥有一致性？</p>
-<p>流程：客户端会向服务端发起写请求，如果请求对象不是主节点，从节点会把请求转发给主节点，数据写进主节点，主节点发送请求proposal给从节点，从节点写进事务日志后给主节点一个ack，主节点统计ack数量，如果ack数量是集群半数以上，主节点又会发起一个commit请求给客户端，客户端记录事务提交，并把数据更新到内存中去，主节点告诉客户端我写好了，在同步数据这段时间，ZooKeeper对于客户端而言是不可用的，多以它不满足可用性，所以他是CP架构。</p>
-<p>在集群运行过程当中如果有一个follower节点宕机，由于宕机节点没过半，集群仍然能正常服务。当leader收到新的客户端请求，此时无法同步给宕机的节点。造成数据不一致。为了解决这个问题，当节点启动时，第一件事情就是找当前的Leader，比对数据是否一致。不一致则开始同步,同步完成之后在进行对外提供服务。 </p>
-<p><strong>如何比对Leader的数据版本呢？</strong>这里通过ZXID事物ID来确认。比Leader就需要同步。</p>
-<p>ZXID： ZXID是一个长度64位的数字，其中低32位是按照数字递增，任何数据的变更都会导致,低32位的数字简单加1。高32位是leader周期编号，每当选举出一个新的leader时，新的leader就从本地事物日志中取出ZXID,然后解析出高32位的周期编号，进行加1，再将低32位的全部设置为0。这样就保证了每次新选举的leader后，保证了ZXID的唯一性而且是保证递增的。</p>
-<h3 id="集群选举机制"><a href="#集群选举机制" class="headerlink" title="集群选举机制"></a>集群选举机制</h3><p>选举流程：</p>
-<p>​    TODO</p>
-<p>选举触发条件</p>
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Netty是现在比较流行的NIO框架。它的健壮性、可扩展性、性能方面都得到了很多项目的验证。</p>
+<p>要想了解Netty，首先得了解IO模型。Java支持三种IO模型分别是BIO,NIO,AIO。</p>
 <ul>
-<li><p>节点初始化启动时</p>
-<p>节点启动的时候会在集群中寻找是否有leader,找到了就与leader建立通信，自身变为follower或observer,没有找到Leader,当前节点记录为LOOKING，开始选举</p>
+<li>BIO：同步阻塞模型，连接一个请求就会有一个线程，假设有个客户端连接进来了，一直不做读写操作，这个连接就会一直占用，会大量的浪费资源，，如果连接的客户端巨多，就会导致线程数暴增，可能服务器都撑不住。使用场景，连接数比较小且不会有连接数暴增</li>
+<li>NIO：同步非阻塞模型，主要实现的是一个线程可以处理多个连接，它的实现逻辑是把所有打过来的请求都会丢到一个selector（多路复用器）上面去，多路复用器在去轮询，根据请求类型进行读、写、连接处理。多路复用器底层就是调用的操作系统的select，poll，epoll方法实现。使用场景：连接数多但连接较短。</li>
+<li>AIO：异步非阻塞模型，发起请求后会回调服务端程序去执行对应的请求，相当于一个钩子程序，NIO的升级版。使用场景：连接数多，且连接耗时较长</li>
+</ul>
+<h2 id="认识Netty"><a href="#认识Netty" class="headerlink" title="认识Netty"></a>认识Netty</h2><p>Netty说白了就是对NIO的一层封装，改造了原来的IO模型提升性能，为了让你代码写起来更方便，增强扩展性。</p>
+<p>Netty在游戏领域，开源中间件（Dubbo,RocketMQ）,大数据领域(Hadoop)，通信行业等方向都有不少的应用。</p>
+<p>Netty优点</p>
+<ul>
+<li>使用简单</li>
+<li>功能强大，内置了很多编解码功能，对主流协议的支持</li>
+<li>定制能力强，可以通过ChannelHandler进行定制化开发</li>
+<li>性能高</li>
+<li>经历了多种行业的锤炼，证明了它的稳定性</li>
+</ul>
+<h2 id="Netty线程模型"><a href="#Netty线程模型" class="headerlink" title="Netty线程模型"></a>Netty线程模型</h2><p>Netty线程模型跟Reactor模式相一致。而Reacror模式又分为三种。主要核心逻辑可以参照Doug Lea大佬的<a target="_blank" rel="noopener" href="http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf">Scalable IO in Java</a></p>
+<ul>
+<li><p>单线程模型</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/20200907215427.png" alt="单线程模型"></p>
+<p>从图可以看出Reactor内部通过selector进行监控，如果收到的是一个连接请求就通过dispatch分发任务给acceptor去处理并生成一个handler去处理之后的读写请求。因为处理连接和读写请求都在一个线程里面去执行，所以如果handler被阻塞了,会导致其他的线程同样不能执行，性能受到影响。</p>
 </li>
-<li><p>半数以上节点无法和Leader建立通信</p>
-<p>Leader一挂，只要有半数节点感知到Leader挂了，就所有follower进入到LOOKING状态，开始选举</p>
+<li><p>多线程模型</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/20200907220454.png" alt="多线程模型"></p>
+<p>从图看出，Reactor收到一个连接请求就分发给acceptor,然后acceptor创建一个Handler处理后续事件Handler不处理业务操作，只负责响应度和写，业务操作扔到线程池里面去操作。这里的性能瓶颈是单Reactor，当有大量的客户端进行连接，可能会有处理不过来的情况。</p>
+</li>
+<li><p>主从多线程模型</p>
 </li>
 </ul>
-<h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><ul>
-<li><p>为什么建议集群奇数个节点？</p>
-<p>节省资源，3节点和4节点都是挂2个节点不可用，所以用4个节点站在可用性的角度来看没意义</p>
-</li>
-<li><p>为什么要有半数机制？</p>
-<p>脑裂问题，假设你有4个节点，由于网络抖动分裂成了2个集群，然后这2个集群都会进行选举，会选举出2个leader,网络恢复后就有2个leader，肯定是有问题的，但半数机制就保证了这种问题不会发生，就算网络抖动也只会选举出一个leader</p>
-</li>
-</ul>
-<h2 id="ZooKeeper使用场景"><a href="#ZooKeeper使用场景" class="headerlink" title="ZooKeeper使用场景"></a>ZooKeeper使用场景</h2><h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在单体应用中，我们可以用synchronized或者ReentrantLock来实现锁机制。但在分布式应用中不行，因为synchronized或者ReentrantLock只针对于一个JVM中可以使用。所以我们必须实现分布式锁来实现锁机制。可以使用Redis或ZooKeeper实现，Redis就不多说了。</p>
-<p>实现分布式锁的主要逻辑就是利用临时序号节点，我创建一个临时序号节点，继续创建临时序号节点会自增最后形成一堆有序的节点，通过序号我们可以知道哪个节点在前哪个节点在后，序号最小的节点才有资格拿锁，后一个节点监听前一个节点，当前一个节点被删除了，我后一个节点就可以去尝试激活锁了。</p>
-<p>这里为什么不直接每个节点监听加锁节点，加锁节点删除在找到最小序号去加锁呢？</p>
-<p>这里主要是防止羊群效应，一旦加锁节点被释放就会有大量的节点被触发，然后反查Lock子节点可能会让zookeeper承受巨大的压力。</p>
-<p>这里写一个简单的demo</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> String server <span class="token operator">=</span> <span class="token string">"你的zookeeper地址"</span><span class="token punctuation">;</span>
-<span class="token keyword">private</span> ZkClient zkClient<span class="token punctuation">;</span>
-<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> String rootPath <span class="token operator">=</span> <span class="token string">"/dm-lock"</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token function">ZookeeperLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    zkClient <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ZkClient</span><span class="token punctuation">(</span>server<span class="token punctuation">,</span> <span class="token number">5000</span><span class="token punctuation">,</span> <span class="token number">20000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 创建根节点</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>zkClient<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span>rootPath<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        zkClient<span class="token punctuation">.</span><span class="token function">createPersistent</span><span class="token punctuation">(</span>rootPath<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * 加锁
- */</span>
-<span class="token keyword">public</span> Lock <span class="token function">lock</span><span class="token punctuation">(</span>String lockId<span class="token punctuation">,</span> <span class="token keyword">long</span> timeout<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment" spellcheck="true">// 创建临时序号节点</span>
-    Lock lockNode <span class="token operator">=</span> <span class="token function">createLockNode</span><span class="token punctuation">(</span>lockId<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 尝试拿锁</span>
-    lockNode <span class="token operator">=</span> <span class="token function">tryActiveLock</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 没有拿到锁</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>lockNode<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span> <span class="token punctuation">{</span>
-            <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                <span class="token comment" spellcheck="true">// 把线程hang在这里然后等待监听事件触发，拿到锁，释放线程</span>
-                <span class="token comment" spellcheck="true">// 在tryActiveLockelse逻辑里面</span>
-                lockNode<span class="token punctuation">.</span><span class="token function">wait</span><span class="token punctuation">(</span>timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-    <span class="token comment" spellcheck="true">// 线程hang住的时间里面还没拿到锁就抛异常</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>lockNode<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span><span class="token string">"lock timeout"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> lockNode<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * s=释放锁
- */</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">unlock</span><span class="token punctuation">(</span>Lock lock<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>lock<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        zkClient<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>lock<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * 尝试激活锁
- */</span>
-<span class="token keyword">private</span> Lock <span class="token function">tryActiveLock</span><span class="token punctuation">(</span>Lock lockNode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
-    <span class="token comment" spellcheck="true">//  获取根节点下面所有的排好序的子节点</span>
-    List<span class="token operator">&lt;</span>String<span class="token operator">></span> list <span class="token operator">=</span> zkClient<span class="token punctuation">.</span><span class="token function">getChildren</span><span class="token punctuation">(</span>rootPath<span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">sorted</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>p <span class="token operator">-</span><span class="token operator">></span> rootPath <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> p<span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span>Collectors<span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">// 取最小的节点，这个节点就应该是应该加锁的节点</span>
-    String firstNodePath <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 最小节点是不是当前节点,是就直接加锁</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>firstNodePath<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        lockNode<span class="token punctuation">.</span><span class="token function">setActive</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">// 取得当前节点减一，要监听这个节点</span>
-        String upNodePath <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>list<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        zkClient<span class="token punctuation">.</span><span class="token function">subscribeDataChanges</span><span class="token punctuation">(</span>upNodePath<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">IZkDataListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token annotation punctuation">@Override</span>
-            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">handleDataChange</span><span class="token punctuation">(</span>String dataPath<span class="token punctuation">,</span> Object data<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-
-            <span class="token punctuation">}</span>
-
-            <span class="token comment" spellcheck="true">// 前一个节点被释放回调</span>
-            <span class="token annotation punctuation">@Override</span>
-            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">handleDataDeleted</span><span class="token punctuation">(</span>String dataPath<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-                <span class="token comment" spellcheck="true">// 重新尝试拿锁</span>
-                Lock lock <span class="token operator">=</span> <span class="token function">tryActiveLock</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    <span class="token comment" spellcheck="true">// 之前同步块的线程释放</span>
-                    <span class="token keyword">if</span> <span class="token punctuation">(</span>lock<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                        lockNode<span class="token punctuation">.</span><span class="token function">notify</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-                    <span class="token punctuation">}</span>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20200907221055477.png" alt="主从多线程模型"></p>
+<p>这里使用了多个Reactor,mainReactor处理进来的连接请求，交给acceptor处理，然后acceptor将新的连接分配给一个子线程，子线程subReactor将分配过来的连接加入连接队列并通过自己的selector进行监听，并创建一个Handler处理后续事件。</p>
+<p>对于Netty而言上诉几种模型都可以实现。主要看NioEventLoopGroup线程个数的分配。</p>
+<p>单线程模型</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 只申请一个工作线程</span>
+NioEventLoopGroup group <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ServerBootstrap bootstrap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerBootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>group<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>多线程模型</p>
+<pre class=" language-java"><code class="language-java">NioEventLoopGroup eventGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ServerBootstrap bootstrap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerBootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>eventGroup<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>主从多线程模型(最常用)</p>
+<pre class=" language-java"><code class="language-java">NioEventLoopGroup bossGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+NioEventLoopGroup workerGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ServerBootstrap bootstrap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerBootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>bossGroup<span class="token punctuation">,</span>workerGroup<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Netty的线程模型是对于上诉的Reactor模式进行了一定的升级，但核心思想没有变。</p>
+<p><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/5ee107f7f346fb1ae5592b33">Netty线程模型图</a></p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/clipboard.png" alt="Netty线程模型架构"></p>
+<h2 id="Netty相关组件"><a href="#Netty相关组件" class="headerlink" title="Netty相关组件"></a>Netty相关组件</h2><p>Netty的一个服务端通用代码</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+    EventLoopGroup bossGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    EventLoopGroup workerGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        ServerBootstrap bootstrap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerBootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>bossGroup<span class="token punctuation">,</span> workerGroup<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ChannelInitializer</span><span class="token operator">&lt;</span>SocketChannel<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token annotation punctuation">@Override</span>
+                <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">initChannel</span><span class="token punctuation">(</span>SocketChannel ch<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+                    ChannelPipeline pipeline <span class="token operator">=</span> ch<span class="token punctuation">.</span><span class="token function">pipeline</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token string">"decoder"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">StringDecoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token string">"encoder"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">StringEncoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyServerHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
                 <span class="token punctuation">}</span>
-                zkClient<span class="token punctuation">.</span><span class="token function">unsubscribeDataChanges</span><span class="token punctuation">(</span>upNodePath<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ChannelFuture channelFuture <span class="token operator">=</span> bootstrap<span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token number">9000</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        channelFuture<span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">closeFuture</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+        bossGroup<span class="token punctuation">.</span><span class="token function">shutdownGracefully</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        workerGroup<span class="token punctuation">.</span><span class="token function">shutdownGracefully</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> lockNode<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * 创建临时序号节点
- */</span>
-<span class="token keyword">public</span> Lock <span class="token function">createLockNode</span><span class="token punctuation">(</span>String lockId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    String nodePath <span class="token operator">=</span> zkClient<span class="token punctuation">.</span><span class="token function">createEphemeralSequential</span><span class="token punctuation">(</span>rootPath <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> lockId<span class="token punctuation">,</span> <span class="token string">"w"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Lock</span><span class="token punctuation">(</span>lockId<span class="token punctuation">,</span> nodePath<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="分布式注册中心"><a href="#分布式注册中心" class="headerlink" title="分布式注册中心"></a>分布式注册中心</h3><p>在这里，首先得了解注册中心是什么？单体应用升级到分布式应用，肯定会有成千上万个服务节点不同的客户端会调用这些服务节点，如果把这些服务节点配置到客户端的话会很复杂，这时候就需要一个中间件来帮助我们找到我们需要调用的服务，这就是服务发现。</p>
-<p>一般注册中心需要一下几个功能，服务注册，服务发现，服务订阅</p>
 <ul>
-<li>服务注册：服务刚启动将自己的信息注册到注册中心</li>
-<li>服务发现：客户端通过注册中心找到自己要调用的服务，然后通过RPC进行调用</li>
-<li>服务订阅：能动态感知服务的变化</li>
+<li>Selector：通过Selector监听多个连接的channel事件，通过selector轮训所有注册的channel,</li>
+<li>NioEventLoopGroup：相当于一个线程池，内部维护类一组线程（NioEventLoop），每个线程处理多个Channel上的事件。</li>
+<li>NioEventLoop：里面有线程和任务队列，有run方法处理不同的事件</li>
+<li>ServerBootstrap：串联Netty所有组件，是Netty的启动类。</li>
+<li>ChannelHandler：ChannelHandler处理I/O事件，并将其转发到pipeline中的下一个处理程序<ul>
+<li>ChannelInboundHandler：处理入站IO事件</li>
+<li>ChannelOutboundHandler：处理出站IO事件</li>
 </ul>
-<p>我们可以把注册的服务写成临时节点，只要服务一下线就会自动删除对应的服务。</p>
+</li>
+<li>ChannelHandlerContext：关联ChannelHandler</li>
+<li>ChannelPipline：一个由ChannelHandlerContext构成的过滤器链，它是一个双向链表,他会维护一个head和tail,入站则是head-&gt;tail,出站是tail到head,<strong>注意：入站和出站在这里是相对的，read是入站事件，write是出站事件，服务端写数据到客户端，服务端是出站事件，客户端是入站事件</strong></li>
+</ul>
+<h2 id="Netty常见问题"><a href="#Netty常见问题" class="headerlink" title="Netty常见问题"></a>Netty常见问题</h2><h3 id="编解码问题"><a href="#编解码问题" class="headerlink" title="编解码问题"></a>编解码问题</h3><pre class=" language-java"><code class="language-java"> ChannelPipeline pipeline <span class="token operator">=</span> ch<span class="token punctuation">.</span><span class="token function">pipeline</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token string">"decoder"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">StringDecoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">// 解码器</span>
+ pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token string">"encoder"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">StringEncoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">// 编码器</span>
+ pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyServerHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>首先服务器之间的通讯只能是字节，然后我们要把消息发送到客户端，首先要对发送内容进行编码，客户端要对收到内容进行解码.上诉代码就是一个编解码的pipeline.通过分析StringEncoder编码器应该继承的是ChannelOutboundHandlerAdapter或者实现了ChannelOutboundHandler满足出站事件。StringDecoder解码器应该继承的是ChannelInboundHandlerAdapter或者实现了ChannelInboundHandler满足入站事件。看一下继承关系图，发现分析正确</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/20200907231616.png" alt="StringDecoder继承关系图"></p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/20200907231755.png" alt="StringEncoder继承关系图"></p>
+<p>Netty还有其他的编解码器，比如ObjectEncoder和ObjectDecoder</p>
+<h3 id="粘包拆包问题"><a href="#粘包拆包问题" class="headerlink" title="粘包拆包问题"></a>粘包拆包问题</h3><p>由于TCP是面向流的，所以是无消息保护边界的。发送端有时为了更有效地将数据包发送给对方，有时会把多个数据包合并为一个发送就是粘包问题，把一个数据包拆分成多个就是拆包问题。这样带来的问题就是虽然你是提高了效率，但是接收端这边就无法分清哪个数据包是哪个了。</p>
+<p>解决方案：</p>
+<ol>
+<li>对发送内容进行边界控制，就是在你所发送的内容开始与结束加上标志符。但这样不好用，因为每次开发你都的加上边界符，不易于其他人对代码的理解。</li>
+<li>在你所发送的内容上加上发送内容的长度，通过长度判断数据的开始与结束。</li>
+</ol>
+<h3 id="Netty零拷贝"><a href="#Netty零拷贝" class="headerlink" title="Netty零拷贝"></a>Netty零拷贝</h3><p>在零拷贝之前必须了解直接内存与堆内存的区别；堆内存顾名思义就是放在JVM堆里面的内存,直接内存是排除掉堆内存的其他内存相当于物理内存，gc不参与到其中，这部分内存JVM管不着；</p>
+<p>申请直接内存：java申请直接内存会调用本地native方法，在物理内存上申请一块空间，然后自己JVM堆内存上也分配一块叫DirectByteBuffer的空间，DirectByteBuffer里面会存申请的物理内存的内存地址的开始位置，和数据长度，通过定位和长度就能确定数据了。</p>
+<p>内存回收：JVM gc 管不了他们那么怎么将这部分内存进行回收呢？在申请直接内存的时候会给引用对象绑定一个Cleaner机制，就是只要引用对象一被GC,那么就会触发Cleaner机制把内存回收。</p>
+<p>直接内存与堆内存对比：读写上直接内存更快；申请空间上堆内存更快。</p>
+<p>下面可以介绍零拷贝了</p>
+<p>我们客户端发一条数据到服务端，服务端需要在IO读写层面需要做哪些操作呢？</p>
+<p>假设没有零拷贝，发生的情况就是客户端发一条数据到服务端，服务端将这条数据放到socket缓冲区然后拷贝到直接内存（数据不能直接给堆内存），然后直接内存把数据拷贝到JVM堆内存，然后JVM对数据进行修改后在将数据拷贝到直接内存（数据不能直接给socket缓冲区）,然后直接内存把数据拷贝到socket缓冲区。大家数一下中间发生了几次拷贝。共4次拷贝，</p>
+<p>以刚刚的例子来说零拷贝技术就是客户端发一条数据到服务端，服务端将这条数据socket缓冲区然后拷贝到直接内存，然后堆内存会有一个DirectByteBuffer映射到这一块直接内存，然后JVM对数据进行修改将数据直接改到直接内存，然后直接内存拷贝给socket缓冲区总共发生2次拷贝，零拷贝就是减少数据之间的拷贝。</p>
+<h4 id="直接内存优缺点"><a href="#直接内存优缺点" class="headerlink" title="直接内存优缺点"></a>直接内存优缺点</h4><p>优点：</p>
+<pre><code>        * 不占用堆内存
+        * 内存读写快</code></pre>
+<p>缺点</p>
+<ul>
+<li>申请空间慢</li>
+<li>有物理内存被撑爆的可能性，这就跟JVM元空间内存机制是一样的，元空间也是直接内存，然后元空间必须设置最大值一个道理。在这里我们可以和元空间的处理类似，加上一个配置参数-XX：MaxDirectMemorySize控制直接内存的大小</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -741,7 +679,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dm13579.gitee.io/zookeeper-chu-tan-ji-shi-yong-chang-jing/">https://dm13579.gitee.io/zookeeper-chu-tan-ji-shi-yong-chang-jing/</a>
+                    <a href="https://dm13579.gitee.io/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/">https://dm13579.gitee.io/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -779,8 +717,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/ZooKeeper/">
-                                    <span class="chip bg-color">ZooKeeper</span>
+                                <a href="/tags/Netty/">
+                                    <span class="chip bg-color">Netty</span>
+                                </a>
+                            
+                                <a href="/tags/IO%E6%A8%A1%E5%9E%8B/">
+                                    <span class="chip bg-color">IO模型</span>
                                 </a>
                             
                         </div>
@@ -951,7 +893,7 @@
         repo: 'dm13579.github.io',
         owner: 'dm13579',
         admin: "dm13579",
-        id: '2020-09-08T20-15-00',
+        id: '2020-09-07T20-15-00',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -975,12 +917,11 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/zookeeper-chu-tan-ji-shi-yong-chang-jing/">
+                <a href="/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/">
                     <div class="card-image">
                         
                         
@@ -996,9 +937,9 @@
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-08
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-09-08
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1011,7 +952,6 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -1030,24 +970,24 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/">
+                <a href="/2020/09/01/hashmap/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/12.jpg" class="responsive-img" alt="Netty线程模型初探和Netty的常见问题">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/2.jpg" class="responsive-img" alt="HashMap1.7和1.8对比与源码解析">
                         
-                        <span class="card-title">Netty线程模型初探和Netty的常见问题</span>
+                        <span class="card-title">HashMap1.7和1.8对比与源码解析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Netty线程模型理解和Netty常见问题
+                            jdk1.7和jdk1.8差异和源码详解
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-07
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-01
                             </span>
                         <span class="publish-author">
                             
@@ -1064,12 +1004,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Netty/">
-                        <span class="chip bg-color">Netty</span>
+                    <a href="/tags/%E9%9B%86%E5%90%88/">
+                        <span class="chip bg-color">集合</span>
                     </a>
                     
-                    <a href="/tags/IO%E6%A8%A1%E5%9E%8B/">
-                        <span class="chip bg-color">IO模型</span>
+                    <a href="/tags/HashMap/">
+                        <span class="chip bg-color">HashMap</span>
                     </a>
                     
                 </div>
@@ -1433,11 +1373,11 @@ $(function () {
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "别走啊！", clearTimeout(st)) : (document.title = "回来喽！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) }) </script>
-<script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script><script>
             window.imageLazyLoadSetting = {
                 isSPA: false,
                 processImages: null,
             };
-        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
 
 </html>
