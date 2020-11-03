@@ -6,7 +6,7 @@
   <link href="https://dm13579.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://dm13579.gitee.io/"/>
-  <updated>2020-10-09T08:49:11.463Z</updated>
+  <updated>2020-11-03T08:08:18.586Z</updated>
   <id>https://dm13579.gitee.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java关键字系列（一）-synchronized与volatile</title>
+    <link href="https://dm13579.gitee.io/2020/10/26/java-guan-jian-zi-synchronized-volatile/"/>
+    <id>https://dm13579.gitee.io/2020/10/26/java-guan-jian-zi-synchronized-volatile/</id>
+    <published>2020-10-26T14:05:25.000Z</published>
+    <updated>2020-11-03T08:08:18.586Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Java中有许多关键字，比如synchronized，volatile，transient，final，static，native等等，在这里我想针对对这些关键字进行一个统一的了解，并做一个系列。&lt;/p&gt;
+&lt;p&gt;在这些关键字中与并发息息相关的就是synchronized和v</summary>
+        
+      
+    
+    
+    
+    <category term="笔记" scheme="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="并发" scheme="https://dm13579.gitee.io/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+    <category term="Java关键字" scheme="https://dm13579.gitee.io/tags/Java%E5%85%B3%E9%94%AE%E5%AD%97/"/>
+    
+  </entry>
   
   <entry>
     <title>消息队列常见问题及解决方案</title>
