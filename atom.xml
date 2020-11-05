@@ -6,7 +6,7 @@
   <link href="https://dm13579.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://dm13579.gitee.io/"/>
-  <updated>2020-11-05T06:09:54.538Z</updated>
+  <updated>2020-11-05T07:33:21.258Z</updated>
   <id>https://dm13579.gitee.io/</id>
   
   <author>
@@ -18,18 +18,17 @@
   
   <entry>
     <title>Unsafe魔法类解析及应用</title>
-    <link href="https://dm13579.gitee.io/2020/11/atomic-unsafe-mo-fa-lei/"/>
-    <id>https://dm13579.gitee.io/2020/11/atomic-unsafe-mo-fa-lei/</id>
+    <link href="https://dm13579.gitee.io/2020/11/05/atomic-unsafe-mo-fa-lei/"/>
+    <id>https://dm13579.gitee.io/2020/11/05/atomic-unsafe-mo-fa-lei/</id>
     <published>2020-11-05T14:05:25.000Z</published>
-    <updated>2020-11-05T06:09:54.538Z</updated>
+    <updated>2020-11-05T07:33:21.258Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;Unsafe类提供了一些极度不安全的方法，这些方法会直接访问系统内存和对系统内存进行操作。，由于它是直接对内存进行的操作，所以从他的命名也可以看出它是不安全的。Unsafe类的使用必须&lt;strong&gt;慎重&lt;/strong&gt;；&lt;/p&gt;
-&lt;p&gt;Unsafe的API的分类大致是内</summary>
+    <summary type="html">&lt;p&gt;Unsafe类提供了一些极度不安全的方法，这些方法会直接访问系统内存和对系统内存进行操作。，由于它是直接对内存进行的操作，所以从他的命名也可以看出它是不安全的。Unsafe类的使用必须&lt;strong&gt;慎重&lt;/strong&gt;；juc包中大量运用了Unsafe类，对Unsafe</summary>
         
       
     
@@ -48,8 +47,8 @@
   
   <entry>
     <title>Java关键字系列（一）-synchronized与volatile</title>
-    <link href="https://dm13579.gitee.io/2020/10/java-guan-jian-zi-synchronized-volatile/"/>
-    <id>https://dm13579.gitee.io/2020/10/java-guan-jian-zi-synchronized-volatile/</id>
+    <link href="https://dm13579.gitee.io/2020/10/26/java-guan-jian-zi-synchronized-volatile/"/>
+    <id>https://dm13579.gitee.io/2020/10/26/java-guan-jian-zi-synchronized-volatile/</id>
     <published>2020-10-26T14:05:25.000Z</published>
     <updated>2020-11-03T10:27:02.390Z</updated>
     
@@ -76,8 +75,8 @@
   
   <entry>
     <title>消息队列常见问题及解决方案</title>
-    <link href="https://dm13579.gitee.io/2020/10/xiao-xi-dui-lie/"/>
-    <id>https://dm13579.gitee.io/2020/10/xiao-xi-dui-lie/</id>
+    <link href="https://dm13579.gitee.io/2020/10/08/xiao-xi-dui-lie/"/>
+    <id>https://dm13579.gitee.io/2020/10/08/xiao-xi-dui-lie/</id>
     <published>2020-10-08T12:15:00.000Z</published>
     <updated>2020-10-09T08:49:11.463Z</updated>
     
@@ -102,8 +101,8 @@
   
   <entry>
     <title>ConcurrentHashMap1.7和1.8对比与线程安全源码解析</title>
-    <link href="https://dm13579.gitee.io/2020/09/concurrenthashmap/"/>
-    <id>https://dm13579.gitee.io/2020/09/concurrenthashmap/</id>
+    <link href="https://dm13579.gitee.io/2020/09/16/concurrenthashmap/"/>
+    <id>https://dm13579.gitee.io/2020/09/16/concurrenthashmap/</id>
     <published>2020-09-16T14:05:25.000Z</published>
     <updated>2020-09-16T08:44:42.783Z</updated>
     
@@ -131,8 +130,8 @@
   
   <entry>
     <title>ZooKeeper初探及使用场景</title>
-    <link href="https://dm13579.gitee.io/2020/09/zookeeper-chu-tan-ji-shi-yong-chang-jing/"/>
-    <id>https://dm13579.gitee.io/2020/09/zookeeper-chu-tan-ji-shi-yong-chang-jing/</id>
+    <link href="https://dm13579.gitee.io/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/"/>
+    <id>https://dm13579.gitee.io/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/</id>
     <published>2020-09-08T12:15:00.000Z</published>
     <updated>2020-09-09T15:23:56.266Z</updated>
     
@@ -156,8 +155,8 @@
   
   <entry>
     <title>Netty线程模型初探和Netty的常见问题</title>
-    <link href="https://dm13579.gitee.io/2020/09/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/"/>
-    <id>https://dm13579.gitee.io/2020/09/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/</id>
+    <link href="https://dm13579.gitee.io/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/"/>
+    <id>https://dm13579.gitee.io/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/</id>
     <published>2020-09-07T12:15:00.000Z</published>
     <updated>2020-09-09T07:36:26.090Z</updated>
     
@@ -183,8 +182,8 @@
   
   <entry>
     <title>HashMap1.7和1.8对比与源码解析</title>
-    <link href="https://dm13579.gitee.io/2020/09/hashmap/"/>
-    <id>https://dm13579.gitee.io/2020/09/hashmap/</id>
+    <link href="https://dm13579.gitee.io/2020/09/01/hashmap/"/>
+    <id>https://dm13579.gitee.io/2020/09/01/hashmap/</id>
     <published>2020-09-01T14:05:25.000Z</published>
     <updated>2020-09-09T06:27:28.737Z</updated>
     
@@ -210,8 +209,8 @@
   
   <entry>
     <title>Java多线程介绍与线程池底层实现原理</title>
-    <link href="https://dm13579.gitee.io/2020/08/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/"/>
-    <id>https://dm13579.gitee.io/2020/08/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/</id>
+    <link href="https://dm13579.gitee.io/2020/08/27/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/"/>
+    <id>https://dm13579.gitee.io/2020/08/27/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/</id>
     <published>2020-08-27T12:15:00.000Z</published>
     <updated>2020-09-09T03:02:18.923Z</updated>
     
@@ -237,8 +236,8 @@
   
   <entry>
     <title>MySQL事务系统解析</title>
-    <link href="https://dm13579.gitee.io/2020/08/mysql-shi-wu-xi-tong-jie-xi/"/>
-    <id>https://dm13579.gitee.io/2020/08/mysql-shi-wu-xi-tong-jie-xi/</id>
+    <link href="https://dm13579.gitee.io/2020/08/25/mysql-shi-wu-xi-tong-jie-xi/"/>
+    <id>https://dm13579.gitee.io/2020/08/25/mysql-shi-wu-xi-tong-jie-xi/</id>
     <published>2020-08-24T18:15:00.000Z</published>
     <updated>2020-09-09T03:01:48.618Z</updated>
     

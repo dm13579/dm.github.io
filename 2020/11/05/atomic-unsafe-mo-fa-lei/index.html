@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 	<meta name="baidu-site-verification" content="lElrePz9Qe" />
 	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
-    <meta name="keywords" content="ZooKeeper">
+    <meta name="keywords" content="Unsafe,并发">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,7 +29,7 @@
 </script>
 
 
-    <title>ZooKeeper初探及使用场景 | Coisini</title>
+    <title>Unsafe魔法类解析及应用 | Coisini</title>
     <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -322,12 +322,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/3.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">ZooKeeper初探及使用场景</h1>
+                    <h1 class="description center-align post-title">Unsafe魔法类解析及应用</h1>
                 </div>
             </div>
         </div>
@@ -444,8 +444,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/ZooKeeper/">
-                                <span class="chip bg-color">ZooKeeper</span>
+                            <a href="/tags/%E5%B9%B6%E5%8F%91/">
+                                <span class="chip bg-color">并发</span>
+                            </a>
+                        
+                            <a href="/tags/Atomic/">
+                                <span class="chip bg-color">Atomic</span>
+                            </a>
+                        
+                            <a href="/tags/Unsafe/">
+                                <span class="chip bg-color">Unsafe</span>
                             </a>
                         
                     </div>
@@ -469,21 +477,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-08
+                    2020-11-05
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-09-09
+                    2020-11-05
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.1k
+                    2k
                 </div>
                 
 
@@ -505,199 +513,157 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="认识ZooKeeper"><a href="#认识ZooKeeper" class="headerlink" title="认识ZooKeeper"></a>认识ZooKeeper</h2><p>ZooKeeper是一个分布式调度协调服务，分布式应用的产生必定会带来多节点之间的协调问题，这个时候ZooKeeper就出现了。很多开源中间件都用到了ZooKeeper,比如KafKa就是强依赖于ZooKeeper.它自身也是一个分布式应用。</p>
-<h2 id="ZooKeeper节点特性"><a href="#ZooKeeper节点特性" class="headerlink" title="ZooKeeper节点特性"></a>ZooKeeper节点特性</h2><p>ZooKeeper共有4种节点，分别是持久节点，持久序号节点，临时节点，临时序号节点</p>
-<table>
-<thead>
-<tr>
-<th align="left"></th>
-<th>特性</th>
-<th>创建命令</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">持久节点</td>
-<td>持久化保存的节点，默认创建</td>
-<td>create /test</td>
-</tr>
-<tr>
-<td align="left">持久序号节点</td>
-<td>持久化保存的节点，创建的时候会在路径上加上序号作为后缀比如/test会创建出/test00000001</td>
-<td>create -s /test</td>
-</tr>
-<tr>
-<td align="left">临时节点</td>
-<td>临时节点会在客户端删除的时候自动删除</td>
-<td>create -e /test</td>
-</tr>
-<tr>
-<td align="left">临时序号节点</td>
-<td>临时节点会在客户端删除的时候自动删除，创建的时候会在路径上加上序号作为后缀比如/test会创建出/test00000001</td>
-<td>create -e -s /test</td>
-</tr>
-</tbody></table>
-<h2 id="ZooKeeper集群"><a href="#ZooKeeper集群" class="headerlink" title="ZooKeeper集群"></a>ZooKeeper集群</h2><p>ZooKeeper集群主要解决的是<strong>高可用</strong>、<strong>读写分离提高承载能力</strong>。ZooKeeper集群必须保证有<strong>至少三个节点</strong>，不然部署失败</p>
-<p>集群角色</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>角色名称</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>leader</td>
-<td>主节点，领导者</td>
-<td>写数据，通过选举产生</td>
-</tr>
-<tr>
-<td>follower</td>
-<td>从节点，追随者</td>
-<td>读数据，主节点的备选节点，拥有投票权</td>
-</tr>
-<tr>
-<td>observer</td>
-<td>次级子节点，观察者</td>
-<td>读数据，无投票权，不能选举为主节点，计算集群可用状态不会将其计算在内</td>
-</tr>
-</tbody></table>
-<h3 id="数据提交机制"><a href="#数据提交机制" class="headerlink" title="数据提交机制"></a>数据提交机制</h3><p>ZooKeeper是一个CP架构，它专注于的是一致性，为什么它拥有一致性？</p>
-<p>流程：客户端会向服务端发起写请求，如果请求对象不是主节点，从节点会把请求转发给主节点，数据写进主节点，主节点发送请求proposal给从节点，从节点写进事务日志后给主节点一个ack，主节点统计ack数量，如果ack数量是集群半数以上，主节点又会发起一个commit请求给客户端，客户端记录事务提交，并把数据更新到内存中去，主节点告诉客户端我写好了，在同步数据这段时间，ZooKeeper对于客户端而言是不可用的，多以它不满足可用性，所以他是CP架构。</p>
-<p>在集群运行过程当中如果有一个follower节点宕机，由于宕机节点没过半，集群仍然能正常服务。当leader收到新的客户端请求，此时无法同步给宕机的节点。造成数据不一致。为了解决这个问题，当节点启动时，第一件事情就是找当前的Leader，比对数据是否一致。不一致则开始同步,同步完成之后在进行对外提供服务。 </p>
-<p><strong>如何比对Leader的数据版本呢？</strong>这里通过ZXID事物ID来确认。比Leader就需要同步。</p>
-<p>ZXID： ZXID是一个长度64位的数字，其中低32位是按照数字递增，任何数据的变更都会导致,低32位的数字简单加1。高32位是leader周期编号，每当选举出一个新的leader时，新的leader就从本地事物日志中取出ZXID,然后解析出高32位的周期编号，进行加1，再将低32位的全部设置为0。这样就保证了每次新选举的leader后，保证了ZXID的唯一性而且是保证递增的。</p>
-<h3 id="集群选举机制"><a href="#集群选举机制" class="headerlink" title="集群选举机制"></a>集群选举机制</h3><p>选举流程：</p>
-<p>​    TODO</p>
-<p>选举触发条件</p>
-<ul>
-<li><p>节点初始化启动时</p>
-<p>节点启动的时候会在集群中寻找是否有leader,找到了就与leader建立通信，自身变为follower或observer,没有找到Leader,当前节点记录为LOOKING，开始选举</p>
-</li>
-<li><p>半数以上节点无法和Leader建立通信</p>
-<p>Leader一挂，只要有半数节点感知到Leader挂了，就所有follower进入到LOOKING状态，开始选举</p>
-</li>
-</ul>
-<h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><ul>
-<li><p>为什么建议集群奇数个节点？</p>
-<p>节省资源，3节点和4节点都是挂2个节点不可用，所以用4个节点站在可用性的角度来看没意义</p>
-</li>
-<li><p>为什么要有半数机制？</p>
-<p>脑裂问题，假设你有4个节点，由于网络抖动分裂成了2个集群，然后这2个集群都会进行选举，会选举出2个leader,网络恢复后就有2个leader，肯定是有问题的，但半数机制就保证了这种问题不会发生，就算网络抖动也只会选举出一个leader</p>
-</li>
-</ul>
-<h2 id="ZooKeeper使用场景"><a href="#ZooKeeper使用场景" class="headerlink" title="ZooKeeper使用场景"></a>ZooKeeper使用场景</h2><h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在单体应用中，我们可以用synchronized或者ReentrantLock来实现锁机制。但在分布式应用中不行，因为synchronized或者ReentrantLock只针对于一个JVM中可以使用。所以我们必须实现分布式锁来实现锁机制。可以使用Redis或ZooKeeper实现，Redis就不多说了。</p>
-<p>实现分布式锁的主要逻辑就是利用临时序号节点，我创建一个临时序号节点，继续创建临时序号节点会自增最后形成一堆有序的节点，通过序号我们可以知道哪个节点在前哪个节点在后，序号最小的节点才有资格拿锁，后一个节点监听前一个节点，当前一个节点被删除了，我后一个节点就可以去尝试激活锁了。</p>
-<p>这里为什么不直接每个节点监听加锁节点，加锁节点删除在找到最小序号去加锁呢？</p>
-<p>这里主要是防止羊群效应，一旦加锁节点被释放就会有大量的节点被触发，然后反查Lock子节点可能会让zookeeper承受巨大的压力。</p>
-<p>这里写一个简单的demo</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> String server <span class="token operator">=</span> <span class="token string">"你的zookeeper地址"</span><span class="token punctuation">;</span>
-<span class="token keyword">private</span> ZkClient zkClient<span class="token punctuation">;</span>
-<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> String rootPath <span class="token operator">=</span> <span class="token string">"/dm-lock"</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token function">ZookeeperLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    zkClient <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ZkClient</span><span class="token punctuation">(</span>server<span class="token punctuation">,</span> <span class="token number">5000</span><span class="token punctuation">,</span> <span class="token number">20000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 创建根节点</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>zkClient<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span>rootPath<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        zkClient<span class="token punctuation">.</span><span class="token function">createPersistent</span><span class="token punctuation">(</span>rootPath<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * 加锁
- */</span>
-<span class="token keyword">public</span> Lock <span class="token function">lock</span><span class="token punctuation">(</span>String lockId<span class="token punctuation">,</span> <span class="token keyword">long</span> timeout<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment" spellcheck="true">// 创建临时序号节点</span>
-    Lock lockNode <span class="token operator">=</span> <span class="token function">createLockNode</span><span class="token punctuation">(</span>lockId<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 尝试拿锁</span>
-    lockNode <span class="token operator">=</span> <span class="token function">tryActiveLock</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 没有拿到锁</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>lockNode<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span> <span class="token punctuation">{</span>
-            <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                <span class="token comment" spellcheck="true">// 把线程hang在这里然后等待监听事件触发，拿到锁，释放线程</span>
-                <span class="token comment" spellcheck="true">// 在tryActiveLockelse逻辑里面</span>
-                lockNode<span class="token punctuation">.</span><span class="token function">wait</span><span class="token punctuation">(</span>timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-    <span class="token comment" spellcheck="true">// 线程hang住的时间里面还没拿到锁就抛异常</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>lockNode<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span><span class="token string">"lock timeout"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> lockNode<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * s=释放锁
- */</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">unlock</span><span class="token punctuation">(</span>Lock lock<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>lock<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        zkClient<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>lock<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * 尝试激活锁
- */</span>
-<span class="token keyword">private</span> Lock <span class="token function">tryActiveLock</span><span class="token punctuation">(</span>Lock lockNode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
-    <span class="token comment" spellcheck="true">//  获取根节点下面所有的排好序的子节点</span>
-    List<span class="token operator">&lt;</span>String<span class="token operator">></span> list <span class="token operator">=</span> zkClient<span class="token punctuation">.</span><span class="token function">getChildren</span><span class="token punctuation">(</span>rootPath<span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">sorted</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>p <span class="token operator">-</span><span class="token operator">></span> rootPath <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> p<span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span>Collectors<span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">// 取最小的节点，这个节点就应该是应该加锁的节点</span>
-    String firstNodePath <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 最小节点是不是当前节点,是就直接加锁</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>firstNodePath<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        lockNode<span class="token punctuation">.</span><span class="token function">setActive</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <p>Unsafe类提供了一些极度不安全的方法，这些方法会直接访问系统内存和对系统内存进行操作。，由于它是直接对内存进行的操作，所以从他的命名也可以看出它是不安全的。Unsafe类的使用必须<strong>慎重</strong>；juc包中大量运用了Unsafe类，对Unsafe的了解也会方便与了解juc的一些类，即使一般情况下我们不使用这个类，但我们也有必要对其进行理解。</p>
+<p>Unsafe的API的分类大致是内存操作，CAS，内存屏障，线程调度；</p>
+<h2 id="Unsafe类的使用"><a href="#Unsafe类的使用" class="headerlink" title="Unsafe类的使用"></a>Unsafe类的使用</h2><p>Unsafe方法是单例的，要想使用Unsafe首先需要调用Unsafe类的getUnsafe方法。</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> Unsafe theUnsafe<span class="token punctuation">;</span>
+<span class="token annotation punctuation">@CallerSensitive</span>
+<span class="token keyword">public</span> <span class="token keyword">static</span> Unsafe <span class="token function">getUnsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Class <span class="token class-name">var0</span> <span class="token operator">=</span> Reflection<span class="token punctuation">.</span><span class="token function">getCallerClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>VM<span class="token punctuation">.</span><span class="token function">isSystemDomainLoader</span><span class="token punctuation">(</span>var0<span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SecurityException</span><span class="token punctuation">(</span><span class="token string">"Unsafe"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">// 取得当前节点减一，要监听这个节点</span>
-        String upNodePath <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>list<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        zkClient<span class="token punctuation">.</span><span class="token function">subscribeDataChanges</span><span class="token punctuation">(</span>upNodePath<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">IZkDataListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token annotation punctuation">@Override</span>
-            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">handleDataChange</span><span class="token punctuation">(</span>String dataPath<span class="token punctuation">,</span> Object data<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-
-            <span class="token punctuation">}</span>
-
-            <span class="token comment" spellcheck="true">// 前一个节点被释放回调</span>
-            <span class="token annotation punctuation">@Override</span>
-            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">handleDataDeleted</span><span class="token punctuation">(</span>String dataPath<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-                <span class="token comment" spellcheck="true">// 重新尝试拿锁</span>
-                Lock lock <span class="token operator">=</span> <span class="token function">tryActiveLock</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    <span class="token comment" spellcheck="true">// 之前同步块的线程释放</span>
-                    <span class="token keyword">if</span> <span class="token punctuation">(</span>lock<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                        lockNode<span class="token punctuation">.</span><span class="token function">notify</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-                    <span class="token punctuation">}</span>
-                <span class="token punctuation">}</span>
-                zkClient<span class="token punctuation">.</span><span class="token function">unsubscribeDataChanges</span><span class="token punctuation">(</span>upNodePath<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> theUnsafe<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> lockNode<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>从上面代码**!VM.isSystemDomainLoader(var0.getClassLoader())**</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">boolean</span> <span class="token function">isSystemDomainLoader</span><span class="token punctuation">(</span>ClassLoader var0<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> var0 <span class="token operator">==</span> null<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>可以看出如果你调用Unsafe类必须保证Unsafe类是系统类加载器（系统类加载器ClassLoader==null,因为系统类加载器是由C加载的）去加载的。直接调用getUnsafe会报错。</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Unsafe unsafe <span class="token operator">=</span> Unsafe<span class="token punctuation">.</span><span class="token function">getUnsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
-<span class="token comment" spellcheck="true">/**
- * 创建临时序号节点
- */</span>
-<span class="token keyword">public</span> Lock <span class="token function">createLockNode</span><span class="token punctuation">(</span>String lockId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    String nodePath <span class="token operator">=</span> zkClient<span class="token punctuation">.</span><span class="token function">createEphemeralSequential</span><span class="token punctuation">(</span>rootPath <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> lockId<span class="token punctuation">,</span> <span class="token string">"w"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Lock</span><span class="token punctuation">(</span>lockId<span class="token punctuation">,</span> nodePath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 调用结果</span>
+Exception in thread <span class="token string">"main"</span> java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>SecurityException<span class="token operator">:</span> Unsafe
+    at sun<span class="token punctuation">.</span>misc<span class="token punctuation">.</span>Unsafe<span class="token punctuation">.</span><span class="token function">getUnsafe</span><span class="token punctuation">(</span>Unsafe<span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">90</span><span class="token punctuation">)</span>
+    at com<span class="token punctuation">.</span>dm<span class="token punctuation">.</span>jmm<span class="token punctuation">.</span>util<span class="token punctuation">.</span>test<span class="token punctuation">.</span><span class="token function">main</span><span class="token punctuation">(</span>test<span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">33</span><span class="token punctuation">)</span></code></pre>
+<p>通过资料发现Unsafe的使用有2种方法</p>
+<ol>
+<li><p>通过Java命令行命令<code>-Xbootclasspath/a: ${path}</code>把调用Unsafe相关方法的类test所在jar包路径追加到默认的bootstrap路径中，使得test被引导类加载器加载，从而通过<code>Unsafe.getUnsafe</code>方法安全的获取Unsafe实例。</p>
+</li>
+<li><p>通过反射拿取，<strong>下面的应用皆用这种方式</strong></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> Unsafe <span class="token function">reflectGetUnsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        Field field <span class="token operator">=</span> Unsafe<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getDeclaredField</span><span class="token punctuation">(</span><span class="token string">"theUnsafe"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        field<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span>Unsafe<span class="token punctuation">)</span> field<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> null<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="分布式注册中心"><a href="#分布式注册中心" class="headerlink" title="分布式注册中心"></a>分布式注册中心</h3><p>在这里，首先得了解注册中心是什么？单体应用升级到分布式应用，肯定会有成千上万个服务节点不同的客户端会调用这些服务节点，如果把这些服务节点配置到客户端的话会很复杂，这时候就需要一个中间件来帮助我们找到我们需要调用的服务，这就是服务发现。</p>
-<p>一般注册中心需要一下几个功能，服务注册，服务发现，服务订阅</p>
-<ul>
-<li>服务注册：服务刚启动将自己的信息注册到注册中心</li>
-<li>服务发现：客户端通过注册中心找到自己要调用的服务，然后通过RPC进行调用</li>
-<li>服务订阅：能动态感知服务的变化</li>
-</ul>
-<p>我们可以把注册的服务写成临时节点，只要服务一下线就会自动删除对应的服务。</p>
+</li>
+</ol>
+<h2 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h2><p>先简单介绍一下内存屏障吧。内存屏障（也称内存栅栏，内存栅障，屏障指令等，是一类同步屏障指令，是CPU或编译器在对内存随机访问的操作中的一个同步点，使得此点之前的所有读写操作都执行后才可以开始执行此点之后的操作），避免代码重排序。</p>
+<p>还记得之前JMM模型是如何禁止重排序的吗，里面有详细介绍了内存屏障包括volatile触发内存屏障。<a href="https://dm13579.gitee.io/2020/10/26/java-guan-jian-zi-synchronized-volatile/">Java关键字系列（一）-synchronized与volatile</a></p>
+<p>在这里我们可以使用Unsafe手动设置内存屏障。</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//内存屏障，禁止load操作重排序。屏障前的load操作不能被重排序到屏障后，屏障后的load操作不能被重排序到屏障前</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">loadFence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//内存屏障，禁止store操作重排序。屏障前的store操作不能被重排序到屏障后，屏障后的store操作不能被重排序到屏障前</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">storeFence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//内存屏障，禁止load、store操作重排序</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">fullFence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>以之前举例证明重排序存在的代码为例，之前是通过添加volatile可以解决，现在通过手动添加内存屏障解决</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Slf4j</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">test</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span>  <span class="token keyword">static</span> <span class="token keyword">int</span> x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span>  <span class="token keyword">static</span> <span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span><span class="token punctuation">;</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            i<span class="token operator">++</span><span class="token punctuation">;</span>
+            x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> y <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> b <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            Thread t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Runnable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token function">shortWait</span><span class="token punctuation">(</span><span class="token number">10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+
+                    <span class="token comment" spellcheck="true">// 添加屏障代码，需引入上面通过反射拿取Unsafe类</span>
+                    UnsafeInstance<span class="token punctuation">.</span><span class="token function">reflectGetUnsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">fullFence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                    x <span class="token operator">=</span> b<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            Thread t2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Runnable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    b <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+
+                     <span class="token comment" spellcheck="true">// 添加屏障代码，需引入上面通过反射拿取Unsafe类</span>
+                    UnsafeInstance<span class="token punctuation">.</span><span class="token function">reflectGetUnsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">fullFence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                    y <span class="token operator">=</span> a<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            t1<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            t2<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            t1<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            t2<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            String result <span class="token operator">=</span> <span class="token string">"第"</span> <span class="token operator">+</span> i <span class="token operator">+</span> <span class="token string">"次 ("</span> <span class="token operator">+</span> x <span class="token operator">+</span> <span class="token string">","</span> <span class="token operator">+</span> y <span class="token operator">+</span> <span class="token string">"）"</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span><span class="token punctuation">(</span>x <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> y <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">/**
+     * 等待一段时间，时间单位纳秒
+     * @param interval
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">shortWait</span><span class="token punctuation">(</span><span class="token keyword">long</span> interval<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">long</span> start <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">nanoTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">long</span> end<span class="token punctuation">;</span>
+        <span class="token keyword">do</span><span class="token punctuation">{</span>
+            end <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">nanoTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">while</span><span class="token punctuation">(</span>start <span class="token operator">+</span> interval <span class="token operator">>=</span> end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>现在这段代码运行就不会结束了，证明内存屏障设置成功了。</p>
+<h2 id="内存操作"><a href="#内存操作" class="headerlink" title="内存操作"></a>内存操作</h2><p>Unsafe相关的内存操作都是与堆外内存相关，包括堆外内存的分配，释放，拷贝等等。</p>
+<h3 id="堆外内存"><a href="#堆外内存" class="headerlink" title="堆外内存"></a>堆外内存</h3><p>大家都知道Java 对象基本都是存放在堆或者栈上面的，它们的分配，释放都是依靠JVM来解决的。但在我们的Java中有一种内存叫做堆外内存，这部分内存不被JVM所托管。元空间的内存就是堆外内存，所以如果我们不设置**-XX：MaxMetaspaceSize**参数，由于它是堆外内存就有可能导致元空间内存不断往上加，最后可能撑爆系统内存（堆外内存不受JVM内存管理，它依托的是系统内存）。</p>
+<p>而对堆外内存的操作我们通常是使用Unsafe类操作，这种操作危险。如果代码内存溢出，可能会把服务器内存打宕掉。<strong>这里一定得注意内存的释放。</strong></p>
+<p><strong>Q:既然JVM可以管理内存，为什么我们会有使用堆外内存的需求呢？</strong></p>
+<ol>
+<li>减少GC次数，避免垃圾回收停顿对应用程序的影响。JVM是有GC机制的。如果我们操作的一个内存是比较大的，可能会频繁GC。但我们使用堆外内存（不受JVM控制），会有效的减少GC的STW。</li>
+<li>提升程序I/O操作的性能。在I/O通信过程中，有堆内内存-&gt;堆外内存的数据拷贝操作，如果有这种需求我们可以直接把数据存储到堆外内存，减少堆内内存到堆外内存的时间，提升IO性能。这也是零拷贝的思想，在Netty和RocketMQ都有应用。关于零拷贝的详细可见<a href="https://dm13579.gitee.io/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/#toc-heading-5">Netty线程模型初探和Netty的常见问题</a></li>
+</ol>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//分配内存, 相当于C++的malloc函数</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">long</span> <span class="token function">allocateMemory</span><span class="token punctuation">(</span><span class="token keyword">long</span> bytes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//扩充内存</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">long</span> <span class="token function">reallocateMemory</span><span class="token punctuation">(</span><span class="token keyword">long</span> address<span class="token punctuation">,</span> <span class="token keyword">long</span> bytes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//释放内存</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">freeMemory</span><span class="token punctuation">(</span><span class="token keyword">long</span> address<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//在给定的内存块中设置值</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">setMemory</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> <span class="token keyword">long</span> offset<span class="token punctuation">,</span> <span class="token keyword">long</span> bytes<span class="token punctuation">,</span> <span class="token keyword">byte</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//内存拷贝</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">copyMemory</span><span class="token punctuation">(</span>Object srcBase<span class="token punctuation">,</span> <span class="token keyword">long</span> srcOffset<span class="token punctuation">,</span> Object destBase<span class="token punctuation">,</span> <span class="token keyword">long</span> destOffset<span class="token punctuation">,</span> <span class="token keyword">long</span> bytes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//获取给定地址值，忽略修饰限定符的访问限制。与此类似操作还有: getInt，getDouble，getLong，getChar等</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> Object <span class="token function">getObject</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> <span class="token keyword">long</span> offset<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//为给定地址设置值，忽略修饰限定符的访问限制，与此类似操作还有: putInt,putDouble，putLong，putChar等</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">putObject</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> <span class="token keyword">long</span> offset<span class="token punctuation">,</span> Object x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//获取给定地址的byte类型的值（当且仅当该内存地址为allocateMemory分配时，此方法结果为确定的）</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">byte</span> <span class="token function">getByte</span><span class="token punctuation">(</span><span class="token keyword">long</span> address<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//为给定地址设置byte类型的值（当且仅当该内存地址为allocateMemory分配时，此方法结果才是确定的）</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">putByte</span><span class="token punctuation">(</span><span class="token keyword">long</span> address<span class="token punctuation">,</span> <span class="token keyword">byte</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h2 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h2><p>CAS全称CompareAndSwap，从名字就可以看出它是什么作用了，就是比较和交换。</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 下面几个方法作用一样</span>
+<span class="token comment" spellcheck="true">// 介绍一下参数值0--修改field的对象，offset--对象中某field的偏移量，expected--期望值，update--更新值</span>
+<span class="token comment" spellcheck="true">// 他的操作就是将内存位置的值和expected进行比较，是不是一样，一样就把update和当前内存位置的值进行交换</span>
+<span class="token comment" spellcheck="true">// 整个过程是原子的。</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">boolean</span> <span class="token function">compareAndSwapObject</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> <span class="token keyword">long</span> offset<span class="token punctuation">,</span>  Object expected<span class="token punctuation">,</span> Object update<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">boolean</span> <span class="token function">compareAndSwapInt</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> <span class="token keyword">long</span> offset<span class="token punctuation">,</span> <span class="token keyword">int</span> expected<span class="token punctuation">,</span><span class="token keyword">int</span> update<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">boolean</span> <span class="token function">compareAndSwapLong</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> <span class="token keyword">long</span> offset<span class="token punctuation">,</span> <span class="token keyword">long</span> expected<span class="token punctuation">,</span> <span class="token keyword">long</span> update<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>CAS在整个juc中应用是最为广泛的，比如AQS,Atomic等等，可能就是因为他是原子的所以才会在并发包中得到这么广泛的应用吧。其实他整个操作都是基于offset进行操作的，offset可以使用unsafe的objectFieldOffset获取。通过offset就可以找到内存地址，我们在从内存地址中获取这个值，拿到值就跟期望值expected进行比较，如果一样就把更新值update赋值到这个地址上去。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -741,7 +707,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dm13579.gitee.io/2020/09/zookeeper-chu-tan-ji-shi-yong-chang-jing/">https://dm13579.gitee.io/2020/09/zookeeper-chu-tan-ji-shi-yong-chang-jing/</a>
+                    <a href="https://dm13579.gitee.io/2020/11/05/atomic-unsafe-mo-fa-lei/">https://dm13579.gitee.io/2020/11/05/atomic-unsafe-mo-fa-lei/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -779,8 +745,16 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/ZooKeeper/">
-                                    <span class="chip bg-color">ZooKeeper</span>
+                                <a href="/tags/%E5%B9%B6%E5%8F%91/">
+                                    <span class="chip bg-color">并发</span>
+                                </a>
+                            
+                                <a href="/tags/Atomic/">
+                                    <span class="chip bg-color">Atomic</span>
+                                </a>
+                            
+                                <a href="/tags/Unsafe/">
+                                    <span class="chip bg-color">Unsafe</span>
                                 </a>
                             
                         </div>
@@ -951,7 +925,7 @@
         repo: 'dm13579.github.io',
         owner: 'dm13579',
         admin: "dm13579",
-        id: '2020-09-08T20-15-00',
+        id: '2020-11-05T22-05-25',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -975,29 +949,89 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/09/concurrenthashmap/">
+                <a href="/2020/11/05/atomic-unsafe-mo-fa-lei/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/22.jpg" class="responsive-img" alt="ConcurrentHashMap1.7和1.8对比与线程安全源码解析">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/3.jpg" class="responsive-img" alt="Unsafe魔法类解析及应用">
                         
-                        <span class="card-title">ConcurrentHashMap1.7和1.8对比与线程安全源码解析</span>
+                        <span class="card-title">Unsafe魔法类解析及应用</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            本篇博文主要介绍的是ConcurrentHashMap是怎么实现的线程安全。
+                            Unsafe类提供了一些极度不安全的方法，这些方法会直接访问系统内存和对系统内存进行操作。，由于它是直接对内存进行的操作，所以从他的命名也可以看出它是不安全的。Unsafe类的使用必须慎重；juc包中大量运用了Unsafe类，对Unsafe
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-09-16
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-05
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                            
+                            
                         </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%B9%B6%E5%8F%91/">
+                        <span class="chip bg-color">并发</span>
+                    </a>
+                    
+                    <a href="/tags/Atomic/">
+                        <span class="chip bg-color">Atomic</span>
+                    </a>
+                    
+                    <a href="/tags/Unsafe/">
+                        <span class="chip bg-color">Unsafe</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/10/26/java-guan-jian-zi-synchronized-volatile/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/4.jpg" class="responsive-img" alt="Java关键字系列（一）-synchronized与volatile">
+                        
+                        <span class="card-title">Java关键字系列（一）-synchronized与volatile</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Java中有许多关键字，比如synchronized，volatile，transient，final，static，native等等，在这里我想针对对这些关键字进行一个统一的了解，并做一个系列。
+在这些关键字中与并发息息相关的就是sync
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-10-26
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1017,65 +1051,8 @@
                         <span class="chip bg-color">并发</span>
                     </a>
                     
-                    <a href="/tags/%E9%9B%86%E5%90%88/">
-                        <span class="chip bg-color">集合</span>
-                    </a>
-                    
-                    <a href="/tags/ConcurrentHashMap/">
-                        <span class="chip bg-color">ConcurrentHashMap</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2020/09/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/12.jpg" class="responsive-img" alt="Netty线程模型初探和Netty的常见问题">
-                        
-                        <span class="card-title">Netty线程模型初探和Netty的常见问题</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            Netty线程模型理解和Netty常见问题
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-07
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Netty/">
-                        <span class="chip bg-color">Netty</span>
-                    </a>
-                    
-                    <a href="/tags/IO%E6%A8%A1%E5%9E%8B/">
-                        <span class="chip bg-color">IO模型</span>
+                    <a href="/tags/Java%E5%85%B3%E9%94%AE%E5%AD%97/">
+                        <span class="chip bg-color">Java关键字</span>
                     </a>
                     
                 </div>
@@ -1260,7 +1237,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">28.5k</span>
+            <span class="white-color">29.8k</span>
             
 
             <br>
@@ -1439,11 +1416,11 @@ $(function () {
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "别走啊！", clearTimeout(st)) : (document.title = "回来喽！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) }) </script>
-<script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script><script>
             window.imageLazyLoadSetting = {
                 isSPA: false,
                 processImages: null,
             };
-        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
 
 </html>
