@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 	<meta name="baidu-site-verification" content="lElrePz9Qe" />
 	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
-    <meta name="keywords" content="ZooKeeper">
+    <meta name="keywords" content="MySQL事务">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,7 +29,7 @@
 </script>
 
 
-    <title>ZooKeeper初探及使用场景 | Coisini</title>
+    <title>MySQL事务系统解析 | Coisini</title>
     <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -322,12 +322,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/15.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">ZooKeeper初探及使用场景</h1>
+                    <h1 class="description center-align post-title">MySQL事务系统解析</h1>
                 </div>
             </div>
         </div>
@@ -444,8 +444,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/ZooKeeper/">
-                                <span class="chip bg-color">ZooKeeper</span>
+                            <a href="/tags/MySQL/">
+                                <span class="chip bg-color">MySQL</span>
+                            </a>
+                        
+                            <a href="/tags/%E4%BA%8B%E5%8A%A1/">
+                                <span class="chip bg-color">事务</span>
                             </a>
                         
                     </div>
@@ -469,7 +473,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-08
+                    2020-08-25
                 </div>
                 
 
@@ -483,14 +487,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.1k
+                    1.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    8 分
+                    6 分
                 </div>
                 
 
@@ -505,199 +509,103 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="认识ZooKeeper"><a href="#认识ZooKeeper" class="headerlink" title="认识ZooKeeper"></a>认识ZooKeeper</h2><p>ZooKeeper是一个分布式调度协调服务，分布式应用的产生必定会带来多节点之间的协调问题，这个时候ZooKeeper就出现了。很多开源中间件都用到了ZooKeeper,比如KafKa就是强依赖于ZooKeeper.它自身也是一个分布式应用。</p>
-<h2 id="ZooKeeper节点特性"><a href="#ZooKeeper节点特性" class="headerlink" title="ZooKeeper节点特性"></a>ZooKeeper节点特性</h2><p>ZooKeeper共有4种节点，分别是持久节点，持久序号节点，临时节点，临时序号节点</p>
-<table>
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近啃MySQL相关的知识，了解到事务以及事务隔离机制，想要深入了解下事务是如何实现的下面是此次主要探讨的几点方向。这里先推荐几篇文章</p>
+<p><a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2017/12">数据库内核月报 － 2017 / 12</a></p>
+<p><a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2017/10">数据库内核月报 － 2017 / 10</a></p>
+<p><a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2015/04">数据库内核月报 － 2015 / 04</a></p>
+<ol>
+<li>事务及其ACID特性</li>
+<li>并发事务带来的问题</li>
+<li>事务隔离机制以及解决并发事务问题</li>
+<li>事务隔离机制如何实现（MVCC多版本并发控制机制）</li>
+</ol>
+<h2 id="事务及其ACID特性"><a href="#事务及其ACID特性" class="headerlink" title="事务及其ACID特性"></a>事务及其ACID特性</h2><p>事务一般具有4个特性，这4个特性一般简称ACID特性</p>
+<ul>
+<li>A（原子性）：事务要么全部成功，要么全部失败</li>
+<li>C（一致性）：不管什么时候，数据都是一致的，不会读到中间状态的数据</li>
+<li>I（隔离性）：多个事务之间相互不影响</li>
+<li>D（持久性）：在事务执行过程中，不管怎么样数据都不能丢，MySQL是使用了redo log实现的。</li>
+</ul>
+<h2 id="并发事务带来的问题"><a href="#并发事务带来的问题" class="headerlink" title="并发事务带来的问题"></a>并发事务带来的问题</h2><p>并发事务带来了更新丢失，脏读，不可重读，幻读4种问题</p>
+<ul>
+<li>更新丢失：当多个事务同时执行一行数据时，第一个事务已经对行做了修改但第二个事务不知道就把第一个事务更新的数据给修改了，出现了更新丢失的情况。<strong>当前事务的更新覆盖了其他事务的更新</strong>。</li>
+<li>脏读：第一个事务已经做了写操作，但此时并没有提交事务，然后第二个事务读取到了这条数据，也就是第二条数据读取到了脏数据，这就是所谓的脏读。<strong>当前事务读取了其他事务的已经修改但未提交的数据</strong>。</li>
+<li>不可重读：一个事务开始查询了某个语句，第二次执行同样的语句发现查询的东西不一样了。<strong>当前事务在不同时刻执行同样的查询语句，查询出的结果不一样</strong></li>
+<li>幻读：一个事务按相同的查询条件查询读取已经检索过的数据，却发现其他事务插入了满足条件的数据。<strong>当前事务读取到了其他事务插入的数据</strong></li>
+</ul>
+<h2 id="事务隔离机制"><a href="#事务隔离机制" class="headerlink" title="事务隔离机制"></a>事务隔离机制</h2><p>事务隔离机制有4种，读未提交，读已提交，可重读，串行化</p>
+<ul>
+<li>RU(Read uncommitted)：读未提交</li>
+<li>RC(Read committed)：读已提交</li>
+<li>RR(Repeatable read)：重复读</li>
+<li>SERIALIZABLE(Serializable)：串行化</li>
+</ul>
+<h3 id="隔离级别对并发事务的解决"><a href="#隔离级别对并发事务的解决" class="headerlink" title="隔离级别对并发事务的解决"></a>隔离级别对并发事务的解决</h3><table>
 <thead>
 <tr>
-<th align="left"></th>
-<th>特性</th>
-<th>创建命令</th>
+<th align="center"></th>
+<th align="center">脏读</th>
+<th align="center">不可重读</th>
+<th align="center">幻读</th>
 </tr>
 </thead>
 <tbody><tr>
-<td align="left">持久节点</td>
-<td>持久化保存的节点，默认创建</td>
-<td>create /test</td>
+<td align="center">读未提交</td>
+<td align="center">×</td>
+<td align="center">×</td>
+<td align="center">×</td>
 </tr>
 <tr>
-<td align="left">持久序号节点</td>
-<td>持久化保存的节点，创建的时候会在路径上加上序号作为后缀比如/test会创建出/test00000001</td>
-<td>create -s /test</td>
+<td align="center">读已提交</td>
+<td align="center">√</td>
+<td align="center">×</td>
+<td align="center">×</td>
 </tr>
 <tr>
-<td align="left">临时节点</td>
-<td>临时节点会在客户端删除的时候自动删除</td>
-<td>create -e /test</td>
+<td align="center">重复读</td>
+<td align="center">√</td>
+<td align="center">√</td>
+<td align="center">×</td>
 </tr>
 <tr>
-<td align="left">临时序号节点</td>
-<td>临时节点会在客户端删除的时候自动删除，创建的时候会在路径上加上序号作为后缀比如/test会创建出/test00000001</td>
-<td>create -e -s /test</td>
+<td align="center">串行化</td>
+<td align="center">√</td>
+<td align="center">√</td>
+<td align="center">√</td>
 </tr>
 </tbody></table>
-<h2 id="ZooKeeper集群"><a href="#ZooKeeper集群" class="headerlink" title="ZooKeeper集群"></a>ZooKeeper集群</h2><p>ZooKeeper集群主要解决的是<strong>高可用</strong>、<strong>读写分离提高承载能力</strong>。ZooKeeper集群必须保证有<strong>至少三个节点</strong>，不然部署失败</p>
-<p>集群角色</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>角色名称</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>leader</td>
-<td>主节点，领导者</td>
-<td>写数据，通过选举产生</td>
-</tr>
-<tr>
-<td>follower</td>
-<td>从节点，追随者</td>
-<td>读数据，主节点的备选节点，拥有投票权</td>
-</tr>
-<tr>
-<td>observer</td>
-<td>次级子节点，观察者</td>
-<td>读数据，无投票权，不能选举为主节点，计算集群可用状态不会将其计算在内</td>
-</tr>
-</tbody></table>
-<h3 id="数据提交机制"><a href="#数据提交机制" class="headerlink" title="数据提交机制"></a>数据提交机制</h3><p>ZooKeeper是一个CP架构，它专注于的是一致性，为什么它拥有一致性？</p>
-<p>流程：客户端会向服务端发起写请求，如果请求对象不是主节点，从节点会把请求转发给主节点，数据写进主节点，主节点发送请求proposal给从节点，从节点写进事务日志后给主节点一个ack，主节点统计ack数量，如果ack数量是集群半数以上，主节点又会发起一个commit请求给客户端，客户端记录事务提交，并把数据更新到内存中去，主节点告诉客户端我写好了，在同步数据这段时间，ZooKeeper对于客户端而言是不可用的，多以它不满足可用性，所以他是CP架构。</p>
-<p>在集群运行过程当中如果有一个follower节点宕机，由于宕机节点没过半，集群仍然能正常服务。当leader收到新的客户端请求，此时无法同步给宕机的节点。造成数据不一致。为了解决这个问题，当节点启动时，第一件事情就是找当前的Leader，比对数据是否一致。不一致则开始同步,同步完成之后在进行对外提供服务。 </p>
-<p><strong>如何比对Leader的数据版本呢？</strong>这里通过ZXID事物ID来确认。比Leader就需要同步。</p>
-<p>ZXID： ZXID是一个长度64位的数字，其中低32位是按照数字递增，任何数据的变更都会导致,低32位的数字简单加1。高32位是leader周期编号，每当选举出一个新的leader时，新的leader就从本地事物日志中取出ZXID,然后解析出高32位的周期编号，进行加1，再将低32位的全部设置为0。这样就保证了每次新选举的leader后，保证了ZXID的唯一性而且是保证递增的。</p>
-<h3 id="集群选举机制"><a href="#集群选举机制" class="headerlink" title="集群选举机制"></a>集群选举机制</h3><p>选举流程：</p>
-<p>​    TODO</p>
-<p>选举触发条件</p>
+<p>读已提交，重复读是通过MVCC机制解决的并发问题。串行化是通过对数据库加锁控制其他事务对数据的操作解决并发问题。<strong>事务隔离级别越高对并发的问题越小，但相应的付出的代价也会越大</strong>；串行化肯定是并发影响最小的，当你访问某个数据时串行化直接来个行锁或表锁，其他的数据只能阻塞在后面等这边的数据处理完成后才可以进行访问。串行化对数据库性能影响太大所以<strong>MySQL综合考虑默认使用的是重复读隔离级别</strong>。</p>
+<h2 id="MVCC多版本并发控制机制"><a href="#MVCC多版本并发控制机制" class="headerlink" title="MVCC多版本并发控制机制"></a>MVCC多版本并发控制机制</h2><p>MVCC（Multi-Version Concurrency Control）：多版本并发控制机制，对一行数据的读写操作不通过加锁来保证隔离性，提高性能。MVCC不是MySQL所特有的在Oracle,PostgreSQL都有关于MVCC的实现，实现可能是不一样的。还有MVCC只在读已提交和重复度2个隔离级别下才干活。读未提交只读最新的数据（不管你事务提不提交）它不需要任何锁，串行化直接搞把锁，所以也不需要MVCC来控制。</p>
+<p>在介绍MVCC机制前先介绍2个概念，undo log和read view</p>
+<h3 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h3><p>undo log是日志版本链，当我们对记录做了变更操作就会产生一条undo记录，undo记录主要在每条数据后面加2个隐藏字段DATA_TRX_ID，DATA_ROLL_PTR其实应该是3个，如果表没有主键还会生成一个DB_ROW_ID。<a target="_blank" rel="noopener" href="http://www.searchdoc.cn/rdbms/mysql/dev.mysql.com/doc/refman/5.7/en/innodb-multi-versioning.com.coder114.cn.html">InnoDB多版本控制</a></p>
 <ul>
-<li><p>节点初始化启动时</p>
-<p>节点启动的时候会在集群中寻找是否有leader,找到了就与leader建立通信，自身变为follower或observer,没有找到Leader,当前节点记录为LOOKING，开始选举</p>
-</li>
-<li><p>半数以上节点无法和Leader建立通信</p>
-<p>Leader一挂，只要有半数节点感知到Leader挂了，就所有follower进入到LOOKING状态，开始选举</p>
-</li>
+<li>DATA_TRX_ID：事务编号，6字节，记录更新这条行记录的事务编号</li>
+<li>DATA_ROLL_PTR：回滚指针，7字节，记录</li>
+<li>DB_ROW_ID：主键编号，6字节，没有主键会自动生成</li>
 </ul>
-<h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><ul>
-<li><p>为什么建议集群奇数个节点？</p>
-<p>节省资源，3节点和4节点都是挂2个节点不可用，所以用4个节点站在可用性的角度来看没意义</p>
-</li>
-<li><p>为什么要有半数机制？</p>
-<p>脑裂问题，假设你有4个节点，由于网络抖动分裂成了2个集群，然后这2个集群都会进行选举，会选举出2个leader,网络恢复后就有2个leader，肯定是有问题的，但半数机制就保证了这种问题不会发生，就算网络抖动也只会选举出一个leader</p>
-</li>
-</ul>
-<h2 id="ZooKeeper使用场景"><a href="#ZooKeeper使用场景" class="headerlink" title="ZooKeeper使用场景"></a>ZooKeeper使用场景</h2><h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在单体应用中，我们可以用synchronized或者ReentrantLock来实现锁机制。但在分布式应用中不行，因为synchronized或者ReentrantLock只针对于一个JVM中可以使用。所以我们必须实现分布式锁来实现锁机制。可以使用Redis或ZooKeeper实现，Redis就不多说了。</p>
-<p>实现分布式锁的主要逻辑就是利用临时序号节点，我创建一个临时序号节点，继续创建临时序号节点会自增最后形成一堆有序的节点，通过序号我们可以知道哪个节点在前哪个节点在后，序号最小的节点才有资格拿锁，后一个节点监听前一个节点，当前一个节点被删除了，我后一个节点就可以去尝试激活锁了。</p>
-<p>这里为什么不直接每个节点监听加锁节点，加锁节点删除在找到最小序号去加锁呢？</p>
-<p>这里主要是防止羊群效应，一旦加锁节点被释放就会有大量的节点被触发，然后反查Lock子节点可能会让zookeeper承受巨大的压力。</p>
-<p>这里写一个简单的demo</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> String server <span class="token operator">=</span> <span class="token string">"你的zookeeper地址"</span><span class="token punctuation">;</span>
-<span class="token keyword">private</span> ZkClient zkClient<span class="token punctuation">;</span>
-<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> String rootPath <span class="token operator">=</span> <span class="token string">"/dm-lock"</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token function">ZookeeperLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    zkClient <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ZkClient</span><span class="token punctuation">(</span>server<span class="token punctuation">,</span> <span class="token number">5000</span><span class="token punctuation">,</span> <span class="token number">20000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 创建根节点</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>zkClient<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span>rootPath<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        zkClient<span class="token punctuation">.</span><span class="token function">createPersistent</span><span class="token punctuation">(</span>rootPath<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * 加锁
- */</span>
-<span class="token keyword">public</span> Lock <span class="token function">lock</span><span class="token punctuation">(</span>String lockId<span class="token punctuation">,</span> <span class="token keyword">long</span> timeout<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment" spellcheck="true">// 创建临时序号节点</span>
-    Lock lockNode <span class="token operator">=</span> <span class="token function">createLockNode</span><span class="token punctuation">(</span>lockId<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 尝试拿锁</span>
-    lockNode <span class="token operator">=</span> <span class="token function">tryActiveLock</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 没有拿到锁</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>lockNode<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span> <span class="token punctuation">{</span>
-            <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                <span class="token comment" spellcheck="true">// 把线程hang在这里然后等待监听事件触发，拿到锁，释放线程</span>
-                <span class="token comment" spellcheck="true">// 在tryActiveLockelse逻辑里面</span>
-                lockNode<span class="token punctuation">.</span><span class="token function">wait</span><span class="token punctuation">(</span>timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-    <span class="token comment" spellcheck="true">// 线程hang住的时间里面还没拿到锁就抛异常</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>lockNode<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span><span class="token string">"lock timeout"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> lockNode<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * s=释放锁
- */</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">unlock</span><span class="token punctuation">(</span>Lock lock<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>lock<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        zkClient<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>lock<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * 尝试激活锁
- */</span>
-<span class="token keyword">private</span> Lock <span class="token function">tryActiveLock</span><span class="token punctuation">(</span>Lock lockNode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
-    <span class="token comment" spellcheck="true">//  获取根节点下面所有的排好序的子节点</span>
-    List<span class="token operator">&lt;</span>String<span class="token operator">></span> list <span class="token operator">=</span> zkClient<span class="token punctuation">.</span><span class="token function">getChildren</span><span class="token punctuation">(</span>rootPath<span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">sorted</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>p <span class="token operator">-</span><span class="token operator">></span> rootPath <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> p<span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span>Collectors<span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">// 取最小的节点，这个节点就应该是应该加锁的节点</span>
-    String firstNodePath <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 最小节点是不是当前节点,是就直接加锁</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>firstNodePath<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        lockNode<span class="token punctuation">.</span><span class="token function">setActive</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">// 取得当前节点减一，要监听这个节点</span>
-        String upNodePath <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>list<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        zkClient<span class="token punctuation">.</span><span class="token function">subscribeDataChanges</span><span class="token punctuation">(</span>upNodePath<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">IZkDataListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token annotation punctuation">@Override</span>
-            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">handleDataChange</span><span class="token punctuation">(</span>String dataPath<span class="token punctuation">,</span> Object data<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-
-            <span class="token punctuation">}</span>
-
-            <span class="token comment" spellcheck="true">// 前一个节点被释放回调</span>
-            <span class="token annotation punctuation">@Override</span>
-            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">handleDataDeleted</span><span class="token punctuation">(</span>String dataPath<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-                <span class="token comment" spellcheck="true">// 重新尝试拿锁</span>
-                Lock lock <span class="token operator">=</span> <span class="token function">tryActiveLock</span><span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>lockNode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    <span class="token comment" spellcheck="true">// 之前同步块的线程释放</span>
-                    <span class="token keyword">if</span> <span class="token punctuation">(</span>lock<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                        lockNode<span class="token punctuation">.</span><span class="token function">notify</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-                    <span class="token punctuation">}</span>
-                <span class="token punctuation">}</span>
-                zkClient<span class="token punctuation">.</span><span class="token function">unsubscribeDataChanges</span><span class="token punctuation">(</span>upNodePath<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> lockNode<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
- * 创建临时序号节点
- */</span>
-<span class="token keyword">public</span> Lock <span class="token function">createLockNode</span><span class="token punctuation">(</span>String lockId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    String nodePath <span class="token operator">=</span> zkClient<span class="token punctuation">.</span><span class="token function">createEphemeralSequential</span><span class="token punctuation">(</span>rootPath <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> lockId<span class="token punctuation">,</span> <span class="token string">"w"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Lock</span><span class="token punctuation">(</span>lockId<span class="token punctuation">,</span> nodePath<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
-<h3 id="分布式注册中心"><a href="#分布式注册中心" class="headerlink" title="分布式注册中心"></a>分布式注册中心</h3><p>在这里，首先得了解注册中心是什么？单体应用升级到分布式应用，肯定会有成千上万个服务节点不同的客户端会调用这些服务节点，如果把这些服务节点配置到客户端的话会很复杂，这时候就需要一个中间件来帮助我们找到我们需要调用的服务，这就是服务发现。</p>
-<p>一般注册中心需要一下几个功能，服务注册，服务发现，服务订阅</p>
+<p>事务id的生成是在对innodb进行了写操作而生成的。在InnoDB看来所有的事务在启动时候都是只读状态是只读事务此时不会生成事务编号。<a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2017/12">数据库内核月报 － 2017 / 12</a></p>
+<p>undo log记录过程：首先表里有一个数据，伴随着隐藏字段DATA_TRX_ID，DATA_ROLL_PTR，然后有一个事务100对其进行了修改，这时候我们会把原先的数据copy一份到undo log中去，然后把修改后的数据也放进undo log,但这条数据的DATA_TRX_ID = 100，DATA_ROLL_PTR指向原来的数据。如果这时候又来了一个事务200，此时事务100还没提交，事务200又进行了一次更新会把新数据写进undo log并且DATA_TRX_ID = 200，DATA_ROLL_PTR指向事务100的那条数据。</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://i.loli.net/2020/09/03/k1JtNnVGyXmRc2I.png" alt="日志版本链生成过程"></p>
+<p>最后在undo log中的日志版本链就是</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://i.loli.net/2020/09/03/rExVXKv4Gp5olIH.png" alt="日志版本链"></p>
+<h3 id="read-view（快照）"><a href="#read-view（快照）" class="headerlink" title="read view（快照）"></a>read view（快照）</h3><p>read view在MVCC里面主要做的就是可见性判断，read view 的生成时机就是RR,RC两种隔离级别的主要区别</p>
 <ul>
-<li>服务注册：服务刚启动将自己的信息注册到注册中心</li>
-<li>服务发现：客户端通过注册中心找到自己要调用的服务，然后通过RPC进行调用</li>
-<li>服务订阅：能动态感知服务的变化</li>
+<li>RR隔离级别，只要是开启事务后的第一次select查询操作便会生成一次read view,后面便不再维护read view了</li>
+<li>RC隔离级别，开启事务后，只要进行了查询语句便会生成一次read view</li>
 </ul>
-<p>我们可以把注册的服务写成临时节点，只要服务一下线就会自动删除对应的服务。</p>
+<h3 id="read-view创建过程"><a href="#read-view创建过程" class="headerlink" title="read view创建过程"></a>read view创建过程</h3><ol>
+<li>首先看当前所有未提交的事务，存储在数组中<strong>trx_ids</strong></li>
+<li>选取未提交事务的最小的事务编号为<strong>up_limit_id</strong>,</li>
+<li>选取已提交事务的最大的事务编号加1为<strong>low_limit_id</strong></li>
+</ol>
+<p>1）trx_id&lt;up_limit_id；小于最小未提交事务肯定是已提交事务，可见<br>2）trx_id&gt;low_limit_id；大于最大已提交事务肯定是后面创建的事务，不可见<br>3）up_limit_id&lt;=trx_id&lt;=low_limit_id；分2种情况</p>
+<ul>
+<li>trx_id在trx_ids中说明是未提交事务，不可见</li>
+<li>trx_id不在trx_ids中说明是已提交事务，可见</li>
+</ul>
+<p>MVCC如何利用日志版本链来进行查询的？</p>
+<p>根据图第二次查询结果还是hello,但此时undo log日志版本链最新的是hello2，这里主要走的过程是，看undolog日志版本链从最新往下看，最新是事务1，发现事务1在已提交事务和未提交事务区间内而且是在trx_ids中，说明是不可见的，所以继续undolog日志版本链往下看。发现是事务3，发现事务3在已提交事务&amp;未提交事务区间而且不再trx_id中所以是可见的。</p>
+<p>​    <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://i.loli.net/2020/09/03/YuX6dImOpJKa4zW.png" alt="MVCC"></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -741,7 +649,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dm13579.gitee.io/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/">https://dm13579.gitee.io/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/</a>
+                    <a href="https://dm13579.gitee.io/2020/08/mysql-shi-wu-xi-tong-jie-xi/">https://dm13579.gitee.io/2020/08/mysql-shi-wu-xi-tong-jie-xi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -779,8 +687,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/ZooKeeper/">
-                                    <span class="chip bg-color">ZooKeeper</span>
+                                <a href="/tags/MySQL/">
+                                    <span class="chip bg-color">MySQL</span>
+                                </a>
+                            
+                                <a href="/tags/%E4%BA%8B%E5%8A%A1/">
+                                    <span class="chip bg-color">事务</span>
                                 </a>
                             
                         </div>
@@ -951,7 +863,7 @@
         repo: 'dm13579.github.io',
         owner: 'dm13579',
         admin: "dm13579",
-        id: '2020-09-08T20-15-00',
+        id: '2020-08-25T02-15-00',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -979,24 +891,24 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/09/16/concurrenthashmap/">
+                <a href="/2020/08/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/22.jpg" class="responsive-img" alt="ConcurrentHashMap1.7和1.8对比与线程安全源码解析">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/6.jpg" class="responsive-img" alt="Java多线程介绍与线程池底层实现原理">
                         
-                        <span class="card-title">ConcurrentHashMap1.7和1.8对比与线程安全源码解析</span>
+                        <span class="card-title">Java多线程介绍与线程池底层实现原理</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            本篇博文主要介绍的是ConcurrentHashMap是怎么实现的线程安全。
+                            对Java多线程从底层原理开始解析，线程池从源码级别进行解析
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-09-16
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-08-27
                         </span>
                         <span class="publish-author">
                             
@@ -1017,12 +929,8 @@
                         <span class="chip bg-color">并发</span>
                     </a>
                     
-                    <a href="/tags/%E9%9B%86%E5%90%88/">
-                        <span class="chip bg-color">集合</span>
-                    </a>
-                    
-                    <a href="/tags/ConcurrentHashMap/">
-                        <span class="chip bg-color">ConcurrentHashMap</span>
+                    <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+                        <span class="chip bg-color">线程池</span>
                     </a>
                     
                 </div>
@@ -1033,27 +941,27 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+                本篇&nbsp;<i class="far fa-dot-circle"></i>
             </div>
             <div class="card">
-                <a href="/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/">
+                <a href="/2020/08/mysql-shi-wu-xi-tong-jie-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/12.jpg" class="responsive-img" alt="Netty线程模型初探和Netty的常见问题">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/15.jpg" class="responsive-img" alt="MySQL事务系统解析">
                         
-                        <span class="card-title">Netty线程模型初探和Netty的常见问题</span>
+                        <span class="card-title">MySQL事务系统解析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Netty线程模型理解和Netty常见问题
+                            一个超详细的MySQL事务系统的解析笔记，从基础知识到事务的实现原理以最直观的方式表达出来，图文并茂
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-07
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-25
                             </span>
                         <span class="publish-author">
                             
@@ -1067,15 +975,16 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Netty/">
-                        <span class="chip bg-color">Netty</span>
+                    <a href="/tags/MySQL/">
+                        <span class="chip bg-color">MySQL</span>
                     </a>
                     
-                    <a href="/tags/IO%E6%A8%A1%E5%9E%8B/">
-                        <span class="chip bg-color">IO模型</span>
+                    <a href="/tags/%E4%BA%8B%E5%8A%A1/">
+                        <span class="chip bg-color">事务</span>
                     </a>
                     
                 </div>
