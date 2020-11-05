@@ -6,7 +6,7 @@
   <link href="https://dm13579.gitee.io/atom.xml" rel="self"/>
   
   <link href="https://dm13579.gitee.io/"/>
-  <updated>2020-11-03T09:33:17.771Z</updated>
+  <updated>2020-11-05T06:09:54.538Z</updated>
   <id>https://dm13579.gitee.io/</id>
   
   <author>
@@ -15,6 +15,61 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Unsafe魔法类解析及应用</title>
+    <link href="https://dm13579.gitee.io/2020/11/05/atomic-unsafe-mo-fa-lei/"/>
+    <id>https://dm13579.gitee.io/2020/11/05/atomic-unsafe-mo-fa-lei/</id>
+    <published>2020-11-05T14:05:25.000Z</published>
+    <updated>2020-11-05T06:09:54.538Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Unsafe类提供了一些极度不安全的方法，这些方法会直接访问系统内存和对系统内存进行操作。，由于它是直接对内存进行的操作，所以从他的命名也可以看出它是不安全的。Unsafe类的使用必须&lt;strong&gt;慎重&lt;/strong&gt;；&lt;/p&gt;
+&lt;p&gt;Unsafe的API的分类大致是内</summary>
+        
+      
+    
+    
+    
+    <category term="笔记" scheme="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="并发" scheme="https://dm13579.gitee.io/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+    <category term="Atomic" scheme="https://dm13579.gitee.io/tags/Atomic/"/>
+    
+    <category term="Unsafe" scheme="https://dm13579.gitee.io/tags/Unsafe/"/>
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="https://dm13579.gitee.io/2020/11/05/atomic-unsafe/"/>
+    <id>https://dm13579.gitee.io/2020/11/05/atomic-unsafe/</id>
+    <published>2020-11-05T02:43:22.423Z</published>
+    <updated>2020-11-05T02:43:22.423Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;script&gt;
+        document.querySelectorAll(&#39;.github-emoji&#39;)
+          .forEach(el =&gt; {
+            if (!el.dataset.src) { return; }
+       </summary>
+        
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Java关键字系列（一）-synchronized与volatile</title>
