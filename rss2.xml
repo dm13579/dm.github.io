@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Coisini</title>
+    <link>https://dm13579.gitee.io/</link>
+    
+    <atom:link href="https://dm13579.gitee.io/rss2.xml" rel="self" type="application/rss+xml"/>
+    
+    <description></description>
+    <pubDate>Thu, 05 Nov 2020 08:04:47 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>以ReentrantLock角度剖析AQS同步框架</title>
+      <link>https://dm13579.gitee.io/2020/11/06/todo-reentrantlock/</link>
+      <guid>https://dm13579.gitee.io/2020/11/06/todo-reentrantlock/</guid>
+      <pubDate>Fri, 06 Nov 2020 14:05:25 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;script&gt;
+        document.querySelectorAll(&#39;.github-emoji&#39;)
+          .forEach(el =&gt; {
+            if (!el.dataset.src) { return; }
+       </description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dm13579.gitee.io/tags/%E5%B9%B6%E5%8F%91/">并发</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/ReentrantLock/">ReentrantLock</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/AQS/">AQS</category>
+      
+      
+      <comments>https://dm13579.gitee.io/2020/11/06/todo-reentrantlock/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Unsafe魔法类解析及应用</title>
+      <link>https://dm13579.gitee.io/2020/11/05/atomic-unsafe-mo-fa-lei/</link>
+      <guid>https://dm13579.gitee.io/2020/11/05/atomic-unsafe-mo-fa-lei/</guid>
+      <pubDate>Thu, 05 Nov 2020 14:05:25 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;p&gt;Unsafe类提供了一些极度不安全的方法，这些方法会直接访问系统内存和对系统内存进行操作。，由于它是直接对内存进行的操作，所以从他的命名也可以看出它是不安全的。Unsafe类的使用必须&lt;strong&gt;慎重&lt;/strong&gt;；juc包中大量运用了Unsafe类，对Unsafe</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dm13579.gitee.io/tags/%E5%B9%B6%E5%8F%91/">并发</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/Atomic/">Atomic</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/Unsafe/">Unsafe</category>
+      
+      
+      <comments>https://dm13579.gitee.io/2020/11/05/atomic-unsafe-mo-fa-lei/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Java关键字系列（一）-synchronized与volatile</title>
+      <link>https://dm13579.gitee.io/2020/10/26/java-guan-jian-zi-synchronized-volatile/</link>
+      <guid>https://dm13579.gitee.io/2020/10/26/java-guan-jian-zi-synchronized-volatile/</guid>
+      <pubDate>Mon, 26 Oct 2020 14:05:25 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;p&gt;Java中有许多关键字，比如synchronized，volatile，transient，final，static，native等等，在这里我想针对对这些关键字进行一个统一的了解，并做一个系列。&lt;/p&gt;
+&lt;p&gt;在这些关键字中与并发息息相关的就是synchronized和v</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dm13579.gitee.io/tags/%E5%B9%B6%E5%8F%91/">并发</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/Java%E5%85%B3%E9%94%AE%E5%AD%97/">Java关键字</category>
+      
+      
+      <comments>https://dm13579.gitee.io/2020/10/26/java-guan-jian-zi-synchronized-volatile/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>消息队列常见问题及解决方案</title>
+      <link>https://dm13579.gitee.io/2020/10/08/xiao-xi-dui-lie/</link>
+      <guid>https://dm13579.gitee.io/2020/10/08/xiao-xi-dui-lie/</guid>
+      <pubDate>Thu, 08 Oct 2020 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;p&gt;当前市场常见的几种消息中间件就有比如说RabbitMQ、RocketMQ、Kafka，他们都各有优势，下面会介绍他们之间的差别和优缺点。这里不针对某种消息队列，常见消息队列糅杂在一起谈谈&lt;/p&gt;
+&lt;h2 id=&quot;常用消息中间件简单介绍&quot;&gt;&lt;a</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dm13579.gitee.io/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
+      
+      
+      <comments>https://dm13579.gitee.io/2020/10/08/xiao-xi-dui-lie/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>ConcurrentHashMap1.7和1.8对比与线程安全源码解析</title>
+      <link>https://dm13579.gitee.io/2020/09/16/concurrenthashmap/</link>
+      <guid>https://dm13579.gitee.io/2020/09/16/concurrenthashmap/</guid>
+      <pubDate>Wed, 16 Sep 2020 14:05:25 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;p&gt;ConcurrentHashMap与HashMap在Api,参数,数据结构上面基本都是类似的，实现原理也基本都是一致的在这里就不做过多的说明了，若不清楚可以看下另一篇HashMap的对比博文&lt;a</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dm13579.gitee.io/tags/%E5%B9%B6%E5%8F%91/">并发</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/%E9%9B%86%E5%90%88/">集合</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/ConcurrentHashMap/">ConcurrentHashMap</category>
+      
+      
+      <comments>https://dm13579.gitee.io/2020/09/16/concurrenthashmap/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>ZooKeeper初探及使用场景</title>
+      <link>https://dm13579.gitee.io/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/</link>
+      <guid>https://dm13579.gitee.io/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/</guid>
+      <pubDate>Tue, 08 Sep 2020 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;认识ZooKeeper&quot;&gt;&lt;a href=&quot;#认识ZooKeeper&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dm13579.gitee.io/tags/ZooKeeper/">ZooKeeper</category>
+      
+      
+      <comments>https://dm13579.gitee.io/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Netty线程模型初探和Netty的常见问题</title>
+      <link>https://dm13579.gitee.io/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/</link>
+      <guid>https://dm13579.gitee.io/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/</guid>
+      <pubDate>Mon, 07 Sep 2020 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dm13579.gitee.io/tags/Netty/">Netty</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/IO%E6%A8%A1%E5%9E%8B/">IO模型</category>
+      
+      
+      <comments>https://dm13579.gitee.io/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>HashMap1.7和1.8对比与源码解析</title>
+      <link>https://dm13579.gitee.io/2020/09/01/hashmap/</link>
+      <guid>https://dm13579.gitee.io/2020/09/01/hashmap/</guid>
+      <pubDate>Tue, 01 Sep 2020 14:05:25 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;常用API&quot;&gt;&lt;a href=&quot;#常用API&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dm13579.gitee.io/tags/HashMap/">HashMap</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/%E9%9B%86%E5%90%88/">集合</category>
+      
+      
+      <comments>https://dm13579.gitee.io/2020/09/01/hashmap/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Java多线程介绍与线程池底层实现原理</title>
+      <link>https://dm13579.gitee.io/2020/08/27/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/</link>
+      <guid>https://dm13579.gitee.io/2020/08/27/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/</guid>
+      <pubDate>Thu, 27 Aug 2020 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;Java线程跟操作系统的关系&quot;&gt;&lt;a href=&quot;#Java线程跟操作系统的关系&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dm13579.gitee.io/tags/%E5%B9%B6%E5%8F%91/">并发</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程池</category>
+      
+      
+      <comments>https://dm13579.gitee.io/2020/08/27/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>MySQL事务系统解析</title>
+      <link>https://dm13579.gitee.io/2020/08/25/mysql-shi-wu-xi-tong-jie-xi/</link>
+      <guid>https://dm13579.gitee.io/2020/08/25/mysql-shi-wu-xi-tong-jie-xi/</guid>
+      <pubDate>Mon, 24 Aug 2020 18:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dm13579.gitee.io/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dm13579.gitee.io/tags/MySQL/">MySQL</category>
+      
+      <category domain="https://dm13579.gitee.io/tags/%E4%BA%8B%E5%8A%A1/">事务</category>
+      
+      
+      <comments>https://dm13579.gitee.io/2020/08/25/mysql-shi-wu-xi-tong-jie-xi/#disqus_thread</comments>
+      
+    </item>
+    
+  </channel>
+</rss>

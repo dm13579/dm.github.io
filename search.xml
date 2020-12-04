@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>以ReentrantLock角度剖析AQS同步框架</title>
+      <link href="/2020/11/06/todo-reentrantlock/"/>
+      <url>/2020/11/06/todo-reentrantlock/</url>
+      
+        <content type="html"><![CDATA[<script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
+      
+      
+      <categories>
+          
+          <category> 笔记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 并发 </tag>
+            
+            <tag> ReentrantLock </tag>
+            
+            <tag> AQS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Unsafe魔法类解析及应用</title>
       <link href="/2020/11/05/atomic-unsafe-mo-fa-lei/"/>
       <url>/2020/11/05/atomic-unsafe-mo-fa-lei/</url>
