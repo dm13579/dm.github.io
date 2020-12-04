@@ -476,21 +476,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-09-09
+                    2020-12-04
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.1k
+                    2.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    8 分
+                    9 分
                 </div>
                 
 
@@ -535,7 +535,46 @@
 <td>临时节点会在客户端删除的时候自动删除，创建的时候会在路径上加上序号作为后缀比如/test会创建出/test00000001</td>
 <td>create -e -s /test</td>
 </tr>
+<tr>
+<td align="left">Container节点</td>
+<td>Container节点目录下没有子节点会在zookeeper内部的定时任务轮训下自动删除,（刚开始的没有不算，只有有了子节点后被清除才会有之前的逻辑）</td>
+<td>create ‐c /test</td>
+</tr>
+<tr>
+<td align="left">TTL 节点</td>
+<td>禁用，需在系统配置增加 zookeeper.extendedTypesEnabled=true，</td>
+<td>create ‐t 500 /test</td>
+</tr>
 </tbody></table>
+<h2 id="Zookeeper-ACL-权限控制"><a href="#Zookeeper-ACL-权限控制" class="headerlink" title="Zookeeper ACL 权限控制"></a>Zookeeper ACL 权限控制</h2><p>权限信息</p>
+<ul>
+<li>创建权限（c: create）:授予权限的对象可以在数据节点下创建子节点</li>
+<li>更新权限（w: wirte）:授予权限的对象可以更新该数据节点</li>
+<li>读取权限（r: read）：授予权限的对象可以读取该节点的内容以及子节点的列表信息</li>
+<li>删除权限（d: delete）：授予权限的对象可以删除该数据节点的子节点</li>
+<li>管理者权限（a: admin）：授予权限的对象可以对该数据节点体进行 ACL 权限设置</li>
+</ul>
+<p>ACL的设置有2种方式：</p>
+<ol>
+<li><p>创建节点的时候直接设置</p>
+<pre class=" language-shell"><code class="language-shell">create /test-node datatest digest:test:V28q/NynI4JI3Rk54h0r8O5kMug=:cdrwa</code></pre>
+</li>
+<li><p>单独设置</p>
+<pre class=" language-shell"><code class="language-shell">setAcl /test-node digest:test:V28q/NynI4JI3Rk54h0r8O5kMug=:cdrwa</code></pre>
+<p>授权过后不能直接访问需要授权才能访问</p>
+<p>授权</p>
+<pre class=" language-shell"><code class="language-shell">addauth digest test:test</code></pre>
+<p>上诉授权是密文，如果想要明文授权我们需要先获取权限在进行授权</p>
+<pre class=" language-shell"><code class="language-shell">addauth digest test:test
+create /test-node1 test auth:test:test:cdwra</code></pre>
+<p>最后还有一种授权方式是对ip进行授权</p>
+<pre class=" language-shell"><code class="language-shell">create /test-node2 data ip:192.168.186.131:cdwra
+setAcl /test-node2 ip:192.168.186.131:cdwra</code></pre>
+</li>
+</ol>
+<p>超级管理员模式</p>
+<p>启动脚本添加**-Dzookeeper.DigestAuthenticationProvider.superDigest=zk:N0YquoLgOZWu74hzsd3OJTZZUw0=**</p>
+<p>具体可看zookeeper安装博文</p>
 <h2 id="ZooKeeper集群"><a href="#ZooKeeper集群" class="headerlink" title="ZooKeeper集群"></a>ZooKeeper集群</h2><p>ZooKeeper集群主要解决的是<strong>高可用</strong>、<strong>读写分离提高承载能力</strong>。ZooKeeper集群必须保证有<strong>至少三个节点</strong>，不然部署失败</p>
 <p>集群角色</p>
 <table>
@@ -1260,7 +1299,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">29.9k</span>
+            <span class="white-color">31.1k</span>
             
 
             <br>
@@ -1439,11 +1478,11 @@ $(function () {
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "别走啊！", clearTimeout(st)) : (document.title = "回来喽！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) }) </script>
-<script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script><script>
             window.imageLazyLoadSetting = {
                 isSPA: false,
                 processImages: null,
             };
-        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
 
 </html>

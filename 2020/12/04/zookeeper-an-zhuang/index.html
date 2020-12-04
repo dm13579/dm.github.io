@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 	<meta name="baidu-site-verification" content="lElrePz9Qe" />
 	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
-    <meta name="keywords" content="AQS,并发,ReentrantLock">
+    <meta name="keywords" content="ZooKeeper">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,7 +29,7 @@
 </script>
 
 
-    <title>以ReentrantLock角度剖析AQS同步框架 | Coisini</title>
+    <title>ZooKeeper安装及常用命令 | Coisini</title>
     <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -322,12 +322,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/3.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/23.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">以ReentrantLock角度剖析AQS同步框架</h1>
+                    <h1 class="description center-align post-title">ZooKeeper安装及常用命令</h1>
                 </div>
             </div>
         </div>
@@ -444,16 +444,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%B9%B6%E5%8F%91/">
-                                <span class="chip bg-color">并发</span>
+                            <a href="/tags/ZooKeeper/">
+                                <span class="chip bg-color">ZooKeeper</span>
                             </a>
                         
-                            <a href="/tags/ReentrantLock/">
-                                <span class="chip bg-color">ReentrantLock</span>
+                            <a href="/tags/%E5%AE%89%E8%A3%85/">
+                                <span class="chip bg-color">安装</span>
                             </a>
                         
-                            <a href="/tags/AQS/">
-                                <span class="chip bg-color">AQS</span>
+                            <a href="/tags/Linux/">
+                                <span class="chip bg-color">Linux</span>
                             </a>
                         
                     </div>
@@ -464,8 +464,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                笔记
+                            <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
+                                安装手册
                             </a>
                         
                     </div>
@@ -477,28 +477,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-11-06
+                    2020-12-04
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-11-05
+                    2020-12-04
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    52
+                    876
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    4 分
                 </div>
                 
 
@@ -513,7 +513,101 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <script>
+                <p>发现zookeeper3.5.3之后出了许多新特性，就趁此时机安装一下较新版本zookeeper，顺便记录一下安装步骤，方便以后查验。</p>
+<p>首先准备zookeeper,在这里我使用的是centos7，java环境是1.8.安装的zookeeper是3.5.8.首先找到对应版本下载。</p>
+<h2 id="zookeeper单机安装"><a href="#zookeeper单机安装" class="headerlink" title="zookeeper单机安装"></a>zookeeper单机安装</h2><h3 id="下载解压zookeeper"><a href="#下载解压zookeeper" class="headerlink" title="下载解压zookeeper"></a>下载解压zookeeper</h3><p>我这里直接从github上面下载对应的源码包，rz命令上传</p>
+<p>地址：<a target="_blank" rel="noopener" href="https://zookeeper.apache.org/releases.html">https://zookeeper.apache.org/releases.html</a></p>
+<p>rz/sz安装命令</p>
+<pre class=" language-shell"><code class="language-shell">yum install lrzsz</code></pre>
+<p>安装包解压</p>
+<pre class=" language-shell"><code class="language-shell">tar -zxvf apache-zookeeper-3.5.8-bin.tar.gz -C /</code></pre>
+<p>增加软链接（纯粹为了方便，不影响安装）</p>
+<pre class=" language-shell"><code class="language-shell">ln -s /apache-zookeeper-3.5.8-bin/ /zk</code></pre>
+<p>进入zk目录，重命名配置文件</p>
+<pre class=" language-shell"><code class="language-shell">cp conf/zoo_sample.cfg conf/zoo.cfg</code></pre>
+<p>启动zookeeper</p>
+<pre class=" language-shell"><code class="language-shell">./bin/zkServer.sh start ./conf/zoo.cfg</code></pre>
+<p>连接zk服务端</p>
+<pre class=" language-shell"><code class="language-shell">./bin/zkCli.sh -server 127.0.0.1:2181</code></pre>
+<p>至此zookeeper安装完毕</p>
+<h2 id="zookeeper集群安装"><a href="#zookeeper集群安装" class="headerlink" title="zookeeper集群安装"></a>zookeeper集群安装</h2><p>为了方便这里我直接安装的是伪集群，集群架构1主2从1观察者，总共4个节点</p>
+<p>步骤和上面单机一样，不过我们这里需要4个配置文件，并修改配置</p>
+<p>复制4个配置文件</p>
+<pre class=" language-shell"><code class="language-shell">cp conf/zoo.cfg conf/zoo1.cfg
+cp conf/zoo.cfg conf/zoo2.cfg
+cp conf/zoo.cfg conf/zoo3.cfg
+cp conf/zoo.cfg conf/zoo4.cfg</code></pre>
+<p>修改配置</p>
+<pre class=" language-shell"><code class="language-shell">tickTime=2000
+initLimit=10
+syncLimit=5
+# dataDir修改配置为/zk/data1,/zk/data2,/zk/data3,/zk/data4
+dataDir=/zk/data1
+# clientPort修改配置为2181,2182,2183,2184
+clientPort=2181
+server.1=127.0.0.1:2001:3001
+server.2=127.0.0.1:2002:3002
+server.3=127.0.0.1:2003:3003
+server.4=127.0.0.1:2004:3004:observer</code></pre>
+<p>创建4个目录，就是上面的dataDir目录</p>
+<pre class=" language-shell"><code class="language-shell">mkdir data1
+mkdir data2
+mkdir data3
+mkdir data4</code></pre>
+<p>创建文件myid,标识服务server id</p>
+<pre class=" language-shell"><code class="language-shell">echo 1 > data1/myid
+echo 2 > data2/myid
+echo 3 > data3/myid
+echo 4 > data4/myid</code></pre>
+<p>启动4个实例</p>
+<pre class=" language-shell"><code class="language-shell">./bin/zkServer.sh start conf/zoo1.cfg
+./bin/zkServer.sh start conf/zoo2.cfg
+./bin/zkServer.sh start conf/zoo3.cfg
+./bin/zkServer.sh start conf/zoo4.cfg</code></pre>
+<p>可查询状态</p>
+<pre class=" language-shell"><code class="language-shell">./bin/zkServer.sh status conf/zoo1.cfg 
+./bin/zkServer.sh status conf/zoo2.cfg
+./bin/zkServer.sh status conf/zoo3.cfg
+./bin/zkServer.sh status conf/zoo4.cfg
+
+# 状态返回依次
+ZooKeeper JMX enabled by default
+Using config: conf/zoo1.cfg
+Client port found: 2181. Client address: localhost.
+Mode: follower
+#========================
+ZooKeeper JMX enabled by default
+Using config: conf/zoo2.cfg
+Client port found: 2182. Client address: localhost.
+Mode: leader
+#========================
+ZooKeeper JMX enabled by default
+Using config: conf/zoo3.cfg
+Client port found: 2183. Client address: localhost.
+Mode: follower
+#========================
+ZooKeeper JMX enabled by default
+Using config: conf/zoo4.cfg
+Client port found: 2184. Client address: localhost.
+Mode: observer
+#========================</code></pre>
+<p>从状态返回很明显1,3节点为follower,2节点为leader,4节点为observer</p>
+<p>连接服务端</p>
+<pre class=" language-shell"><code class="language-shell">./bin/zkCli.sh -server 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183,127.0.0.1:2184</code></pre>
+<h2 id="启动参数配置"><a href="#启动参数配置" class="headerlink" title="启动参数配置"></a>启动参数配置</h2><p>启动参数都是在zkServer.sh里面的ZOOMAIN参数里面配置</p>
+<pre class=" language-shell"><code class="language-shell">ZOOMAIN="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=$JMXLOCALONLY org.apache.zookeeper.server.quorum.QuorumPeerMain"</code></pre>
+<h3 id="TTL节点"><a href="#TTL节点" class="headerlink" title="TTL节点"></a>TTL节点</h3><p>ttl节点默认是禁止的。如果要想使用ttl节点必须在启动参数配置</p>
+<p>没有开启的情况</p>
+<pre class=" language-shell"><code class="language-shell">[zk: 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183,127.0.0.1:2184(CONNECTED) 0] create -t 500 /tsetttl
+KeeperErrorCode = Unimplemented for /tsetttl</code></pre>
+<p>开启需要在启动配置加  <strong>-Dzookeeper.extendedTypesEnabled=true</strong></p>
+<h2 id="ACL超级管理员配置"><a href="#ACL超级管理员配置" class="headerlink" title="ACL超级管理员配置"></a>ACL超级管理员配置</h2><p>配置参数 <strong>-Dzookeeper.skipACL=yes</strong>可以跳过权限验证，一般安全就配置为false</p>
+<p>获取加密密文</p>
+<pre class=" language-shell"><code class="language-shell">echo -n zk:123456 | openssl dgst -binary -sha1 | openssl base64
+# 返回值
+N0YquoLgOZWu74hzsd3OJTZZUw0=</code></pre>
+<p>启动脚本添加**-Dzookeeper.DigestAuthenticationProvider.superDigest=zk:N0YquoLgOZWu74hzsd3OJTZZUw0=**</p>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -556,7 +650,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dm13579.gitee.io/2020/11/06/todo-reentrantlock/">https://dm13579.gitee.io/2020/11/06/todo-reentrantlock/</a>
+                    <a href="https://dm13579.gitee.io/2020/12/04/zookeeper-an-zhuang/">https://dm13579.gitee.io/2020/12/04/zookeeper-an-zhuang/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -594,16 +688,16 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%B9%B6%E5%8F%91/">
-                                    <span class="chip bg-color">并发</span>
+                                <a href="/tags/ZooKeeper/">
+                                    <span class="chip bg-color">ZooKeeper</span>
                                 </a>
                             
-                                <a href="/tags/ReentrantLock/">
-                                    <span class="chip bg-color">ReentrantLock</span>
+                                <a href="/tags/%E5%AE%89%E8%A3%85/">
+                                    <span class="chip bg-color">安装</span>
                                 </a>
                             
-                                <a href="/tags/AQS/">
-                                    <span class="chip bg-color">AQS</span>
+                                <a href="/tags/Linux/">
+                                    <span class="chip bg-color">Linux</span>
                                 </a>
                             
                         </div>
@@ -774,7 +868,7 @@
         repo: 'dm13579.github.io',
         owner: 'dm13579',
         admin: "dm13579",
-        id: '2020-11-06T22-05-25',
+        id: '2020-12-04T20-15-00',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -798,9 +892,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/12/04/zookeeper-an-zhuang/">
                     <div class="card-image">
@@ -819,9 +914,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-12-04
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-04
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -834,6 +929,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -860,24 +956,27 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/11/05/atomic-unsafe-mo-fa-lei/">
+                <a href="/2020/11/06/todo-reentrantlock/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/3.jpg" class="responsive-img" alt="Unsafe魔法类解析及应用">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/3.jpg" class="responsive-img" alt="以ReentrantLock角度剖析AQS同步框架">
                         
-                        <span class="card-title">Unsafe魔法类解析及应用</span>
+                        <span class="card-title">以ReentrantLock角度剖析AQS同步框架</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Unsafe类提供了一些极度不安全的方法，这些方法会直接访问系统内存和对系统内存进行操作。，由于它是直接对内存进行的操作，所以从他的命名也可以看出它是不安全的。Unsafe类的使用必须慎重；juc包中大量运用了Unsafe类，对Unsafe
+                            
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-06
                             </span>
                         <span class="publish-author">
                             
@@ -898,12 +997,12 @@
                         <span class="chip bg-color">并发</span>
                     </a>
                     
-                    <a href="/tags/Atomic/">
-                        <span class="chip bg-color">Atomic</span>
+                    <a href="/tags/ReentrantLock/">
+                        <span class="chip bg-color">ReentrantLock</span>
                     </a>
                     
-                    <a href="/tags/Unsafe/">
-                        <span class="chip bg-color">Unsafe</span>
+                    <a href="/tags/AQS/">
+                        <span class="chip bg-color">AQS</span>
                     </a>
                     
                 </div>
