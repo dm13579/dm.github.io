@@ -573,7 +573,8 @@ setAcl /test-node2 ip:192.168.186.131:cdwra</code></pre>
 </li>
 </ol>
 <p>超级管理员模式</p>
-<p>启动脚本添加**-Dzookeeper.DigestAuthenticationProvider.superDigest=zk:N0YquoLgOZWu74hzsd3OJTZZUw0=**</p>
+<p>启动脚本添加</p>
+<p><strong>-Dzookeeper.DigestAuthenticationProvider.superDigest=zk:N0YquoLgOZWu74hzsd3OJTZZUw0=</strong></p>
 <p>具体可看zookeeper安装博文</p>
 <h2 id="ZooKeeper集群"><a href="#ZooKeeper集群" class="headerlink" title="ZooKeeper集群"></a>ZooKeeper集群</h2><p>ZooKeeper集群主要解决的是<strong>高可用</strong>、<strong>读写分离提高承载能力</strong>。ZooKeeper集群必须保证有<strong>至少三个节点</strong>，不然部署失败</p>
 <p>集群角色</p>
