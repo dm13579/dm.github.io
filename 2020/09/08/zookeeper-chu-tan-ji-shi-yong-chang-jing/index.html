@@ -476,21 +476,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-12-04
+                    2020-12-08
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.5k
+                    3.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    9 分
+                    15 分
                 </div>
                 
 
@@ -626,7 +626,7 @@ setAcl /test-node2 ip:192.168.186.131:cdwra</code></pre>
 <p>脑裂问题，假设你有4个节点，由于网络抖动分裂成了2个集群，然后这2个集群都会进行选举，会选举出2个leader,网络恢复后就有2个leader，肯定是有问题的，但半数机制就保证了这种问题不会发生，就算网络抖动也只会选举出一个leader</p>
 </li>
 </ul>
-<h2 id="ZooKeeper使用场景"><a href="#ZooKeeper使用场景" class="headerlink" title="ZooKeeper使用场景"></a>ZooKeeper使用场景</h2><h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在单体应用中，我们可以用synchronized或者ReentrantLock来实现锁机制。但在分布式应用中不行，因为synchronized或者ReentrantLock只针对于一个JVM中可以使用。所以我们必须实现分布式锁来实现锁机制。可以使用Redis或ZooKeeper实现，Redis就不多说了。</p>
+<h2 id="ZooKeeper使用场景"><a href="#ZooKeeper使用场景" class="headerlink" title="ZooKeeper使用场景"></a>ZooKeeper使用场景</h2><h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在单体应用中，我们可以用synchronized或者ReentrantLock来实现锁机制。但在分布式应用中不行，因为synchronized或者ReentrantLock只针对于一个JVM中可以使用。所以我们必须使用分布式锁来实现锁机制。可以使用Redis或ZooKeeper实现，Redis就不多说了。</p>
 <p>实现分布式锁的主要逻辑就是利用临时序号节点，我创建一个临时序号节点，继续创建临时序号节点会自增最后形成一堆有序的节点，通过序号我们可以知道哪个节点在前哪个节点在后，序号最小的节点才有资格拿锁，后一个节点监听前一个节点，当前一个节点被删除了，我后一个节点就可以去尝试激活锁了。</p>
 <p>这里为什么不直接每个节点监听加锁节点，加锁节点删除在找到最小序号去加锁呢？</p>
 <p>这里主要是防止羊群效应，一旦加锁节点被释放就会有大量的节点被触发，然后反查Lock子节点可能会让zookeeper承受巨大的压力。</p>
@@ -671,7 +671,7 @@ setAcl /test-node2 ip:192.168.186.131:cdwra</code></pre>
 <span class="token punctuation">}</span>
 
 <span class="token comment" spellcheck="true">/**
- * s=释放锁
+ * 释放锁
  */</span>
 <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">unlock</span><span class="token punctuation">(</span>Lock lock<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>lock<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -729,6 +729,250 @@ setAcl /test-node2 ip:192.168.186.131:cdwra</code></pre>
 <span class="token keyword">public</span> Lock <span class="token function">createLockNode</span><span class="token punctuation">(</span>String lockId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     String nodePath <span class="token operator">=</span> zkClient<span class="token punctuation">.</span><span class="token function">createEphemeralSequential</span><span class="token punctuation">(</span>rootPath <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> lockId<span class="token punctuation">,</span> <span class="token string">"w"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Lock</span><span class="token punctuation">(</span>lockId<span class="token punctuation">,</span> nodePath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>当然这里的代码还是会有一些问题的，比如重试机制的处理，幽灵节点的处理，这里只是更好的理解分布式锁，建议直接使用Curator客户端。</p>
+<h3 id="Curator分布式锁使用及源码"><a href="#Curator分布式锁使用及源码" class="headerlink" title="Curator分布式锁使用及源码"></a>Curator分布式锁使用及源码</h3><p>基本使用</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 配置类</span>
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CuratorConfig</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Bean</span><span class="token punctuation">(</span>initMethod <span class="token operator">=</span> <span class="token string">"start"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> CuratorFramework <span class="token function">curatorFramework</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        RetryPolicy retryPolicy <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExponentialBackoffRetry</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> CuratorFrameworkFactory<span class="token punctuation">.</span><span class="token function">newClient</span><span class="token punctuation">(</span>ZookeeperConstants<span class="token punctuation">.</span>SERVER<span class="token punctuation">,</span> retryPolicy<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MutexLock</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    CuratorFramework curatorFramework<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> Object <span class="token function">handler</span><span class="token punctuation">(</span>Integer id<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+        InterProcessMutex interProcessMutex <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">InterProcessMutex</span><span class="token punctuation">(</span>curatorFramework<span class="token punctuation">,</span> <span class="token string">"/product_"</span><span class="token operator">+</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            interProcessMutex<span class="token punctuation">.</span><span class="token function">acquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 模拟业务执行</span>
+            Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>e <span class="token keyword">instanceof</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">throw</span> e<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token keyword">finally</span> <span class="token punctuation">{</span>
+            interProcessMutex<span class="token punctuation">.</span><span class="token function">release</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> <span class="token string">"ok"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>原理和之前使用的zkClient原理基本一致</p>
+<ol>
+<li>请求进来，没有根节点，创建容器节点作为根节点，</li>
+<li>在跟节点下创建临时序号节点</li>
+<li>判断节点是不是最小的节点，是最小的节点直接获取锁，不是就监听前一个节点</li>
+<li>获得锁的请求，处理完业务代码释放锁删除节点然后监听它的节点收到通知，走第三步</li>
+</ol>
+<p>源码：</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 从interProcessMutex.acquire();进入代码</span>
+<span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">acquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token operator">!</span><span class="token function">internalLock</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> null<span class="token punctuation">)</span> <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IOException</span><span class="token punctuation">(</span><span class="token string">"Lost connection while trying to acquire lock: "</span> <span class="token operator">+</span> basePath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">private</span> <span class="token keyword">boolean</span> <span class="token function">internalLock</span><span class="token punctuation">(</span><span class="token keyword">long</span> time<span class="token punctuation">,</span> TimeUnit unit<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception
+<span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">/*
+           Note on concurrency: a given lockData instance
+           can be only acted on by a single thread so locking isn't necessary
+        */</span>
+
+    <span class="token comment" spellcheck="true">// 获取当前线程</span>
+    Thread currentThread <span class="token operator">=</span> Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// threadData是一个Map,key是当前线程，value是LocalData LocalData里面主要是加锁路径和加锁次数</span>
+    LockData lockData <span class="token operator">=</span> threadData<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>currentThread<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 不是空说明当前线程已经获得锁了</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> lockData <span class="token operator">!=</span> null <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// re-entering</span>
+        <span class="token comment" spellcheck="true">// 这里对LocalData里面的lockCount自增，这里说明了锁的可重入特性</span>
+        lockData<span class="token punctuation">.</span>lockCount<span class="token punctuation">.</span><span class="token function">incrementAndGet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// 这里是加锁逻辑，主要方法是attemptLock</span>
+    String lockPath <span class="token operator">=</span> internals<span class="token punctuation">.</span><span class="token function">attemptLock</span><span class="token punctuation">(</span>time<span class="token punctuation">,</span> unit<span class="token punctuation">,</span> <span class="token function">getLockNodeBytes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 加锁成功</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> lockPath <span class="token operator">!=</span> null <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 加锁信息放进threadData里面</span>
+        LockData newLockData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LockData</span><span class="token punctuation">(</span>currentThread<span class="token punctuation">,</span> lockPath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        threadData<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>currentThread<span class="token punctuation">,</span> newLockData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>attemptLock方法：</p>
+<pre class=" language-java"><code class="language-java">String <span class="token function">attemptLock</span><span class="token punctuation">(</span><span class="token keyword">long</span> time<span class="token punctuation">,</span> TimeUnit unit<span class="token punctuation">,</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lockNodeBytes<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception
+<span class="token punctuation">{</span>
+    <span class="token keyword">final</span> <span class="token keyword">long</span>      startMillis <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> Long      millisToWait <span class="token operator">=</span> <span class="token punctuation">(</span>unit <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token operator">?</span> unit<span class="token punctuation">.</span><span class="token function">toMillis</span><span class="token punctuation">(</span>time<span class="token punctuation">)</span> <span class="token operator">:</span> null<span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span>    localLockNodeBytes <span class="token operator">=</span> <span class="token punctuation">(</span>revocable<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">byte</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">:</span> lockNodeBytes<span class="token punctuation">;</span>
+    <span class="token keyword">int</span>             retryCount <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    String          ourPath <span class="token operator">=</span> null<span class="token punctuation">;</span>
+    <span class="token keyword">boolean</span>         hasTheLock <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token keyword">boolean</span>         isDone <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span> <span class="token operator">!</span>isDone <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        isDone <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">try</span>
+        <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 主要逻辑</span>
+            <span class="token comment" spellcheck="true">// 加锁逻辑</span>
+            ourPath <span class="token operator">=</span> driver<span class="token punctuation">.</span><span class="token function">createsTheLock</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span> path<span class="token punctuation">,</span> localLockNodeBytes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 判断节点是不是最小的节点，是最小的节点直接获取锁，不是就监听前一个节点</span>
+            hasTheLock <span class="token operator">=</span> <span class="token function">internalLockLoop</span><span class="token punctuation">(</span>startMillis<span class="token punctuation">,</span> millisToWait<span class="token punctuation">,</span> ourPath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">catch</span> <span class="token punctuation">(</span> KeeperException<span class="token punctuation">.</span>NoNodeException e <span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// gets thrown by StandardLockInternalsDriver when it can't find the lock node</span>
+            <span class="token comment" spellcheck="true">// this can happen when the session expires, etc. So, if the retry allows, just try it all again</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span> client<span class="token punctuation">.</span><span class="token function">getZookeeperClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getRetryPolicy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">allowRetry</span><span class="token punctuation">(</span>retryCount<span class="token operator">++</span><span class="token punctuation">,</span> System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> startMillis<span class="token punctuation">,</span> RetryLoop<span class="token punctuation">.</span><span class="token function">getDefaultRetrySleeper</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">)</span>
+            <span class="token punctuation">{</span>
+                isDone <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">else</span>
+            <span class="token punctuation">{</span>
+                <span class="token keyword">throw</span> e<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> hasTheLock <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> ourPath<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> null<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>加锁逻辑createsTheLock方法：</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> String <span class="token function">createsTheLock</span><span class="token punctuation">(</span>CuratorFramework client<span class="token punctuation">,</span> String path<span class="token punctuation">,</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lockNodeBytes<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception
+<span class="token punctuation">{</span>
+    String ourPath<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> lockNodeBytes <span class="token operator">!=</span> null <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        ourPath <span class="token operator">=</span> client<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">creatingParentContainersIfNeeded</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withProtection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withMode</span><span class="token punctuation">(</span>CreateMode<span class="token punctuation">.</span>EPHEMERAL_SEQUENTIAL<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forPath</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span> lockNodeBytes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">else</span>
+    <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 这里会创建一个根节点是容器节点（子节点全部删完会删除父节点，子节点全部删了就没有必要维护父节点了，所以直接删除掉），还有子节点是临时序号节点</span>
+        ourPath <span class="token operator">=</span> client<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">creatingParentContainersIfNeeded</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withProtection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withMode</span><span class="token punctuation">(</span>CreateMode<span class="token punctuation">.</span>EPHEMERAL_SEQUENTIAL<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forPath</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> ourPath<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>internalLockLoop：</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">boolean</span> <span class="token function">internalLockLoop</span><span class="token punctuation">(</span><span class="token keyword">long</span> startMillis<span class="token punctuation">,</span> Long millisToWait<span class="token punctuation">,</span> String ourPath<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception
+<span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 是否获取锁</span>
+    <span class="token keyword">boolean</span>     haveTheLock <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token keyword">boolean</span>     doDelete <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token keyword">try</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span> revocable<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> null <span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            client<span class="token punctuation">.</span><span class="token function">getData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">usingWatcher</span><span class="token punctuation">(</span>revocableWatcher<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forPath</span><span class="token punctuation">(</span>ourPath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment" spellcheck="true">// 自旋直至获得锁，或者到达超时时间</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span>client<span class="token punctuation">.</span><span class="token function">getState</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> CuratorFrameworkState<span class="token punctuation">.</span>STARTED<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>haveTheLock <span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 获取所有子节点并排序</span>
+            List<span class="token operator">&lt;</span>String<span class="token operator">></span>        children <span class="token operator">=</span> <span class="token function">getSortedChildren</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 处理当前节点把父路径截取仅获取后面，sequenceNodeName在children列表中</span>
+            String              sequenceNodeName <span class="token operator">=</span> ourPath<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span>basePath<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// +1 to include the slash</span>
+            <span class="token comment" spellcheck="true">// 判断节点是否是最小</span>
+            PredicateResults    predicateResults <span class="token operator">=</span> driver<span class="token punctuation">.</span><span class="token function">getsTheLock</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span> children<span class="token punctuation">,</span> sequenceNodeName<span class="token punctuation">,</span> maxLeases<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 获取锁</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span> predicateResults<span class="token punctuation">.</span><span class="token function">getsTheLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">)</span>
+            <span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">// 更新flag</span>
+                haveTheLock <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token comment" spellcheck="true">// 没有拿到锁开启监听</span>
+            <span class="token keyword">else</span>
+            <span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">// 监听节点</span>
+                String  previousSequencePath <span class="token operator">=</span> basePath <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> predicateResults<span class="token punctuation">.</span><span class="token function">getPathToWatch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                <span class="token comment" spellcheck="true">// 加锁等待，watcher里面会释放锁，继续while循环</span>
+                <span class="token keyword">synchronized</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span>
+                <span class="token punctuation">{</span>
+                    <span class="token keyword">try</span>
+                    <span class="token punctuation">{</span>
+                        <span class="token comment" spellcheck="true">// use getData() instead of exists() to avoid leaving unneeded watchers which is a type of resource leak</span>
+                        <span class="token comment" spellcheck="true">// 监听</span>
+                        client<span class="token punctuation">.</span><span class="token function">getData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">usingWatcher</span><span class="token punctuation">(</span>watcher<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forPath</span><span class="token punctuation">(</span>previousSequencePath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token comment" spellcheck="true">// 有millisToWait就等待一段时间</span>
+                        <span class="token keyword">if</span> <span class="token punctuation">(</span> millisToWait <span class="token operator">!=</span> null <span class="token punctuation">)</span>
+                        <span class="token punctuation">{</span>
+                            millisToWait <span class="token operator">-=</span> <span class="token punctuation">(</span>System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> startMillis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            startMillis <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token keyword">if</span> <span class="token punctuation">(</span> millisToWait <span class="token operator">&lt;=</span> <span class="token number">0</span> <span class="token punctuation">)</span>
+                            <span class="token punctuation">{</span>
+                                doDelete <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">// timed out - delete our node</span>
+                                <span class="token keyword">break</span><span class="token punctuation">;</span>
+                            <span class="token punctuation">}</span>
+
+                            <span class="token function">wait</span><span class="token punctuation">(</span>millisToWait<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">}</span>
+                        <span class="token comment" spellcheck="true">// 一直等待</span>
+                        <span class="token keyword">else</span>
+                        <span class="token punctuation">{</span>
+                            <span class="token function">wait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">}</span>
+                    <span class="token punctuation">}</span>
+                    <span class="token keyword">catch</span> <span class="token punctuation">(</span> KeeperException<span class="token punctuation">.</span>NoNodeException e <span class="token punctuation">)</span>
+                    <span class="token punctuation">{</span>
+                        <span class="token comment" spellcheck="true">// it has been deleted (i.e. lock released). Try to acquire again</span>
+                    <span class="token punctuation">}</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">catch</span> <span class="token punctuation">(</span> Exception e <span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        ThreadUtils<span class="token punctuation">.</span><span class="token function">checkInterrupted</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        doDelete <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+        <span class="token keyword">throw</span> e<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">finally</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span> doDelete <span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            <span class="token function">deleteOurPath</span><span class="token punctuation">(</span>ourPath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> haveTheLock<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>getsTheLock方法：</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 判断节点是否是最小</span>
+<span class="token keyword">public</span> PredicateResults <span class="token function">getsTheLock</span><span class="token punctuation">(</span>CuratorFramework client<span class="token punctuation">,</span> List<span class="token operator">&lt;</span>String<span class="token operator">></span> children<span class="token punctuation">,</span> String sequenceNodeName<span class="token punctuation">,</span> <span class="token keyword">int</span> maxLeases<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception
+<span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 看sequenceNodeName在children中的位置</span>
+    <span class="token keyword">int</span>             ourIndex <span class="token operator">=</span> children<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>sequenceNodeName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">validateOurIndex</span><span class="token punctuation">(</span>sequenceNodeName<span class="token punctuation">,</span> ourIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// maxLeases是1的逻辑在LockInternals的构造方法中。</span>
+    <span class="token comment" spellcheck="true">// maxLeases是1，只要ourIndex是0就表示最小，这里是互斥锁，如果是读写锁maxLeases就不是1后面会说到</span>
+    <span class="token keyword">boolean</span>         getsTheLock <span class="token operator">=</span> ourIndex <span class="token operator">&lt;</span> maxLeases<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 要监听的节点如果拿到锁了不监听pathToWatch是null.否则监听前一个节点</span>
+    String          pathToWatch <span class="token operator">=</span> getsTheLock <span class="token operator">?</span> null <span class="token operator">:</span> children<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>ourIndex <span class="token operator">-</span> maxLeases<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 基本信息封装</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">PredicateResults</span><span class="token punctuation">(</span>pathToWatch<span class="token punctuation">,</span> getsTheLock<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
 <h3 id="分布式注册中心"><a href="#分布式注册中心" class="headerlink" title="分布式注册中心"></a>分布式注册中心</h3><p>在这里，首先得了解注册中心是什么？单体应用升级到分布式应用，肯定会有成千上万个服务节点不同的客户端会调用这些服务节点，如果把这些服务节点配置到客户端的话会很复杂，这时候就需要一个中间件来帮助我们找到我们需要调用的服务，这就是服务发现。</p>
 <p>一般注册中心需要一下几个功能，服务注册，服务发现，服务订阅</p>
@@ -1300,7 +1544,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">31.1k</span>
+            <span class="white-color">32.3k</span>
             
 
             <br>
@@ -1479,11 +1723,11 @@ $(function () {
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "别走啊！", clearTimeout(st)) : (document.title = "回来喽！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) }) </script>
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script><script>
+<script>
             window.imageLazyLoadSetting = {
                 isSPA: false,
                 processImages: null,
             };
-        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
 
 </html>
