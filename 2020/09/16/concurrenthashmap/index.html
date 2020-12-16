@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/rss2.xml" title="Coisini" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="Coisini" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -513,7 +513,7 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>ConcurrentHashMap与HashMap在Api,参数,数据结构上面基本都是类似的，实现原理也基本都是一致的在这里就不做过多的说明了，若不清楚可以看下另一篇HashMap的对比博文<a href="https://dm13579.gitee.io/2020/09/01/hashmap/">HashMap1.7和1.8对比与源码解析</a>:ConcurrentHashMap和HashMap最大的区别不用说就是一个线程安全一个线程不安全。本篇博文主要介绍的是ConcurrentHashMap是怎么实现的线程安全。</p>
+                <p>ConcurrentHashMap与HashMap在Api,参数,数据结构上面基本都是类似的，实现原理也基本都是一致的在这里就不做过多的说明了，若不清楚可以看下另一篇HashMap的对比博文<a target="_blank" rel="noopener" href="https://dm13579.gitee.io/2020/09/01/hashmap/">HashMap1.7和1.8对比与源码解析</a>:ConcurrentHashMap和HashMap最大的区别不用说就是一个线程安全一个线程不安全。本篇博文主要介绍的是ConcurrentHashMap是怎么实现的线程安全。</p>
 <h2 id="jdk1-7和jdk1-8对比"><a href="#jdk1-7和jdk1-8对比" class="headerlink" title="jdk1.7和jdk1.8对比"></a>jdk1.7和jdk1.8对比</h2><p>在看怎么实现之前，先大体介绍一下1.7和1.8的实现区别，1.7主要是用ReentrantLock实现分段锁实现的线程安全。1.8是使用CAS+分段锁实现的。从这上面也可以明显的看出1.8性能更好，不好也不会优化是吧。下面就看下他们是怎么实现的。</p>
 <p><strong>建议：ConcurrentHashMap源码大量运用到了Unsafe魔法类，ReentrantLock，二进制运算，看源码前对这些有了了解看起来会舒服很多</strong></p>
 <h2 id="ConcurrentHashMap-jdk1-7源码解析"><a href="#ConcurrentHashMap-jdk1-7源码解析" class="headerlink" title="ConcurrentHashMap jdk1.7源码解析"></a>ConcurrentHashMap jdk1.7源码解析</h2><p>先看一下需要用到的参数有哪些</p>
@@ -1091,7 +1091,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dm13579.gitee.io/2020/09/16/concurrenthashmap/">https://dm13579.gitee.io/2020/09/16/concurrenthashmap/</a>
+                    <a href="https://dmfly.monster/2020/09/16/concurrenthashmap/">https://dmfly.monster/2020/09/16/concurrenthashmap/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -1607,7 +1607,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">32.3k</span>
+            <span class="white-color">32.2k</span>
             
 
             <br>
