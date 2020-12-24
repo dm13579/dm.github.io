@@ -476,21 +476,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-12-08
+                    2020-12-24
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.7k
+                    4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    15 分
+                    16 分
                 </div>
                 
 
@@ -607,15 +607,37 @@ setAcl /test-node2 ip:192.168.186.131:cdwra</code></pre>
 <p>在集群运行过程当中如果有一个follower节点宕机，由于宕机节点没过半，集群仍然能正常服务。当leader收到新的客户端请求，此时无法同步给宕机的节点。造成数据不一致。为了解决这个问题，当节点启动时，第一件事情就是找当前的Leader，比对数据是否一致。不一致则开始同步,同步完成之后在进行对外提供服务。 </p>
 <p><strong>如何比对Leader的数据版本呢？</strong>这里通过ZXID事物ID来确认。比Leader就需要同步。</p>
 <p>ZXID： ZXID是一个长度64位的数字，其中低32位是按照数字递增，任何数据的变更都会导致,低32位的数字简单加1。高32位是leader周期编号，每当选举出一个新的leader时，新的leader就从本地事物日志中取出ZXID,然后解析出高32位的周期编号，进行加1，再将低32位的全部设置为0。这样就保证了每次新选举的leader后，保证了ZXID的唯一性而且是保证递增的。</p>
-<h3 id="集群选举机制"><a href="#集群选举机制" class="headerlink" title="集群选举机制"></a>集群选举机制</h3><p>选举流程：</p>
-<p>​    TODO</p>
-<p>选举触发条件</p>
-<ul>
+<h3 id="集群选举机制"><a href="#集群选举机制" class="headerlink" title="集群选举机制"></a>集群选举机制</h3><ul>
+<li><h4 id="选票pk成功的条件"><a href="#选票pk成功的条件" class="headerlink" title="选票pk成功的条件"></a>选票pk成功的条件</h4><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// FastLeaderElection.totalOrderPredicate</span>
+<span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>newEpoch <span class="token operator">></span> curEpoch<span class="token punctuation">)</span> <span class="token operator">||</span>
+                <span class="token punctuation">(</span><span class="token punctuation">(</span>newEpoch <span class="token operator">==</span> curEpoch<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
+                <span class="token punctuation">(</span><span class="token punctuation">(</span>newZxid <span class="token operator">></span> curZxid<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>newZxid <span class="token operator">==</span> curZxid<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>newId <span class="token operator">></span> curId<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>从代码可以看出</p>
+<p>选举成功3个条件符合其一</p>
+<ol>
+<li>选举周期大的</li>
+<li>周期相等选事务id大的</li>
+<li>周期相等，事务id相等，选serverid大的，serverid就是配置文件配的集群server.*,也就是myid</li>
+</ol>
+<h4 id="选举成功的条件"><a href="#选举成功的条件" class="headerlink" title="选举成功的条件"></a>选举成功的条件</h4><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// FastLeaderElection.termPredicate</span>
+voteSet<span class="token punctuation">.</span><span class="token function">hasAllQuorums</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">// hasAllQuorums</span>
+<span class="token operator">!</span>qvAckset<span class="token punctuation">.</span><span class="token function">getQuorumVerifier</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">containsQuorum</span><span class="token punctuation">(</span>qvAckset<span class="token punctuation">.</span><span class="token function">getAckset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">// QuorumMaj.containsQuorum</span>
+<span class="token punctuation">(</span>ackSet<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> half<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// QuorumMaj</span>
+half <span class="token operator">=</span> votingMembers<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span></code></pre>
+<p>从这段代码可以看出选举成功就是对某一节点的选票超过半数即为选举成功</p>
+<h4 id="选举触发条件"><a href="#选举触发条件" class="headerlink" title="选举触发条件"></a>选举触发条件</h4><ul>
 <li><p>节点初始化启动时</p>
 <p>节点启动的时候会在集群中寻找是否有leader,找到了就与leader建立通信，自身变为follower或observer,没有找到Leader,当前节点记录为LOOKING，开始选举</p>
 </li>
 <li><p>半数以上节点无法和Leader建立通信</p>
 <p>Leader一挂，只要有半数节点感知到Leader挂了，就所有follower进入到LOOKING状态，开始选举</p>
+</li>
+</ul>
+<h4 id="选举流程"><a href="#选举流程" class="headerlink" title="选举流程"></a>选举流程</h4><p>每个节点启动后都会默认给自己投票，收到其他节点会通过选票pk成功的条件判断谁获胜了，当前节点会更改自己的选票为获胜方，下一轮选举会发给其他节点，最后统计选票，选票超过半数即为LEADING，若自己节点不是LEADING节点就是FOLLOWER或OBSERVER。</p>
+<p>如果集群已经选举完成，新节点加入集群，会首先发送选票给其他节点，其他节点接收到选票后由于已经有LEADING，会把LEADING节点发送给新节点，新节点更改为FOLLOWER.</p>
 </li>
 </ul>
 <h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><ul>
@@ -1544,7 +1566,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">32.2k</span>
+            <span class="white-color">32.5k</span>
             
 
             <br>
@@ -1723,11 +1745,11 @@ $(function () {
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "别走啊！", clearTimeout(st)) : (document.title = "回来喽！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) }) </script>
-<script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script><script>
             window.imageLazyLoadSetting = {
                 isSPA: false,
                 processImages: null,
             };
-        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var i=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){i&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,e,a=0;a<r.length;a++)t=r[a],e=void 0,0<=(e=t.getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
 
 </html>
