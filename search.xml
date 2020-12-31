@@ -20,11 +20,11 @@
       
         <tags>
             
+            <tag> RocketMQ </tag>
+            
             <tag> 安装 </tag>
             
             <tag> Linux </tag>
-            
-            <tag> RocketMQ </tag>
             
         </tags>
       
@@ -49,11 +49,11 @@
       
         <tags>
             
-            <tag> ZooKeeper </tag>
-            
             <tag> 安装 </tag>
             
             <tag> Linux </tag>
+            
+            <tag> ZooKeeper </tag>
             
         </tags>
       
