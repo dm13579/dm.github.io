@@ -9,8 +9,41 @@
     <atom:link href="https://dmfly.monster/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Fri, 04 Dec 2020 08:52:31 GMT</pubDate>
+    <pubDate>Thu, 31 Dec 2020 09:37:09 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>RocketMQ集群搭建</title>
+      <link>https://dmfly.monster/2020/12/28/rocketmq-an-zhuang/</link>
+      <guid>https://dmfly.monster/2020/12/28/rocketmq-an-zhuang/</guid>
+      <pubDate>Mon, 28 Dec 2020 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;环境准备&quot;&gt;&lt;a href=&quot;#环境准备&quot; class=&quot;headerlink&quot; title=&quot;环境准备&quot;&gt;&lt;/a&gt;环境准备&lt;/h2&gt;&lt;p&gt;java版本：1.8&lt;/p&gt;
+&lt;p&gt;操作系统：CentOS7&lt;/p&gt;
+&lt;p&gt;安装包：&lt;a</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmfly.monster/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
+      
+      
+      <category domain="https://dmfly.monster/tags/%E5%AE%89%E8%A3%85/">安装</category>
+      
+      <category domain="https://dmfly.monster/tags/Linux/">Linux</category>
+      
+      <category domain="https://dmfly.monster/tags/RocketMQ/">RocketMQ</category>
+      
+      
+      <comments>https://dmfly.monster/2020/12/28/rocketmq-an-zhuang/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>ZooKeeper安装及常用命令</title>

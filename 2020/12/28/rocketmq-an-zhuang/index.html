@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 	<meta name="baidu-site-verification" content="lElrePz9Qe" />
 	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
-    <meta name="keywords" content="Netty,IO模型">
+    <meta name="keywords" content="RocketMQ">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,7 +29,7 @@
 </script>
 
 
-    <title>Netty线程模型初探和Netty的常见问题 | Coisini</title>
+    <title>RocketMQ集群搭建 | Coisini</title>
     <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -322,12 +322,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/19.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Netty线程模型初探和Netty的常见问题</h1>
+                    <h1 class="description center-align post-title">RocketMQ集群搭建</h1>
                 </div>
             </div>
         </div>
@@ -444,12 +444,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Netty/">
-                                <span class="chip bg-color">Netty</span>
+                            <a href="/tags/%E5%AE%89%E8%A3%85/">
+                                <span class="chip bg-color">安装</span>
                             </a>
                         
-                            <a href="/tags/IO%E6%A8%A1%E5%9E%8B/">
-                                <span class="chip bg-color">IO模型</span>
+                            <a href="/tags/Linux/">
+                                <span class="chip bg-color">Linux</span>
+                            </a>
+                        
+                            <a href="/tags/RocketMQ/">
+                                <span class="chip bg-color">RocketMQ</span>
                             </a>
                         
                     </div>
@@ -460,8 +464,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                笔记
+                            <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
+                                安装手册
                             </a>
                         
                     </div>
@@ -473,28 +477,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-09-07
+                    2020-12-28
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-09-09
+                    2020-12-31
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.5k
+                    1.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    9 分
+                    7 分
                 </div>
                 
 
@@ -509,133 +513,242 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Netty是现在比较流行的NIO框架。它的健壮性、可扩展性、性能方面都得到了很多项目的验证。</p>
-<p>要想了解Netty，首先得了解IO模型。Java支持三种IO模型分别是BIO,NIO,AIO。</p>
-<ul>
-<li>BIO：同步阻塞模型，连接一个请求就会有一个线程，假设有个客户端连接进来了，一直不做读写操作，这个连接就会一直占用，会大量的浪费资源，，如果连接的客户端巨多，就会导致线程数暴增，可能服务器都撑不住。使用场景，连接数比较小且不会有连接数暴增</li>
-<li>NIO：同步非阻塞模型，主要实现的是一个线程可以处理多个连接，它的实现逻辑是把所有打过来的请求都会丢到一个selector（多路复用器）上面去，多路复用器在去轮询，根据请求类型进行读、写、连接处理。多路复用器底层就是调用的操作系统的select，poll，epoll方法实现。使用场景：连接数多但连接较短。</li>
-<li>AIO：异步非阻塞模型，发起请求后会回调服务端程序去执行对应的请求，相当于一个钩子程序，NIO的升级版。使用场景：连接数多，且连接耗时较长</li>
-</ul>
-<h2 id="认识Netty"><a href="#认识Netty" class="headerlink" title="认识Netty"></a>认识Netty</h2><p>Netty说白了就是对NIO的一层封装，改造了原来的IO模型提升性能，为了让你代码写起来更方便，增强扩展性。</p>
-<p>Netty在游戏领域，开源中间件（Dubbo,RocketMQ）,大数据领域(Hadoop)，通信行业等方向都有不少的应用。</p>
-<p>Netty优点</p>
-<ul>
-<li>使用简单</li>
-<li>功能强大，内置了很多编解码功能，对主流协议的支持</li>
-<li>定制能力强，可以通过ChannelHandler进行定制化开发</li>
-<li>性能高</li>
-<li>经历了多种行业的锤炼，证明了它的稳定性</li>
-</ul>
-<h2 id="Netty线程模型"><a href="#Netty线程模型" class="headerlink" title="Netty线程模型"></a>Netty线程模型</h2><p>Netty线程模型跟Reactor模式相一致。而Reacror模式又分为三种。主要核心逻辑可以参照Doug Lea大佬的<a target="_blank" rel="noopener" href="http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf">Scalable IO in Java</a></p>
-<ul>
-<li><p>单线程模型</p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/20200907215427.png" alt="单线程模型"></p>
-<p>从图可以看出Reactor内部通过selector进行监控，如果收到的是一个连接请求就通过dispatch分发任务给acceptor去处理并生成一个handler去处理之后的读写请求。因为处理连接和读写请求都在一个线程里面去执行，所以如果handler被阻塞了,会导致其他的线程同样不能执行，性能受到影响。</p>
-</li>
-<li><p>多线程模型</p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/20200907220454.png" alt="多线程模型"></p>
-<p>从图看出，Reactor收到一个连接请求就分发给acceptor,然后acceptor创建一个Handler处理后续事件Handler不处理业务操作，只负责响应度和写，业务操作扔到线程池里面去操作。这里的性能瓶颈是单Reactor，当有大量的客户端进行连接，可能会有处理不过来的情况。</p>
-</li>
-<li><p>主从多线程模型</p>
-</li>
-</ul>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20200907221055477.png" alt="主从多线程模型"></p>
-<p>这里使用了多个Reactor,mainReactor处理进来的连接请求，交给acceptor处理，然后acceptor将新的连接分配给一个子线程，子线程subReactor将分配过来的连接加入连接队列并通过自己的selector进行监听，并创建一个Handler处理后续事件。</p>
-<p>对于Netty而言上诉几种模型都可以实现。主要看NioEventLoopGroup线程个数的分配。</p>
-<p>单线程模型</p>
-<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 只申请一个工作线程</span>
-NioEventLoopGroup group <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-ServerBootstrap bootstrap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerBootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>group<span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p>多线程模型</p>
-<pre class=" language-java"><code class="language-java">NioEventLoopGroup eventGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-ServerBootstrap bootstrap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerBootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>eventGroup<span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p>主从多线程模型(最常用)</p>
-<pre class=" language-java"><code class="language-java">NioEventLoopGroup bossGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-NioEventLoopGroup workerGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-ServerBootstrap bootstrap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerBootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>bossGroup<span class="token punctuation">,</span>workerGroup<span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p>Netty的线程模型是对于上诉的Reactor模式进行了一定的升级，但核心思想没有变。</p>
-<p><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/5ee107f7f346fb1ae5592b33">Netty线程模型图</a></p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/clipboard.png" alt="Netty线程模型架构"></p>
-<h2 id="Netty相关组件"><a href="#Netty相关组件" class="headerlink" title="Netty相关组件"></a>Netty相关组件</h2><p>Netty的一个服务端通用代码</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-    EventLoopGroup bossGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    EventLoopGroup workerGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">try</span> <span class="token punctuation">{</span>
-        ServerBootstrap bootstrap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerBootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>bossGroup<span class="token punctuation">,</span> workerGroup<span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ChannelInitializer</span><span class="token operator">&lt;</span>SocketChannel<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                <span class="token annotation punctuation">@Override</span>
-                <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">initChannel</span><span class="token punctuation">(</span>SocketChannel ch<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
-                    ChannelPipeline pipeline <span class="token operator">=</span> ch<span class="token punctuation">.</span><span class="token function">pipeline</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token string">"decoder"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">StringDecoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token string">"encoder"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">StringEncoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyServerHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        ChannelFuture channelFuture <span class="token operator">=</span> bootstrap<span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token number">9000</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        channelFuture<span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">closeFuture</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
-        bossGroup<span class="token punctuation">.</span><span class="token function">shutdownGracefully</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        workerGroup<span class="token punctuation">.</span><span class="token function">shutdownGracefully</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
-<ul>
-<li>Selector：通过Selector监听多个连接的channel事件，通过selector轮训所有注册的channel,</li>
-<li>NioEventLoopGroup：相当于一个线程池，内部维护类一组线程（NioEventLoop），每个线程处理多个Channel上的事件。</li>
-<li>NioEventLoop：里面有线程和任务队列，有run方法处理不同的事件</li>
-<li>ServerBootstrap：串联Netty所有组件，是Netty的启动类。</li>
-<li>ChannelHandler：ChannelHandler处理I/O事件，并将其转发到pipeline中的下一个处理程序<ul>
-<li>ChannelInboundHandler：处理入站IO事件</li>
-<li>ChannelOutboundHandler：处理出站IO事件</li>
-</ul>
-</li>
-<li>ChannelHandlerContext：关联ChannelHandler</li>
-<li>ChannelPipline：一个由ChannelHandlerContext构成的过滤器链，它是一个双向链表,他会维护一个head和tail,入站则是head-&gt;tail,出站是tail到head,<strong>注意：入站和出站在这里是相对的，read是入站事件，write是出站事件，服务端写数据到客户端，服务端是出站事件，客户端是入站事件</strong></li>
-</ul>
-<h2 id="Netty常见问题"><a href="#Netty常见问题" class="headerlink" title="Netty常见问题"></a>Netty常见问题</h2><h3 id="编解码问题"><a href="#编解码问题" class="headerlink" title="编解码问题"></a>编解码问题</h3><pre class=" language-java"><code class="language-java"> ChannelPipeline pipeline <span class="token operator">=</span> ch<span class="token punctuation">.</span><span class="token function">pipeline</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
- pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token string">"decoder"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">StringDecoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">// 解码器</span>
- pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token string">"encoder"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">StringEncoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">// 编码器</span>
- pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyServerHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p>首先服务器之间的通讯只能是字节，然后我们要把消息发送到客户端，首先要对发送内容进行编码，客户端要对收到内容进行解码.上诉代码就是一个编解码的pipeline.通过分析StringEncoder编码器应该继承的是ChannelOutboundHandlerAdapter或者实现了ChannelOutboundHandler满足出站事件。StringDecoder解码器应该继承的是ChannelInboundHandlerAdapter或者实现了ChannelInboundHandler满足入站事件。看一下继承关系图，发现分析正确</p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/20200907231616.png" alt="StringDecoder继承关系图"></p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/20200907231755.png" alt="StringEncoder继承关系图"></p>
-<p>Netty还有其他的编解码器，比如ObjectEncoder和ObjectDecoder</p>
-<h3 id="粘包拆包问题"><a href="#粘包拆包问题" class="headerlink" title="粘包拆包问题"></a>粘包拆包问题</h3><p>由于TCP是面向流的，所以是无消息保护边界的。发送端有时为了更有效地将数据包发送给对方，有时会把多个数据包合并为一个发送就是粘包问题，把一个数据包拆分成多个就是拆包问题。这样带来的问题就是虽然你是提高了效率，但是接收端这边就无法分清哪个数据包是哪个了。</p>
-<p>解决方案：</p>
-<ol>
-<li>对发送内容进行边界控制，就是在你所发送的内容开始与结束加上标志符。但这样不好用，因为每次开发你都的加上边界符，不易于其他人对代码的理解。</li>
-<li>在你所发送的内容上加上发送内容的长度，通过长度判断数据的开始与结束。</li>
-</ol>
-<h3 id="Netty零拷贝"><a href="#Netty零拷贝" class="headerlink" title="Netty零拷贝"></a>Netty零拷贝</h3><p>在零拷贝之前必须了解直接内存与堆内存的区别；堆内存顾名思义就是放在JVM堆里面的内存,直接内存是排除掉堆内存的其他内存相当于物理内存，gc不参与到其中，这部分内存JVM管不着；</p>
-<p>申请直接内存：java申请直接内存会调用本地native方法，在物理内存上申请一块空间，然后自己JVM堆内存上也分配一块叫DirectByteBuffer的空间，DirectByteBuffer里面会存申请的物理内存的内存地址的开始位置，和数据长度，通过定位和长度就能确定数据了。</p>
-<p>内存回收：JVM gc 管不了他们那么怎么将这部分内存进行回收呢？在申请直接内存的时候会给引用对象绑定一个Cleaner机制，就是只要引用对象一被GC,那么就会触发Cleaner机制把内存回收。</p>
-<p>直接内存与堆内存对比：读写上直接内存更快；申请空间上堆内存更快。</p>
-<p>下面可以介绍零拷贝了</p>
-<p>我们客户端发一条数据到服务端，服务端需要在IO读写层面需要做哪些操作呢？</p>
-<p>假设没有零拷贝，发生的情况就是客户端发一条数据到服务端，服务端将这条数据放到socket缓冲区然后拷贝到直接内存（数据不能直接给堆内存），然后直接内存把数据拷贝到JVM堆内存，然后JVM对数据进行修改后在将数据拷贝到直接内存（数据不能直接给socket缓冲区）,然后直接内存把数据拷贝到socket缓冲区。大家数一下中间发生了几次拷贝。共4次拷贝，</p>
-<p>以刚刚的例子来说零拷贝技术就是客户端发一条数据到服务端，服务端将这条数据socket缓冲区然后拷贝到直接内存，然后堆内存会有一个DirectByteBuffer映射到这一块直接内存，然后JVM对数据进行修改将数据直接改到直接内存，然后直接内存拷贝给socket缓冲区总共发生2次拷贝，零拷贝就是减少数据之间的拷贝。</p>
-<h4 id="直接内存优缺点"><a href="#直接内存优缺点" class="headerlink" title="直接内存优缺点"></a>直接内存优缺点</h4><p>优点：</p>
-<pre><code>        * 不占用堆内存
-        * 内存读写快</code></pre>
-<p>缺点</p>
-<ul>
-<li>申请空间慢</li>
-<li>有物理内存被撑爆的可能性，这就跟JVM元空间内存机制是一样的，元空间也是直接内存，然后元空间必须设置最大值一个道理。在这里我们可以和元空间的处理类似，加上一个配置参数-XX：MaxDirectMemorySize控制直接内存的大小</li>
-</ul>
+                <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>java版本：1.8</p>
+<p>操作系统：CentOS7</p>
+<p>安装包：<a target="_blank" rel="noopener" href="https://rocketmq.apache.org/dowloading/releases/">https://rocketmq.apache.org/dowloading/releases/</a></p>
+<p>我这里选择的是4.7.1版本的rocketMQ</p>
+<h2 id="RocketMQ-集群搭建"><a href="#RocketMQ-集群搭建" class="headerlink" title="RocketMQ 集群搭建"></a>RocketMQ 集群搭建</h2><p>注：此集群主从之间不会自动选举，也就是说主节点挂了，从节点不会顶上去</p>
+<p>目标：2主2从异步集群</p>
+<p>需要2台机器，具体配置下表</p>
+<table>
+<thead>
+<tr>
+<th>机器</th>
+<th>nameserver节点</th>
+<th>broker主</th>
+<th>broker从</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>机器1</td>
+<td>nameserver</td>
+<td>broker-a</td>
+<td>broker-b-s</td>
+</tr>
+<tr>
+<td>机器2</td>
+<td>nameserver</td>
+<td>broker-b</td>
+<td>broker-a-s</td>
+</tr>
+</tbody></table>
+<p>安装包解压（这里的安装包是zip格式的，所以使用unzip）</p>
+<pre class=" language-shell"><code class="language-shell">unzip rocketmq-all-4.7.1-bin-release.zip -d /</code></pre>
+<p>增加软链接（纯粹为了方便，不影响安装）</p>
+<pre class=" language-shell"><code class="language-shell">ln -s rocketmq-all-4.7.1-bin-release/ rocketmq</code></pre>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>这里先解释下配置文件各参数意义</p>
+<pre class=" language-shell"><code class="language-shell">#所属集群名字，名字一样的节点就在同一个集群内
+brokerClusterName=rocketmq-cluster
+#broker名字，名字一样的节点就是一组主从节点。
+brokerName=broker-a
+#brokerid,0就表示是Master，>0的都是表示 Slave
+brokerId=0
+#nameServer地址，分号分割
+namesrvAddr=192.168.186.131:9876;192.168.186.132:9876
+#在发送消息时，自动创建服务器不存在的topic，默认创建的队列数
+defaultTopicQueueNums=4
+#是否允许 Broker 自动创建Topic，建议线下开启，线上关闭
+autoCreateTopicEnable=true
+#是否允许 Broker 自动创建订阅组，建议线下开启，线上关闭
+autoCreateSubscriptionGroup=true
+#Broker 对外服务的监听端口
+listenPort=10911
+#删除文件时间点，默认凌晨 4点
+deleteWhen=04
+#文件保留时间，默认 48 小时
+fileReservedTime=120
+#commitLog每个文件的大小默认1G
+mapedFileSizeCommitLog=1073741824
+#ConsumeQueue每个文件默认存30W条，根据业务情况调整
+mapedFileSizeConsumeQueue=300000
+#destroyMapedFileIntervalForcibly=120000
+#redeleteHangedFileInterval=120000
+#检测物理文件磁盘空间
+diskMaxUsedSpaceRatio=88
+#存储路径
+storePathRootDir=/data/rocketmq/store-a-master
+#commitLog 存储路径
+storePathCommitLog=/data/rocketmq/store-a-master/commitlog
+#消费队列存储路径存储路径
+storePathConsumeQueue=/data/rocketmq/store-a-master/consumequeue
+#消息索引存储路径
+storePathIndex=/data/rocketmq/store-a-master/index
+#checkpoint 文件存储路径
+storeCheckpoint=/data/rocketmq/store-a-master/checkpoint
+#abort 文件存储路径
+abortFile=/data/rocketmq/store-a-master/abort
+#限制的消息大小
+maxMessageSize=65536
+#flushCommitLogLeastPages=4
+#flushConsumeQueueLeastPages=2
+#flushCommitLogThoroughInterval=10000
+#flushConsumeQueueThoroughInterval=60000
+#Broker 的角色
+#- ASYNC_MASTER 异步复制Master
+#- SYNC_MASTER 同步双写Master
+#- SLAVE
+brokerRole=ASYNC_MASTER
+#刷盘方式
+#- ASYNC_FLUSH 异步刷盘
+#- SYNC_FLUSH 同步刷盘
+flushDiskType=ASYNC_FLUSH
+#checkTransactionMessageEnable=false
+#发消息线程池数量
+#sendMessageThreadPoolNums=128
+#拉消息线程池数量
+#pullMessageThreadPoolNums=128</code></pre>
+<p>这里我们直接更改它原来的配置文件，由于我们要搭建的是<strong>2主2从异步刷盘集群</strong>。所以我们进入2m-2s-async目录，并对当前目录的配置参数进行修改。其实直接启动应该也是没有问题的</p>
+<pre class=" language-shell"><code class="language-shell">[root@localhost 2m-2s-async]# pwd
+/rocketmq/conf/2m-2s-async</code></pre>
+<p>下面是配置参数：这里主要修改了以下几个参数brokerName（主从相同），brokerId（主0从1），listenPort同一主机不同，文件路径区分不同</p>
+<p>broker-a.properties</p>
+<pre class=" language-shell"><code class="language-shell">brokerClusterName=rocketmq-cluster
+brokerName=broker-a
+brokerId=0
+namesrvAddr=192.168.186.131:9876;192.168.186.132:9876
+defaultTopicQueueNums=4
+autoCreateTopicEnable=true
+autoCreateSubscriptionGroup=true
+listenPort=10911
+deleteWhen=04
+fileReservedTime=120
+mapedFileSizeCommitLog=1073741824
+mapedFileSizeConsumeQueue=300000
+diskMaxUsedSpaceRatio=88
+storePathRootDir=/data/rocketmq/store-a-master
+storePathCommitLog=/data/rocketmq/store-a-master/commitlog
+storePathConsumeQueue=/data/rocketmq/store-a-master/consumequeue
+storePathIndex=/data/rocketmq/store-a-master/index
+storeCheckpoint=/data/rocketmq/store-a-master/checkpoint
+abortFile=/data/rocketmq/store-a-master/abort
+maxMessageSize=65536
+brokerRole=ASYNC_MASTER
+flushDiskType=ASYNC_FLUSH</code></pre>
+<p>broker-b-s.properties</p>
+<pre class=" language-shell"><code class="language-shell">brokerClusterName=rocketmq-cluster
+brokerName=broker-b
+brokerId=1
+namesrvAddr=192.168.186.131:9876;192.168.186.132:9876
+defaultTopicQueueNums=4
+autoCreateTopicEnable=true
+autoCreateSubscriptionGroup=true
+listenPort=10912
+deleteWhen=04
+fileReservedTime=120
+mapedFileSizeCommitLog=1073741824
+mapedFileSizeConsumeQueue=300000 
+diskMaxUsedSpaceRatio=88
+storePathRootDir=/data/rocketmq/store-b-slave
+storePathCommitLog=/data/rocketmq/store-b-slave/commitlog
+storePathConsumeQueue=/data/rocketmq/store-b-slave/consumequeue
+storePathIndex=/data/rocketmq/store-b-slave/index
+storeCheckpoint=/data/rocketmq/store-b-slave/checkpoint
+abortFile=/data/rocketmq/store-b-slave/abort
+maxMessageSize=65536
+brokerRole=ASYNC_MASTER
+flushDiskType=ASYNC_FLUSH</code></pre>
+<p>broker-a-s.properties</p>
+<pre class=" language-shell"><code class="language-shell">brokerClusterName=rocketmq-cluster
+brokerName=broker-a
+brokerId=1
+namesrvAddr=192.168.186.131:9876;192.168.186.132:9876
+defaultTopicQueueNums=4
+autoCreateTopicEnable=true
+autoCreateSubscriptionGroup=true
+listenPort=10911
+deleteWhen=04
+fileReservedTime=120
+mapedFileSizeCommitLog=1073741824
+mapedFileSizeConsumeQueue=300000
+diskMaxUsedSpaceRatio=88
+storePathRootDir=/data/rocketmq/store-a-slave
+storePathCommitLog=/data/rocketmq/store-a-slave/commitlog
+storePathConsumeQueue=/data/rocketmq/store-a-slave/consumequeue
+storePathIndex=/data/rocketmq/store-a-slave/index
+storeCheckpoint=/data/rocketmq/store-a-slave/checkpoint
+abortFile=/data/rocketmq/store-a-slave/abort
+maxMessageSize=65536
+brokerRole=ASYNC_MASTER
+flushDiskType=ASYNC_FLUSH</code></pre>
+<p>broker-b.properties</p>
+<pre class=" language-shell"><code class="language-shell">brokerClusterName=rocketmq-cluster
+brokerName=broker-b
+brokerId=0
+namesrvAddr=192.168.186.131:9876;192.168.186.132:9876
+defaultTopicQueueNums=4
+autoCreateTopicEnable=true
+autoCreateSubscriptionGroup=true
+listenPort=10912
+deleteWhen=04
+fileReservedTime=120
+mapedFileSizeCommitLog=1073741824
+mapedFileSizeConsumeQueue=300000 
+diskMaxUsedSpaceRatio=88
+storePathRootDir=/data/rocketmq/store-b-master
+storePathCommitLog=/data/rocketmq/store-b-master/commitlog
+storePathConsumeQueue=/data/rocketmq/store-b-master/consumequeue
+storePathIndex=/data/rocketmq/store-b-master/index
+storeCheckpoint=/data/rocketmq/store-b-master/checkpoint
+abortFile=/data/rocketmq/store-b-master/abort
+maxMessageSize=65536
+brokerRole=ASYNC_MASTER
+flushDiskType=ASYNC_FLUSH</code></pre>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>注意：启动前需要修改runbroker.sh和runserver.sh中的JVM参数，默认rocketmq给的nameserver4g，broker8g,不修改可能机器内存不够启动报错。机器内存足够的话尽量不改，默认配置是经过实验室测试较优配置。</p>
+<p>后台启动nameserver(2台机器全部启动)</p>
+<pre class=" language-shell"><code class="language-shell">nohup bin/mqnamesrv &</code></pre>
+<p>启动成功标识</p>
+<pre class=" language-shell"><code class="language-shell">### 启动成功标识
+cat nohup.out
+Java HotSpot(TM) 64-Bit Server VM warning: Using the DefNew young collector with the CMS collector is deprecated and will likely be removed in a future release
+Java HotSpot(TM) 64-Bit Server VM warning: UseCMSCompactAtFullCollection is deprecated and will likely be removed in a future release.
+The Name Server boot success. serializeType=JSON</code></pre>
+<p>启动每台机器的broker</p>
+<pre class=" language-shell"><code class="language-shell">nohup bin/mqbroker -c conf/2m-2s-async/xxx.properties &</code></pre>
+<h3 id="默认测试工具验证"><a href="#默认测试工具验证" class="headerlink" title="默认测试工具验证"></a>默认测试工具验证</h3><p>首先需要配置nameserver</p>
+<pre class=" language-shell"><code class="language-shell">vim tools.sh
+# 在export JAVA_HOME上面添加如下这段代码
+export NAMESRV_ADDR='192.168.186.131:9876;192.168.186.132:9876'</code></pre>
+<p>生产者发送消息</p>
+<pre class=" language-shell"><code class="language-shell">bin/tools.sh org.apache.rocketmq.example.quickstart.Producer </code></pre>
+<p>消费消息</p>
+<pre class=" language-shell"><code class="language-shell">bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer</code></pre>
+<h2 id="管理控制台搭建"><a href="#管理控制台搭建" class="headerlink" title="管理控制台搭建"></a>管理控制台搭建</h2><p>RocketMQ和RabbitMQ不同,没有官方的管理控制台,但是Rocket的社区扩展项目中提供了一个控制台。</p>
+<p>地址：<a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq-externals">https://github.com/apache/rocketmq-externals</a></p>
+<h3 id="前期maven准备"><a href="#前期maven准备" class="headerlink" title="前期maven准备"></a>前期maven准备</h3><p>地址：<a target="_blank" rel="noopener" href="https://maven.apache.org/download.cgi">https://maven.apache.org/download.cgi</a></p>
+<pre><code>tar -zxvf apache-maven-3.6.3-bin.tar.gz -C /
+mv /apache-maven-3.6.3/ /usr/local/maven</code></pre>
+<pre class=" language-shell"><code class="language-shell">vim /etc/profile
+### 增加代码
+export MAVEN_HOME=/usr/local/maven
+在PATH后追加： :$MAVEN_HOME/bin 
+### 刷新配置
+source /etc/profile
+### 验证
+mvn -v</code></pre>
+<h3 id="控制台安装"><a href="#控制台安装" class="headerlink" title="控制台安装"></a>控制台安装</h3><p>解压</p>
+<pre class=" language-shell"><code class="language-shell">unzip rocketmq-externals-master.zip -d /</code></pre>
+<p>软链接</p>
+<pre class=" language-shell"><code class="language-shell">ln -s /rocketmq-externals-master/ rocketmq-console</code></pre>
+<p>搭建</p>
+<pre class=" language-shell"><code class="language-shell">### 指定nameserver地址；；修改当前application.properties配置参数
+rocketmq.config.namesrvAddr=192.168.186.131:9876;192.168.186.132:9876
+
+cd /rocketmq-console/rocketmq-console
+mvn clean package -Dmaven.test.skip=true
+
+### rocketmq-console-ng-1.0.1.jar----target目录下
+java -jar rocketmq-console-ng-1.0.1.jar</code></pre>
+<p>在当前ip:8080上即可访问</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -679,7 +792,7 @@ bootstrap<span class="token punctuation">.</span><span class="token function">gr
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dmfly.monster/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/">https://dmfly.monster/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/</a>
+                    <a href="https://dmfly.monster/2020/12/28/rocketmq-an-zhuang/">https://dmfly.monster/2020/12/28/rocketmq-an-zhuang/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -717,12 +830,16 @@ bootstrap<span class="token punctuation">.</span><span class="token function">gr
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Netty/">
-                                    <span class="chip bg-color">Netty</span>
+                                <a href="/tags/%E5%AE%89%E8%A3%85/">
+                                    <span class="chip bg-color">安装</span>
                                 </a>
                             
-                                <a href="/tags/IO%E6%A8%A1%E5%9E%8B/">
-                                    <span class="chip bg-color">IO模型</span>
+                                <a href="/tags/Linux/">
+                                    <span class="chip bg-color">Linux</span>
+                                </a>
+                            
+                                <a href="/tags/RocketMQ/">
+                                    <span class="chip bg-color">RocketMQ</span>
                                 </a>
                             
                         </div>
@@ -893,7 +1010,7 @@ bootstrap<span class="token punctuation">.</span><span class="token function">gr
         repo: 'dm13579.github.io',
         owner: 'dm13579',
         admin: "dm13579",
-        id: '2020-09-07T20-15-00',
+        id: '2020-12-28T20-15-00',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -917,46 +1034,60 @@ bootstrap<span class="token punctuation">.</span><span class="token function">gr
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/">
+                <a href="/2020/12/28/rocketmq-an-zhuang/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/9.jpg" class="responsive-img" alt="ZooKeeper初探及使用场景">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/19.jpg" class="responsive-img" alt="RocketMQ集群搭建">
                         
-                        <span class="card-title">ZooKeeper初探及使用场景</span>
+                        <span class="card-title">RocketMQ集群搭建</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Zookeeper的特性与集群架构和其常见的使用场景
+                            环境准备java版本：1.8
+操作系统：CentOS7
+安装包：https://rocketmq.apache.org/dowloading/releases/
+我这里选择的是4.7.1版本的rocketMQ
+RocketMQ 集群搭建注：
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-09-08
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-28
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
+                            <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
+                                    安装手册
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ZooKeeper/">
-                        <span class="chip bg-color">ZooKeeper</span>
+                    <a href="/tags/%E5%AE%89%E8%A3%85/">
+                        <span class="chip bg-color">安装</span>
+                    </a>
+                    
+                    <a href="/tags/Linux/">
+                        <span class="chip bg-color">Linux</span>
+                    </a>
+                    
+                    <a href="/tags/RocketMQ/">
+                        <span class="chip bg-color">RocketMQ</span>
                     </a>
                     
                 </div>
@@ -970,31 +1101,32 @@ bootstrap<span class="token punctuation">.</span><span class="token function">gr
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/09/01/hashmap/">
+                <a href="/2020/12/04/zookeeper-an-zhuang/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/2.jpg" class="responsive-img" alt="HashMap1.7和1.8对比与源码解析">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/23.jpg" class="responsive-img" alt="ZooKeeper安装及常用命令">
                         
-                        <span class="card-title">HashMap1.7和1.8对比与源码解析</span>
+                        <span class="card-title">ZooKeeper安装及常用命令</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            jdk1.7和jdk1.8差异和源码详解
+                            发现zookeeper3.5.3之后出了许多新特性，就趁此时机安装一下较新版本zookeeper，顺便记录一下安装步骤，方便以后查验。
+首先准备zookeeper,在这里我使用的是centos7，java环境是1.8.安装的zookeepe
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-01
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-04
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
+                            <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
+                                    安装手册
                                 </a>
                             
                             
@@ -1004,12 +1136,16 @@ bootstrap<span class="token punctuation">.</span><span class="token function">gr
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/HashMap/">
-                        <span class="chip bg-color">HashMap</span>
+                    <a href="/tags/ZooKeeper/">
+                        <span class="chip bg-color">ZooKeeper</span>
                     </a>
                     
-                    <a href="/tags/%E9%9B%86%E5%90%88/">
-                        <span class="chip bg-color">集合</span>
+                    <a href="/tags/%E5%AE%89%E8%A3%85/">
+                        <span class="chip bg-color">安装</span>
+                    </a>
+                    
+                    <a href="/tags/Linux/">
+                        <span class="chip bg-color">Linux</span>
                     </a>
                     
                 </div>
