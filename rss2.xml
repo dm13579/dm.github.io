@@ -340,5 +340,34 @@
       
     </item>
     
+    <item>
+      <title>RocketMQ整体理解和消息样例</title>
+      <link>https://dmfly.monster/2020/01/04/rocketmq-zheng-ti-li-jie-he-xiao-xi-yang-li/</link>
+      <guid>https://dmfly.monster/2020/01/04/rocketmq-zheng-ti-li-jie-he-xiao-xi-yang-li/</guid>
+      <pubDate>Sat, 04 Jan 2020 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;RocketMQ架构设计&quot;&gt;&lt;a href=&quot;#RocketMQ架构设计&quot; class=&quot;headerlink&quot; title=&quot;RocketMQ架构设计&quot;&gt;&lt;/a&gt;RocketMQ架构设计&lt;/h2&gt;&lt;p&gt;&lt;img</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmfly.monster/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmfly.monster/tags/RocketMQ/">RocketMQ</category>
+      
+      <category domain="https://dmfly.monster/tags/Java/">Java</category>
+      
+      
+      <comments>https://dmfly.monster/2020/01/04/rocketmq-zheng-ti-li-jie-he-xiao-xi-yang-li/#disqus_thread</comments>
+      
+    </item>
+    
   </channel>
 </rss>
