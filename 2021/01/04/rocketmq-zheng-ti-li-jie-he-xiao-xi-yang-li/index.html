@@ -480,21 +480,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-01-08
+                    2021-01-11
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    5.8k
+                    6.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    24 分
+                    27 分
                 </div>
                 
 
@@ -563,10 +563,31 @@
 </li>
 </ol>
 <p>这样，就基于Raft协议完成了两阶段的数据同步。</p>
-<h2 id="消息存储"><a href="#消息存储" class="headerlink" title="消息存储"></a>消息存储</h2><p>分布式消息为了保证消息可靠性是需要对消息进行持久化。RocketMQ和Kafka一样是对消息进行文件存储。</p>
-<p>消息存储就带来了2个问题，消息结构，和磁盘文件读写速度</p>
-<h3 id="消息结构"><a href="#消息结构" class="headerlink" title="消息结构"></a>消息结构</h3><p>TODO</p>
-<h3 id="磁盘文件读写"><a href="#磁盘文件读写" class="headerlink" title="磁盘文件读写"></a>磁盘文件读写</h3><p>TODO</p>
+<h2 id="消息存储"><a href="#消息存储" class="headerlink" title="消息存储"></a>消息存储</h2><p>分布式消息中间件为了保证性能，读写操作基本都是通过内存来操作的，内存操作在服务器宕机的情况下就存在消息丢失的情况。这时候我们肯定是对消息会进行持久化的。而持久化MQ一般都是采用的文件存储。</p>
+<h3 id="磁盘文件读写（顺序写，零拷贝）"><a href="#磁盘文件读写（顺序写，零拷贝）" class="headerlink" title="磁盘文件读写（顺序写，零拷贝）"></a>磁盘文件读写（顺序写，零拷贝）</h3><p>文件存储必然带来的问题就是性能问题，文件存储性能一般而言都不高。但是RocketMQ大家都知道性能是很好的，是可以支持到百万级QPS的。它的优良性能是顺序写和零拷贝带来的。</p>
+<ol>
+<li><p>顺序写：目前的高性能磁盘，顺序写速度可以达到600MB/s， 超过了一般网卡的传输速度。但是磁盘随机写的速度只有大概100KB/s，和顺序写的性能相差6000倍！因为有如此巨大的速度差别，好的消息队列系统会比普通的消息队列系统速度快多个数量级。RocketMQ的消息用顺序写,保证了消息存储的速度。RocketMQ会提前分配1个G的磁盘空间给commitLog.之后生产者发送的消息直接分配到这个commitLog上去。这就是顺序写。</p>
+</li>
+<li><p>零拷贝：Linux操作系统分为用户态和内核态。IO操作不可避免的都会涉及到这2种状态的切换。</p>
+<p>假设一台服务器发送了一条数据给客户端，通常会进行4次数据复制。</p>
+<ol>
+<li>从磁盘文件复制数据到内核态内存</li>
+<li>从内核态内存复制数据到用户态客户端的内存上，如果是Java就是JVM虚拟内存</li>
+<li>从用户态客户端内存复制数据到内核态内存</li>
+<li>最后从网络驱动的内核态内存复制到网卡中进行传输。</li>
+</ol>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210111164005.png"></p>
+<p>而RocketMQ中用来mmap技术，不在将文件复制到用户内存中去。直接将内核内存进行映射。而这种零拷贝技术有一个限制，一次只能映射1.5~2G 的文件至用户态的虚拟内存，这也是为何RocketMQ默认设置单个CommitLog日志数据文件为1G的原因了</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210111164032.png"></p>
+</li>
+</ol>
+<h3 id="消息结构"><a href="#消息结构" class="headerlink" title="消息结构"></a>消息结构</h3><p>RocketMQ消息的存储分为三个部分：commitlog、consumerqueue、index</p>
+<ul>
+<li>commitlog：生产者发送的消息存入到commitlog，commitlog有多个文件，每个文件固定大小1G。以第一条消息的偏移量为文件名。</li>
+<li>consumerqueue：consumerqueue文件夹下是按Topic来分的，一个Topic一个文件夹。topic文件夹下是按队列来分的，一个队列一个文件夹。队列文件记录当前队列被哪些消费者组消费到了哪一条commitlog,记录的commitlog中的索引。</li>
+<li>index：为了消息查询提供了一种通过key或时间区间来查询消息的方法</li>
+</ul>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210111165049.png"></p>
 <h2 id="副本同步方式"><a href="#副本同步方式" class="headerlink" title="副本同步方式"></a>副本同步方式</h2><p>Broker以集群启动必然包含一个功能便是主从复制方式。RocketMQ消息复制得方式有2个,同步复制和异步复制。</p>
 <h3 id="同步复制"><a href="#同步复制" class="headerlink" title="同步复制"></a>同步复制</h3><p>同步复制就是等Master和Slave全部写入消息成功，反馈给客户端消息写入成功。</p>
 <p>优势：数据更加完整，Slave有全部的数据备份，即使Master挂了也没事。</p>
@@ -575,6 +596,15 @@
 <p>优势：数据写入延迟低，系统吞吐量高。</p>
 <p>劣势：消息丢失可能性高。Master节点故障，可能会有数据没有同步到Slave,导致消息丢失。</p>
 <h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>消息复制方式是通过Broker配置文件里的brokerRole参数进行设置的，这个参数可以被设置成ASYNC_MASTER、 SYNC_MASTER、SLAVE三个值中的一个</p>
+<h2 id="消息刷盘机制"><a href="#消息刷盘机制" class="headerlink" title="消息刷盘机制"></a>消息刷盘机制</h2><p>上面有副本同步方式，但只涉及到消息到服务端，此时消息并没有写入磁盘，写磁盘与另一个刷盘机制有关。</p>
+<h3 id="同步刷盘"><a href="#同步刷盘" class="headerlink" title="同步刷盘"></a>同步刷盘</h3><p>数据写入磁盘后才返回给客户端数据写好了</p>
+<p>优势：数据更加完整，Slave有全部的数据备份，即使Master挂了也没事。</p>
+<p>劣势：会增加数据写入延迟，降低系统吞吐量。</p>
+<h3 id="异步刷盘"><a href="#异步刷盘" class="headerlink" title="异步刷盘"></a>异步刷盘</h3><p>数据写入一个缓冲区就回复给客户端写好了。</p>
+<p>优势：数据写入延迟低，系统吞吐量高。</p>
+<p>劣势：消息丢失可能性高。Master节点故障，可能会有数据没有同步到Slave,导致消息丢失。</p>
+<h3 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h3><p>消息复制方式是通过Broker配置文件里的flushDiskType参数进行设置的，这个参数可以被设置成ASYNC_FLUSH：异步刷盘</p>
+<p>SYNC_FLUSH：同步刷盘。</p>
 <h2 id="消息样例"><a href="#消息样例" class="headerlink" title="消息样例"></a>消息样例</h2><h3 id="生产者发送方式"><a href="#生产者发送方式" class="headerlink" title="生产者发送方式"></a>生产者发送方式</h3><h4 id="同步发送（等待消息返回继续操作）"><a href="#同步发送（等待消息返回继续操作）" class="headerlink" title="同步发送（等待消息返回继续操作）"></a>同步发送（等待消息返回继续操作）</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> MQClientException<span class="token punctuation">,</span> UnsupportedEncodingException<span class="token punctuation">,</span> RemotingException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> MQBrokerException <span class="token punctuation">{</span>
     DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"sync_msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1646,7 +1676,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">39.9k</span>
+            <span class="white-color">40.8k</span>
             
 
             <br>
