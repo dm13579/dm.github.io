@@ -480,21 +480,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-01-11
+                    2021-01-12
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    6.7k
+                    6.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    27 分
+                    28 分
                 </div>
                 
 
@@ -588,7 +588,7 @@
 <li>index：为了消息查询提供了一种通过key或时间区间来查询消息的方法</li>
 </ul>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210111165049.png"></p>
-<h2 id="副本同步方式"><a href="#副本同步方式" class="headerlink" title="副本同步方式"></a>副本同步方式</h2><p>Broker以集群启动必然包含一个功能便是主从复制方式。RocketMQ消息复制得方式有2个,同步复制和异步复制。</p>
+<h2 id="消息主从复制"><a href="#消息主从复制" class="headerlink" title="消息主从复制"></a>消息主从复制</h2><p>Broker以集群启动必然包含一个功能便是主从复制方式。RocketMQ消息复制得方式有2个,同步复制和异步复制。</p>
 <h3 id="同步复制"><a href="#同步复制" class="headerlink" title="同步复制"></a>同步复制</h3><p>同步复制就是等Master和Slave全部写入消息成功，反馈给客户端消息写入成功。</p>
 <p>优势：数据更加完整，Slave有全部的数据备份，即使Master挂了也没事。</p>
 <p>劣势：会增加数据写入延迟，降低系统吞吐量。</p>
@@ -597,10 +597,11 @@
 <p>劣势：消息丢失可能性高。Master节点故障，可能会有数据没有同步到Slave,导致消息丢失。</p>
 <h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>消息复制方式是通过Broker配置文件里的brokerRole参数进行设置的，这个参数可以被设置成ASYNC_MASTER、 SYNC_MASTER、SLAVE三个值中的一个</p>
 <h2 id="消息刷盘机制"><a href="#消息刷盘机制" class="headerlink" title="消息刷盘机制"></a>消息刷盘机制</h2><p>上面有副本同步方式，但只涉及到消息到服务端，此时消息并没有写入磁盘，写磁盘与另一个刷盘机制有关。</p>
-<h3 id="同步刷盘"><a href="#同步刷盘" class="headerlink" title="同步刷盘"></a>同步刷盘</h3><p>数据写入磁盘后才返回给客户端数据写好了</p>
+<h3 id="同步刷盘"><a href="#同步刷盘" class="headerlink" title="同步刷盘"></a>同步刷盘</h3><p>在返回写成功状态时，消息已经被写入磁盘。</p>
+<p>具体流程是，消息写入内存的PAGECACHE后，立刻通知刷盘线程刷盘， 然后等待刷盘完成，刷盘线程执行完成后唤醒等待的线程，返回消息写成功的状态。</p>
 <p>优势：数据更加完整，Slave有全部的数据备份，即使Master挂了也没事。</p>
 <p>劣势：会增加数据写入延迟，降低系统吞吐量。</p>
-<h3 id="异步刷盘"><a href="#异步刷盘" class="headerlink" title="异步刷盘"></a>异步刷盘</h3><p>数据写入一个缓冲区就回复给客户端写好了。</p>
+<h3 id="异步刷盘"><a href="#异步刷盘" class="headerlink" title="异步刷盘"></a>异步刷盘</h3><p>在返回写成功状态时，消息可能只是被写入了内存的PAGECACHE，写操作的返回快，吞吐量大；当内存里的消息量积累到一定程度时，统一触发写磁盘动作，快速写入。</p>
 <p>优势：数据写入延迟低，系统吞吐量高。</p>
 <p>劣势：消息丢失可能性高。Master节点故障，可能会有数据没有同步到Slave,导致消息丢失。</p>
 <h3 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h3><p>消息复制方式是通过Broker配置文件里的flushDiskType参数进行设置的，这个参数可以被设置成ASYNC_FLUSH：异步刷盘</p>
@@ -1676,7 +1677,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">40.8k</span>
+            <span class="white-color">40.9k</span>
             
 
             <br>
