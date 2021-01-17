@@ -9,8 +9,41 @@
     <atom:link href="https://dmfly.monster/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Tue, 12 Jan 2021 02:23:14 GMT</pubDate>
+    <pubDate>Tue, 12 Jan 2021 03:00:29 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>RocketMQ生产问题实践</title>
+      <link>https://dmfly.monster/2021/01/12/rocketmq-sheng-chan-wen-ti/</link>
+      <guid>https://dmfly.monster/2021/01/12/rocketmq-sheng-chan-wen-ti/</guid>
+      <pubDate>Tue, 12 Jan 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;script&gt;
+        document.querySelectorAll(&#39;.github-emoji&#39;)
+          .forEach(el =&gt; {
+            if (!el.dataset.src) { return; }
+       </description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmfly.monster/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmfly.monster/tags/RocketMQ/">RocketMQ</category>
+      
+      <category domain="https://dmfly.monster/tags/%E7%94%9F%E4%BA%A7%E9%97%AE%E9%A2%98/">生产问题</category>
+      
+      
+      <comments>https://dmfly.monster/2021/01/12/rocketmq-sheng-chan-wen-ti/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>RocketMQ整体理解和消息样例</title>
@@ -215,9 +248,9 @@
       <category domain="https://dmfly.monster/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmfly.monster/tags/%E9%9B%86%E5%90%88/">集合</category>
-      
       <category domain="https://dmfly.monster/tags/%E5%B9%B6%E5%8F%91/">并发</category>
+      
+      <category domain="https://dmfly.monster/tags/%E9%9B%86%E5%90%88/">集合</category>
       
       <category domain="https://dmfly.monster/tags/ConcurrentHashMap/">ConcurrentHashMap</category>
       

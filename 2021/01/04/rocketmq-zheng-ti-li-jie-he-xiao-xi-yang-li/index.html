@@ -606,7 +606,7 @@
 <p>劣势：消息丢失可能性高。Master节点故障，可能会有数据没有同步到Slave,导致消息丢失。</p>
 <h3 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h3><p>消息复制方式是通过Broker配置文件里的flushDiskType参数进行设置的，这个参数可以被设置成ASYNC_FLUSH：异步刷盘</p>
 <p>SYNC_FLUSH：同步刷盘。</p>
-<h2 id="消息样例"><a href="#消息样例" class="headerlink" title="消息样例"></a>消息样例</h2><h3 id="生产者发送方式"><a href="#生产者发送方式" class="headerlink" title="生产者发送方式"></a>生产者发送方式</h3><h4 id="同步发送（等待消息返回继续操作）"><a href="#同步发送（等待消息返回继续操作）" class="headerlink" title="同步发送（等待消息返回继续操作）"></a>同步发送（等待消息返回继续操作）</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> MQClientException<span class="token punctuation">,</span> UnsupportedEncodingException<span class="token punctuation">,</span> RemotingException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> MQBrokerException <span class="token punctuation">{</span>
+<h2 id="生产者发送方式"><a href="#生产者发送方式" class="headerlink" title="生产者发送方式"></a>生产者发送方式</h2><h3 id="同步发送（等待消息返回继续操作）"><a href="#同步发送（等待消息返回继续操作）" class="headerlink" title="同步发送（等待消息返回继续操作）"></a>同步发送（等待消息返回继续操作）</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> MQClientException<span class="token punctuation">,</span> UnsupportedEncodingException<span class="token punctuation">,</span> RemotingException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> MQBrokerException <span class="token punctuation">{</span>
     DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"sync_msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -618,7 +618,7 @@
     <span class="token punctuation">}</span>
     producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h4 id="异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）"><a href="#异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）" class="headerlink" title="异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）"></a>异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+<h3 id="异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）"><a href="#异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）" class="headerlink" title="异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）"></a>异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
     DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"async_msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -648,7 +648,7 @@
     countDownLatch<span class="token punctuation">.</span><span class="token function">await</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h4 id="单向发送（消息发完就不管了）"><a href="#单向发送（消息发完就不管了）" class="headerlink" title="单向发送（消息发完就不管了）"></a>单向发送（消息发完就不管了）</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception<span class="token punctuation">{</span>
+<h3 id="单向发送（消息发完就不管了）"><a href="#单向发送（消息发完就不管了）" class="headerlink" title="单向发送（消息发完就不管了）"></a>单向发送（消息发完就不管了）</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception<span class="token punctuation">{</span>
     DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"oneway_msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -659,7 +659,7 @@
     <span class="token punctuation">}</span>
     producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="消费者消费方式"><a href="#消费者消费方式" class="headerlink" title="消费者消费方式"></a>消费者消费方式</h3><h4 id="推模式-消费者等待Broker把消息推送过来"><a href="#推模式-消费者等待Broker把消息推送过来" class="headerlink" title="推模式(消费者等待Broker把消息推送过来)"></a>推模式(消费者等待Broker把消息推送过来)</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException<span class="token punctuation">,</span> MQClientException <span class="token punctuation">{</span>
+<h2 id="消费者消费方式"><a href="#消费者消费方式" class="headerlink" title="消费者消费方式"></a>消费者消费方式</h2><h3 id="推模式-消费者等待Broker把消息推送过来"><a href="#推模式-消费者等待Broker把消息推送过来" class="headerlink" title="推模式(消费者等待Broker把消息推送过来)"></a>推模式(消费者等待Broker把消息推送过来)</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException<span class="token punctuation">,</span> MQClientException <span class="token punctuation">{</span>
     DefaultMQPushConsumer consumer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQPushConsumer</span><span class="token punctuation">(</span><span class="token string">"msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     consumer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     consumer<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token string">"TopicStudent"</span><span class="token punctuation">,</span> <span class="token string">"*"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -674,7 +674,7 @@
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     consumer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h4 id="拉模式-消费者主动去Broker上拉取消息"><a href="#拉模式-消费者主动去Broker上拉取消息" class="headerlink" title="拉模式(消费者主动去Broker上拉取消息)"></a>拉模式(消费者主动去Broker上拉取消息)</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> MQClientException <span class="token punctuation">{</span>
+<h3 id="拉模式-消费者主动去Broker上拉取消息"><a href="#拉模式-消费者主动去Broker上拉取消息" class="headerlink" title="拉模式(消费者主动去Broker上拉取消息)"></a>拉模式(消费者主动去Broker上拉取消息)</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> MQClientException <span class="token punctuation">{</span>
     DefaultMQPullConsumer consumer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQPullConsumer</span><span class="token punctuation">(</span><span class="token string">"async_msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     consumer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.Xx.Xx.Xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     consumer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -711,8 +711,8 @@
     <span class="token punctuation">}</span>
     consumer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="顺序消息"><a href="#顺序消息" class="headerlink" title="顺序消息"></a>顺序消息</h3><p>生产者往topic上面发送消息，消息会分配到不同的queue上，而且消费者消费消息也是一个队列取一个进行消费，这时候消费者消费消息就不是顺序的了，要想顺序消费就让它你想顺序的放在同一个队列上。消费者再注册MessageListenerOrderly，按队列消费，一个队列消费完在换下一个队列，这样消费就是顺序的。但是这样是局部有序，要想全局有序就让所有消息放在一个队列消费，但这样性能瓶颈会较大，一般局部有序就可以满足需求了。</p>
-<h4 id="生产者"><a href="#生产者" class="headerlink" title="生产者"></a>生产者</h4><p>这里的逻辑就是通过订单编号对mqs(队列个数)进行取模，分配到队列上去。这样就是相同订单编号进入相同队列</p>
+<h2 id="顺序消息"><a href="#顺序消息" class="headerlink" title="顺序消息"></a>顺序消息</h2><p>生产者往topic上面发送消息，消息会分配到不同的queue上，而且消费者消费消息也是一个队列取一个进行消费，这时候消费者消费消息就不是顺序的了，要想顺序消费就让它你想顺序的放在同一个队列上。消费者再注册MessageListenerOrderly，按队列消费，一个队列消费完在换下一个队列，这样消费就是顺序的。但是这样是局部有序，要想全局有序就让所有消息放在一个队列消费，但这样性能瓶颈会较大，一般局部有序就可以满足需求了。</p>
+<h3 id="生产者"><a href="#生产者" class="headerlink" title="生产者"></a>生产者</h3><p>这里的逻辑就是通过订单编号对mqs(队列个数)进行取模，分配到队列上去。这样就是相同订单编号进入相同队列</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
         DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"ordered_group_name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -811,7 +811,7 @@
         <span class="token keyword">private</span> <span class="token keyword">long</span> orderId<span class="token punctuation">;</span>
         <span class="token keyword">private</span> String desc<span class="token punctuation">;</span>
     <span class="token punctuation">}</span></code></pre>
-<h4 id="消费者"><a href="#消费者" class="headerlink" title="消费者"></a>消费者</h4><p>消费者这里主要改动了监听的方法，消费者注册了监听-MessageListenerOrderly，可以顺序消费每一条队列</p>
+<h3 id="消费者"><a href="#消费者" class="headerlink" title="消费者"></a>消费者</h3><p>消费者这里主要改动了监听的方法，消费者注册了监听-MessageListenerOrderly，可以顺序消费每一条队列</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
         DefaultMQPushConsumer consumer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQPushConsumer</span><span class="token punctuation">(</span><span class="token string">"ordered_group_name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         consumer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -850,8 +850,8 @@
         consumer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Consumer Started.%n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span></code></pre>
-<h3 id="延迟消息"><a href="#延迟消息" class="headerlink" title="延迟消息"></a>延迟消息</h3><p>在其他的消息中间件中，对延迟消息都没有支持，只能通过其他的方法实现延迟队列，比如RabbitMQ一般通过TTL+死信或者延迟插件实现延迟队列。而RocketMQ原生支持延时队列,就是调用producer.send,消息不会直接发送出去而是会等待一段时间。不过开源版只支持18个级别；messageDelayLevel=1s 5s 10s 30s 1m 2m 3m 4m 5m<br>6m 7m 8m 9m 10m 20m 30m 1h 2h。商业版本是支持任意时刻的设置。</p>
-<h4 id="生产者-1"><a href="#生产者-1" class="headerlink" title="生产者"></a>生产者</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+<h2 id="延迟消息"><a href="#延迟消息" class="headerlink" title="延迟消息"></a>延迟消息</h2><p>在其他的消息中间件中，对延迟消息都没有支持，只能通过其他的方法实现延迟队列，比如RabbitMQ一般通过TTL+死信或者延迟插件实现延迟队列。而RocketMQ原生支持延时队列,就是调用producer.send,消息不会直接发送出去而是会等待一段时间。不过开源版只支持18个级别；messageDelayLevel=1s 5s 10s 30s 1m 2m 3m 4m 5m<br>6m 7m 8m 9m 10m 20m 30m 1h 2h。商业版本是支持任意时刻的设置。</p>
+<h3 id="生产者-1"><a href="#生产者-1" class="headerlink" title="生产者"></a>生产者</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
     DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"ExampleConsumer"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -866,8 +866,8 @@
     System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"message send is completed .%n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="广播消息"><a href="#广播消息" class="headerlink" title="广播消息"></a>广播消息</h3><p>集群消费模式下，每一条消息只会被一个消费组的一个消费者消费，而广播模式，是把消息发送给所有订阅了该Topic的消费者，不管消费者是不是同一个消费组。</p>
-<h4 id="消费者-1"><a href="#消费者-1" class="headerlink" title="消费者"></a>消费者</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException<span class="token punctuation">,</span> MQClientException <span class="token punctuation">{</span>
+<h2 id="广播消息"><a href="#广播消息" class="headerlink" title="广播消息"></a>广播消息</h2><p>集群消费模式下，每一条消息只会被一个消费组的一个消费者消费，而广播模式，是把消息发送给所有订阅了该Topic的消费者，不管消费者是不是同一个消费组。</p>
+<h3 id="消费者-1"><a href="#消费者-1" class="headerlink" title="消费者"></a>消费者</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException<span class="token punctuation">,</span> MQClientException <span class="token punctuation">{</span>
     DefaultMQPushConsumer consumer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQPushConsumer</span><span class="token punctuation">(</span><span class="token string">"please_rename_unique_group_name_1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     consumer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     consumer<span class="token punctuation">.</span><span class="token function">setConsumeFromWhere</span><span class="token punctuation">(</span>ConsumeFromWhere<span class="token punctuation">.</span>CONSUME_FROM_LAST_OFFSET<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -885,9 +885,9 @@
     consumer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Broadcast Consumer Started.%n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="批量消息"><a href="#批量消息" class="headerlink" title="批量消息"></a>批量消息</h3><p>批量消息是将多个消息组合成一条批量消息发送出去，是为了减少网络IO,提升系统吞吐量。</p>
+<h2 id="批量消息"><a href="#批量消息" class="headerlink" title="批量消息"></a>批量消息</h2><p>批量消息是将多个消息组合成一条批量消息发送出去，是为了减少网络IO,提升系统吞吐量。</p>
 <p>注意：官方对于批量消息大小的限制是1M，实际使用时，这个1MB的限制可以稍微扩大点，实际最大的限制是4194304字节，大概4MB。但是使用批量消息时，这个消息长度确实是必须考虑的一个问题。而且批量消息的使用是有一定限制的，这些消息应该有相同的Topic，相同的waitStoreMsgOK。而且不能是延迟消息、事务消息等。</p>
-<h4 id="生产者-2"><a href="#生产者-2" class="headerlink" title="生产者"></a>生产者</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+<h3 id="生产者-2"><a href="#生产者-2" class="headerlink" title="生产者"></a>生产者</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
     DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"batch_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -959,17 +959,17 @@
         <span class="token keyword">return</span> subList<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="过滤消息"><a href="#过滤消息" class="headerlink" title="过滤消息"></a>过滤消息</h3><p>RocketMQ设计了很多种消息过滤方式，简单的一般可以用Tag进行过滤。复杂一点的可以使用参数过滤加SQL92.</p>
+<h2 id="过滤消息"><a href="#过滤消息" class="headerlink" title="过滤消息"></a>过滤消息</h2><p>RocketMQ设计了很多种消息过滤方式，简单的一般可以用Tag进行过滤。复杂一点的可以使用参数过滤加SQL92.</p>
 <p>消息过滤一般是在broker端进行过滤，性能上也是比较高的。</p>
 <p>注意：推模式的消费者才可以使用SQL过滤，拉模式不可以</p>
-<h4 id="SQL92语法"><a href="#SQL92语法" class="headerlink" title="SQL92语法"></a>SQL92语法</h4><ul>
+<h3 id="SQL92语法"><a href="#SQL92语法" class="headerlink" title="SQL92语法"></a>SQL92语法</h3><ul>
 <li>数值比较：比如：&gt;、&gt;=、&lt;、&lt;=、BETWEEN、=</li>
 <li>字符比较：比如：=、&lt;&gt;、IN</li>
 <li>空串判断：IS NULL 、 IS NOT NULL</li>
 <li>逻辑符号：AND，OR，NOT；</li>
 <li>常量支持类型为：<br>数值，比如：123，3.1415；<br>字符，比如：’abc’，必须用单引号包裹起来；<br>NULL，特殊的常量<br>布尔值，TRUE 或 FALSE</li>
 </ul>
-<h4 id="生产者-3"><a href="#生产者-3" class="headerlink" title="生产者"></a>生产者</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+<h3 id="生产者-3"><a href="#生产者-3" class="headerlink" title="生产者"></a>生产者</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
     DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"please_rename_unique_group_name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -985,7 +985,7 @@
     <span class="token punctuation">}</span>
     producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h4 id="消费者-2"><a href="#消费者-2" class="headerlink" title="消费者"></a>消费者</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+<h3 id="消费者-2"><a href="#消费者-2" class="headerlink" title="消费者"></a>消费者</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
 
     DefaultMQPushConsumer consumer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQPushConsumer</span><span class="token punctuation">(</span><span class="token string">"please_rename_unique_group_name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     consumer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1005,9 +1005,9 @@
     consumer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Consumer Started.%n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>    </code></pre>
-<h3 id="事务消息"><a href="#事务消息" class="headerlink" title="事务消息"></a>事务消息</h3><p>事务消息和延时消息一样都是RocketMQ特有的。事务消息官方解释是分布式系统中保持最终一致性的2阶段提交的消息实现。简单来说就是保证本地事务执行与发送消息到broker2个操作的原子性。</p>
+<h2 id="事务消息"><a href="#事务消息" class="headerlink" title="事务消息"></a>事务消息</h2><p>事务消息和延时消息一样都是RocketMQ特有的。事务消息官方解释是分布式系统中保持最终一致性的2阶段提交的消息实现。简单来说就是保证本地事务执行与发送消息到broker2个操作的原子性。</p>
 <p>注：事务消息只保证消息发送者的本地事务与发消息这两个操作的原子性，因此，事务消息的只涉及到消息发送者。</p>
-<h4 id="事务消息使用限制"><a href="#事务消息使用限制" class="headerlink" title="事务消息使用限制"></a><strong>事务消息使用限制</strong></h4><ol>
+<h3 id="事务消息使用限制"><a href="#事务消息使用限制" class="headerlink" title="事务消息使用限制"></a><strong>事务消息使用限制</strong></h3><ol>
 <li>事务消息不支持延迟消息和批量消息</li>
 <li>为了避免单个消息被检查太多次而导致半队列消息累积，我们默认将单个消息的检查次数限制为15 次，但是用户可以通过 Broker 配置文件的 transactionCheckMax 参数来修改此限制。如果已经检查某条消息超过 N 次的话（ N = transactionCheckMax ） 则 Broker 将丢弃此消息，并在默认情况下同时打印错误日志。用户可以通过重写 AbstractTransactionCheckListener 类来修改这个行为</li>
 <li>事务消息将在 Broker 配置文件中的参数 transactionMsgTimeout 这样的特定时间长度之后被检查。当发送事务消息时，用户还可以通过设置用户属性 CHECK_IMMUNITY_TIME_IN_SECONDS 来改变这个限制，该参数优先于 transactionMsgTimeout 参数</li>
@@ -1015,7 +1015,7 @@
 <li>提交给用户的目标主题消息可能会失败，目前这依日志的记录而定。它的高可用性通过RocketMQ 本身的高可用性机制来保证，如果希望确保事务消息不丢失、并且事务完整性得到保证，建议使用同步的双重写入机制</li>
 <li>事务消息的生产者 ID 不能与其他类型消息的生产者 ID 共享。与其他类型的消息不同，事务消息允许反向查询、MQ服务器能通过它们的生产者 ID 查询到消费者</li>
 </ol>
-<h4 id="实现机制"><a href="#实现机制" class="headerlink" title="实现机制"></a>实现机制</h4><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210107112452.png"></p>
+<h3 id="实现机制"><a href="#实现机制" class="headerlink" title="实现机制"></a>实现机制</h3><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210107112452.png"></p>
 <p>步骤：</p>
 <ol>
 <li>发送方将half事务消息发送到broker</li>
@@ -1024,7 +1024,7 @@
 <li>发送方根据本地事务执行结果向broker发送二次确认</li>
 <li>broker收到发送方commit状态则将half事务消息标记为可投递，订阅方可以收到消息。。发送方rollback状态，则删除half事务消息。。如果步骤4的二次确认没有发送到broker则会过一段时间broker会对发送方进行消息回查，发送方收到消息回查，检查对应消息的本地事务执行结果。发送方根据回查结果继续步骤5。</li>
 </ol>
-<h4 id="生产者代码"><a href="#生产者代码" class="headerlink" title="生产者代码"></a>生产者代码</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> MQClientException<span class="token punctuation">,</span> InterruptedException <span class="token punctuation">{</span>
+<h3 id="生产者代码"><a href="#生产者代码" class="headerlink" title="生产者代码"></a>生产者代码</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> MQClientException<span class="token punctuation">,</span> InterruptedException <span class="token punctuation">{</span>
         TransactionListener transactionListener <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TransactionListenerImpl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         TransactionMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TransactionMQProducer</span><span class="token punctuation">(</span><span class="token string">"please_rename_unique_group_name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.Xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1383,33 +1383,32 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/01/04/rocketmq-zheng-ti-li-jie-he-xiao-xi-yang-li/">
+                <a href="/2021/01/12/rocketmq-sheng-chan-wen-ti/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/13.jpg" class="responsive-img" alt="RocketMQ整体理解和消息样例">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/load.jpg" data-original="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/23.jpg" class="responsive-img" alt="RocketMQ生产问题实践">
                         
-                        <span class="card-title">RocketMQ整体理解和消息样例</span>
+                        <span class="card-title">RocketMQ生产问题实践</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            RocketMQ架构设计
-在RocketMQ上主要分为4部分，Producer、Consumer、NameServer、Broker
-
-Producer：消息生产者，Producer通过NameServer拉取所有Broker集群，通过负载
+                            
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-04
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-01-12
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1422,7 +1421,6 @@ Producer：消息生产者，Producer通过NameServer拉取所有Broker集群，
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -1430,8 +1428,8 @@ Producer：消息生产者，Producer通过NameServer拉取所有Broker集群，
                         <span class="chip bg-color">RocketMQ</span>
                     </a>
                     
-                    <a href="/tags/Java/">
-                        <span class="chip bg-color">Java</span>
+                    <a href="/tags/%E7%94%9F%E4%BA%A7%E9%97%AE%E9%A2%98/">
+                        <span class="chip bg-color">生产问题</span>
                     </a>
                     
                 </div>
@@ -1677,7 +1675,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">40.9k</span>
+            <span class="white-color">41k</span>
             
 
             <br>
