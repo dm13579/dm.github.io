@@ -111,11 +111,11 @@
       
         <tags>
             
+            <tag> 消息队列 </tag>
+            
             <tag> Kafka </tag>
             
             <tag> Java </tag>
-            
-            <tag> 消息队列 </tag>
             
             <tag> 生产实践 </tag>
             
@@ -142,11 +142,11 @@
       
         <tags>
             
+            <tag> 消息队列 </tag>
+            
             <tag> Kafka </tag>
             
             <tag> Java </tag>
-            
-            <tag> 消息队列 </tag>
             
         </tags>
       
@@ -171,13 +171,13 @@
       
         <tags>
             
-            <tag> 消息队列 </tag>
-            
             <tag> KafKa </tag>
             
             <tag> 安装 </tag>
             
             <tag> Linux </tag>
+            
+            <tag> 消息队列 </tag>
             
         </tags>
       
@@ -231,9 +231,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> 消息队列 </tag>
+            
+            <tag> Java </tag>
             
             <tag> RocketMQ </tag>
             
@@ -260,11 +260,11 @@
       
         <tags>
             
-            <tag> 消息队列 </tag>
-            
             <tag> 安装 </tag>
             
             <tag> Linux </tag>
+            
+            <tag> 消息队列 </tag>
             
             <tag> RocketMQ </tag>
             
