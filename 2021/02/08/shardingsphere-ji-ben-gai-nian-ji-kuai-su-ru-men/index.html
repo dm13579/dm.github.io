@@ -1,0 +1,1749 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+	<meta name="baidu-site-verification" content="lElrePz9Qe" />
+	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
+    <meta name="keywords" content="ShardingSphere,分库分表">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', '');
+</script>
+
+
+    <title>ShardingSphere基本概念及快速入门 | 泉涸</title>
+    <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">泉涸</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags/" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories/" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives/" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about/" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact/" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends/" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">泉涸</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/21.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">ShardingSphere基本概念及快速入门</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/MySQL/">
+                                <span class="chip bg-color">MySQL</span>
+                            </a>
+                        
+                            <a href="/tags/ShardingSphere/">
+                                <span class="chip bg-color">ShardingSphere</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">
+                                <span class="chip bg-color">分库分表</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                笔记
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-02-08
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-02-05
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.3k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    15 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>Apache ShardingSphere 是一套开源的分布式数据库解决方案组成的生态圈，它由 JDBC、Proxy 和 Sidecar（规划中）这 3 款既能够独立部署，又支持混合部署配合使用的产品组成。 它们均提供标准化的数据水平扩展、分布式事务和分布式治理等功能，可适用于如 Java 同构、异构语言、云原生等各种多样化的应用场景。</p>
+<p>ShardingSphere 已于2020年4月16日成为 Apache 软件基金会的顶级项目。</p>
+<p>ShardingSphere 主要有3个产品，ShardingJDBC、ShardingProxy和ShardingSidecar</p>
+<ul>
+<li>ShardingJDBC：客户端分库分表的产品，轻量级 Java 框架，以 jar 包形式提供服务</li>
+<li>ShardingProxy：服务端分库分表的产品，封装了数据库⼆进制协议的服务端版本，⽤于完成对异构语⾔的⽀持。⽬前提供 MySQL 和 PostgreSQL 版本，它可以使⽤任何兼容 MySQL/PostgreSQL 协议的访问客⼾端</li>
+<li>ShardingSidecar：规划中</li>
+</ul>
+<h2 id="ShardingJDBC和ShardingProxy对比"><a href="#ShardingJDBC和ShardingProxy对比" class="headerlink" title="ShardingJDBC和ShardingProxy对比"></a>ShardingJDBC和ShardingProxy对比</h2><p>ShardingJdbc就是一个jar包，在jar包里面提供了分库分表的逻辑（个别逻辑需自己实现），优点是灵活性大，支持数据库较多（只要是通过Jdbc连接的）。缺点是业务侵入大，需要自己实现分库分表逻辑。</p>
+<p>ShardingProxy是一个独立的服务，业务无侵入，客户端只需自己连接ShardingProxy就可以进行分库分表，客户端感知不到其实已经分库分表。但这优点也代表着它不够灵活，只有固定的功能，不可以定制开发，支持的数据库也比较少。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Sharding-JDBC</th>
+<th>Sharding-Proxy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据库</td>
+<td>任意</td>
+<td>MySQL/PostgreSQL</td>
+</tr>
+<tr>
+<td>连接消耗数</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td>异构语言</td>
+<td>仅java</td>
+<td>任意</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>损耗低</td>
+<td>损耗略高</td>
+</tr>
+<tr>
+<td>无中心化</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>静态入口</td>
+<td>无</td>
+<td>有</td>
+</tr>
+</tbody></table>
+<h2 id="ShardingJdbc基本概念"><a href="#ShardingJdbc基本概念" class="headerlink" title="ShardingJdbc基本概念"></a>ShardingJdbc基本概念</h2><p>ShardingJdbc主要职责是读写分离和数据分片，客户端可以自己定制规则通过Jdbc访问多数据源，不用关心数据的具体分布情况。</p>
+<p>相关概念</p>
+<table>
+<thead>
+<tr>
+<th>概览</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>逻辑表</td>
+<td>水平拆库的相同数据结构的表的总和</td>
+</tr>
+<tr>
+<td>真实表</td>
+<td>数据库存在的真实表</td>
+</tr>
+<tr>
+<td>数据节点</td>
+<td>有数据源和数据表组成</td>
+</tr>
+<tr>
+<td>绑定表</td>
+<td>分片规则一致的主表和子表</td>
+</tr>
+<tr>
+<td>广播表</td>
+<td>公共表，所有的分片都存在的表</td>
+</tr>
+<tr>
+<td>分片键</td>
+<td>用于分片的数据库字段，是将数据库(表)进行水平拆分的关键字段。SQL中若没有分片字段，将会执行全路由，性能会很差</td>
+</tr>
+<tr>
+<td>分片算法</td>
+<td>通过分片算法将数据进行分片，支持通过=、BETWEEN和IN分片。分片算法需要自行实现，可实现的灵活度非常高</td>
+</tr>
+<tr>
+<td>分片策略</td>
+<td>分片键+分片算法</td>
+</tr>
+</tbody></table>
+<h2 id="ShardingJdbc快速实战"><a href="#ShardingJdbc快速实战" class="headerlink" title="ShardingJdbc快速实战"></a>ShardingJdbc快速实战</h2><p>引入依赖,其他springboot,mybatis依赖自行引入</p>
+<pre class=" language-java"><code class="language-java"><span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> sharding 分库分表<span class="token operator">--</span><span class="token operator">></span>
+<span class="token operator">&lt;</span>dependency<span class="token operator">></span>
+    <span class="token operator">&lt;</span>groupId<span class="token operator">></span>org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>shardingsphere<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+    <span class="token operator">&lt;</span>artifactId<span class="token operator">></span>sharding<span class="token operator">-</span>jdbc<span class="token operator">-</span>spring<span class="token operator">-</span>boot<span class="token operator">-</span>starter<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+    <span class="token operator">&lt;</span>version<span class="token operator">></span><span class="token number">4.1</span><span class="token punctuation">.</span><span class="token number">1</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span></code></pre>
+<p>SQL代码自行实现，springboot我们这里只要编写配置文件就可以了</p>
+<pre class=" language-properties"><code class="language-properties"><span class="token comment" spellcheck="true">## 分库分表配置</span>
+<span class="token comment" spellcheck="true"># 配置ds0 和ds1两个数据源</span>
+<span class="token attr-name">spring.shardingsphere.datasource.names</span><span class="token punctuation">=</span><span class="token attr-value">ds0,ds1</span>
+<span class="token comment" spellcheck="true"># ds0 数据源配置</span>
+<span class="token attr-name">spring.shardingsphere.datasource.ds0.type</span><span class="token punctuation">=</span><span class="token attr-value">com.alibaba.druid.pool.DruidDataSource</span>
+<span class="token attr-name">spring.shardingsphere.datasource.ds0.driver-class-name</span><span class="token punctuation">=</span><span class="token attr-value">com.mysql.cj.jdbc.Driver</span>
+<span class="token attr-name">spring.shardingsphere.datasource.ds0.url</span><span class="token punctuation">=</span><span class="token attr-value">jdbc:mysql://xx.xx.xx.xx:3306/shop_ds_0?serverTimezone=UTC&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8</span>
+<span class="token attr-name">spring.shardingsphere.datasource.ds0.username</span><span class="token punctuation">=</span><span class="token attr-value">xx</span>
+<span class="token attr-name">spring.shardingsphere.datasource.ds0.password</span><span class="token punctuation">=</span><span class="token attr-value">xx</span>
+<span class="token comment" spellcheck="true"># ds1 数据源配置</span>
+<span class="token attr-name">spring.shardingsphere.datasource.ds1.type</span><span class="token punctuation">=</span><span class="token attr-value">com.alibaba.druid.pool.DruidDataSource</span>
+<span class="token attr-name">spring.shardingsphere.datasource.ds1.driver-class-name</span><span class="token punctuation">=</span><span class="token attr-value">com.mysql.cj.jdbc.Driver</span>
+<span class="token attr-name">spring.shardingsphere.datasource.ds1.url</span><span class="token punctuation">=</span><span class="token attr-value">jdbc:mysql://xx.xx.xx.xx:3306/shop_ds_1?serverTimezone=UTC&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8</span>
+<span class="token attr-name">spring.shardingsphere.datasource.ds1.username</span><span class="token punctuation">=</span><span class="token attr-value">xx</span>
+<span class="token attr-name">spring.shardingsphere.datasource.ds1.password</span><span class="token punctuation">=</span><span class="token attr-value">xx</span>
+
+<span class="token comment" spellcheck="true"># 分库策略 根据id取模确定数据进哪个数据库</span>
+<span class="token attr-name">spring.shardingsphere.sharding.default-database-strategy.inline.sharding-column</span><span class="token punctuation">=</span><span class="token attr-value">user_id</span>
+<span class="token attr-name">spring.shardingsphere.sharding.default-database-strategy.inline.algorithm-expression</span><span class="token punctuation">=</span><span class="token attr-value">ds$->{user_id % 2}</span>
+<span class="token comment" spellcheck="true"># 绑定表</span>
+<span class="token attr-name">spring.shardingsphere.sharding.binding-tables[0]</span><span class="token punctuation">=</span><span class="token attr-value">t_order,t_order_item</span>
+
+<span class="token comment" spellcheck="true"># 广播表</span>
+<span class="token attr-name">spring.shardingsphere.sharding.broadcast-tables</span><span class="token punctuation">=</span><span class="token attr-value">t_dict</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_dict.key-generator.column</span><span class="token punctuation">=</span><span class="token attr-value">dict_id</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_dict.key-generator.type</span><span class="token punctuation">=</span><span class="token attr-value">SNOWFLAKE</span>
+
+<span class="token comment" spellcheck="true"># 具体分表策略</span>
+<span class="token comment" spellcheck="true"># 节点 ds0.t_order_0,ds0.t_order_1,ds1.t_order_0,ds1.t_order_1</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.actual-data-nodes</span><span class="token punctuation">=</span><span class="token attr-value">ds$->{0..1}.t_order_$->{0..1}</span>
+<span class="token comment" spellcheck="true"># 分表字段id</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.table-strategy.inline.sharding-column</span><span class="token punctuation">=</span><span class="token attr-value">order_id</span>
+<span class="token comment" spellcheck="true"># 分表策略 根据id取模,确定数据最终落在那个表中</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.table-strategy.inline.algorithm-expression</span> <span class="token punctuation">=</span> <span class="token attr-value">t_order_$->{order_id % 2}</span>
+<span class="token comment" spellcheck="true"># t_order使用SNOWFLAKE算法生成主键</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.key-generator.column</span><span class="token punctuation">=</span><span class="token attr-value">order_id</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.key-generator.type</span><span class="token punctuation">=</span><span class="token attr-value">SNOWFLAKE</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.key-generator.props.worker.id</span><span class="token punctuation">=</span><span class="token attr-value">1</span>
+
+<span class="token comment" spellcheck="true"># 节点 ds0.t_order_item_0,ds0.t_order_item_1,ds1.t_order_item_0,ds1.t_order_item_1</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order_item.actual-data-nodes</span><span class="token punctuation">=</span><span class="token attr-value">ds$->{0..1}.t_order_item_$->{0..1}</span>
+<span class="token comment" spellcheck="true"># 分表字段id</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order_item.table-strategy.inline.sharding-column</span><span class="token punctuation">=</span><span class="token attr-value">order_id</span>
+<span class="token comment" spellcheck="true"># 分表策略 根据id取模,确定数据最终落在那个表中</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order_item.table-strategy.inline.algorithm-expression</span><span class="token punctuation">=</span><span class="token attr-value">t_order_item_$->{order_id % 2}</span>
+<span class="token comment" spellcheck="true"># t_order_item使用SNOWFLAKE算法生成主键</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order_item.key-generator.column</span><span class="token punctuation">=</span><span class="token attr-value">order_item_id</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order_item.key-generator.type</span><span class="token punctuation">=</span><span class="token attr-value">SNOWFLAKE</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order_item.key-generator.props.worker.id</span><span class="token punctuation">=</span><span class="token attr-value">123</span>
+
+<span class="token comment" spellcheck="true">## 查看SQL</span>
+<span class="token attr-name">spring.shardingsphere.props.sql.show</span> <span class="token punctuation">=</span> <span class="token attr-value">true</span></code></pre>
+<p>这个配置文件的意思就是有4个order表分别是shop_ds_0.t_order_0、shop_ds_0.t_order_1、shop_ds_1.t_order_0、shop_ds_1.t_order_1</p>
+<p>分片策略是user_id对2取模结果便是分的库；order_id对2取模结果是分的order表；主键生产策略是雪花算法</p>
+<p>t_order_item表和上诉同理。</p>
+<p>项目启动直接跑SQL便可分库分表了。</p>
+<p><strong>注意查询可能会有笛卡尔积现象，需要手动编写策略实现指定查询的数据节点</strong></p>
+<h2 id="ShardingJdbc分片算法"><a href="#ShardingJdbc分片算法" class="headerlink" title="ShardingJdbc分片算法"></a>ShardingJdbc分片算法</h2><p>在上面的测试代码用的是inline分片算法即提供一个分片键和一个分片表达式来制定分片算法，针对一些复杂的分片策略，inline就不够使用了。ShardingSphere提供了其他几种分片策略</p>
+<h3 id="NoneShardingStrategy"><a href="#NoneShardingStrategy" class="headerlink" title="NoneShardingStrategy"></a>NoneShardingStrategy</h3><p>不分片</p>
+<h3 id="InlineShardingStrategy"><a href="#InlineShardingStrategy" class="headerlink" title="InlineShardingStrategy"></a>InlineShardingStrategy</h3><p>分片表达式分片，范围查询不支持</p>
+<p>配置参数：</p>
+<ol>
+<li>inline.shardingColumn分片键</li>
+<li>inline.algorithmExpression：分片表达式</li>
+</ol>
+<pre class=" language-properties"><code class="language-properties"><span class="token comment" spellcheck="true">## =======分片表达式分片======</span>
+<span class="token comment" spellcheck="true">## 分表字段id</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.table-strategy.inline.sharding-column</span><span class="token punctuation">=</span><span class="token attr-value">order_id</span>
+<span class="token comment" spellcheck="true">## 分表策略 根据id取模,确定数据最终落在那个表中</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.table-strategy.inline.algorithm-expression</span> <span class="token punctuation">=</span> <span class="token attr-value">t_order_$->{order_id % 2}</span></code></pre>
+<h3 id="StandardShardingStrategy"><a href="#StandardShardingStrategy" class="headerlink" title="StandardShardingStrategy"></a>StandardShardingStrategy</h3><p>支持单分片键的标准分片策略。</p>
+<p>配置参数：</p>
+<ol>
+<li>standard.sharding-column：分片键</li>
+<li>standard.precise-algorithm-class-name：精确分片算法类名，实现类继承PreciseShardingAlgorithm接口</li>
+<li>standard.range-algorithm-class-name：范围分片算法类名，实现类继承RangeShardingAlgorithm接口</li>
+</ol>
+<pre class=" language-properties"><code class="language-properties"><span class="token comment" spellcheck="true">## =======单分片键分片=======</span>
+<span class="token comment" spellcheck="true">## 分表字段id</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.table-strategy.standard.sharding-column</span><span class="token punctuation">=</span><span class="token attr-value">order_id</span>
+<span class="token comment" spellcheck="true">## 精确分片算法类</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.table-strategy.standard.precise-algorithm-class-name</span><span class="token punctuation">=</span><span class="token attr-value">com.dm.shardingsphere.algorithem.TableStrategyStandardPreciseAlgorithm</span>
+<span class="token comment" spellcheck="true">## 范围分片算法类</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.table-strategy.standard.range-algorithm-class-name</span><span class="token punctuation">=</span><span class="token attr-value">com.dm.shardingsphere.algorithem.TableStrategyStandardRangeAlgorithm</span>
+</code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TableStrategyStandardPreciseAlgorithm</span> <span class="token keyword">implements</span> <span class="token class-name">PreciseShardingAlgorithm</span><span class="token operator">&lt;</span>Long<span class="token operator">></span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> String <span class="token function">doSharding</span><span class="token punctuation">(</span>Collection<span class="token operator">&lt;</span>String<span class="token operator">></span> availableTargetNames<span class="token punctuation">,</span> PreciseShardingValue<span class="token operator">&lt;</span>Long<span class="token operator">></span> shardingValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 数据节点</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"TableStrategyStandardPreciseAlgorithm:====================================================="</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"availableTargetNames："</span> <span class="token operator">+</span> String<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">";"</span><span class="token punctuation">,</span> availableTargetNames<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 逻辑表名 t_order</span>
+        String logicTableName <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getLogicTableName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 分片键名 order_id</span>
+        String columnName <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getColumnName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 传进来的 order_id值，根据这个值可以定制分片策略</span>
+        Long value <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"logicTableName："</span> <span class="token operator">+</span> logicTableName <span class="token operator">+</span> <span class="token string">";columnName："</span> <span class="token operator">+</span> columnName <span class="token operator">+</span> <span class="token string">";value："</span> <span class="token operator">+</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 确认分片</span>
+        <span class="token keyword">long</span> sharding <span class="token operator">=</span> value <span class="token operator">%</span> <span class="token number">2</span><span class="token punctuation">;</span>
+        String key <span class="token operator">=</span> logicTableName<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span><span class="token string">"_"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>sharding<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>availableTargetNames<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> key<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">UnsupportedOperationException</span><span class="token punctuation">(</span><span class="token string">"未找到分片"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TableStrategyStandardRangeAlgorithm</span> <span class="token keyword">implements</span> <span class="token class-name">RangeShardingAlgorithm</span><span class="token operator">&lt;</span>Long<span class="token operator">></span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> Collection<span class="token operator">&lt;</span>String<span class="token operator">></span> <span class="token function">doSharding</span><span class="token punctuation">(</span>Collection<span class="token operator">&lt;</span>String<span class="token operator">></span> availableTargetNames<span class="token punctuation">,</span> RangeShardingValue<span class="token operator">&lt;</span>Long<span class="token operator">></span> shardingValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 数据节点</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"TableStrategyStandardRangeAlgorithm:====================================================="</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"availableTargetNames："</span> <span class="token operator">+</span> String<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">";"</span><span class="token punctuation">,</span> availableTargetNames<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 逻辑表名 t_order</span>
+        String logicTableName <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getLogicTableName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 分片键名 order_id</span>
+        String columnName <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getColumnName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 传进来的 查询范围，根据范围可以定制分片策略，指定查询表</span>
+        Long start <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getValueRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">lowerEndpoint</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Long end <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getValueRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">upperEndpoint</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"logicTableName："</span> <span class="token operator">+</span> logicTableName <span class="token operator">+</span> <span class="token string">";columnName："</span> <span class="token operator">+</span> columnName <span class="token operator">+</span> <span class="token string">";start："</span> <span class="token operator">+</span> start <span class="token operator">+</span> <span class="token string">";end："</span> <span class="token operator">+</span> end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 确认范围</span>
+        <span class="token comment" spellcheck="true">// 这里直接返回所有,可以根据start,end定制范围，比如表一0,500表二501-1000这里返回对应表就可以了</span>
+        <span class="token keyword">return</span> availableTargetNames<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 这里表示范围查询只能查t_order_1表</span>
+<span class="token comment" spellcheck="true">//        return Collections.singletonList("t_order_1");</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="ComplexShardingStrategy"><a href="#ComplexShardingStrategy" class="headerlink" title="ComplexShardingStrategy"></a>ComplexShardingStrategy</h3><p>支持多分片键的复杂分片策略</p>
+<p>配置参数：</p>
+<ol>
+<li>complex.sharding-columns：分片键(多个)</li>
+<li>complex.algorithm-class-name：分片算法实现类，实现类继承ComplexKeysShardingAlgorithm接口</li>
+</ol>
+<pre class=" language-properties"><code class="language-properties"><span class="token comment" spellcheck="true">## =======多分片键的复杂分片策略=======</span>
+<span class="token comment" spellcheck="true"># 分表字段id</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.table-strategy.complex.sharding-columns</span><span class="token punctuation">=</span><span class="token attr-value">order_id</span>
+<span class="token comment" spellcheck="true"># 分片算法实现类</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.table-strategy.complex.algorithm-class-name</span><span class="token punctuation">=</span><span class="token attr-value">com.dm.shardingsphere.algorithem.TableStrategyComplexAlgorithm</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TableStrategyComplexAlgorithm</span> <span class="token keyword">implements</span> <span class="token class-name">ComplexKeysShardingAlgorithm</span><span class="token operator">&lt;</span>Long<span class="token operator">></span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> Collection<span class="token operator">&lt;</span>String<span class="token operator">></span> <span class="token function">doSharding</span><span class="token punctuation">(</span>Collection<span class="token operator">&lt;</span>String<span class="token operator">></span> availableTargetNames<span class="token punctuation">,</span> ComplexKeysShardingValue<span class="token operator">&lt;</span>Long<span class="token operator">></span> shardingValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"TableStrategyComplexAlgorithm:====================================================="</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 数据节点</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"availableTargetNames："</span> <span class="token operator">+</span> String<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">";"</span><span class="token punctuation">,</span> availableTargetNames<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 分片键Map,key-键名如order_id,value-键名对应的值如1231131231414</span>
+        Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Collection<span class="token operator">&lt;</span>Long<span class="token operator">>></span> columnNameAndShardingValuesMap <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getColumnNameAndShardingValuesMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 这里返回的是个列表所以in操作也是可以的</span>
+        Collection<span class="token operator">&lt;</span>Long<span class="token operator">></span> orderIds <span class="token operator">=</span> columnNameAndShardingValuesMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"order_id"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Collection<span class="token operator">&lt;</span>Long<span class="token operator">></span> userIds <span class="token operator">=</span> columnNameAndShardingValuesMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"user_id"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//        System.out.println("orderIds：" + orderIds.stream().map(String::valueOf).collect(Collectors.joining(";")) +</span>
+<span class="token comment" spellcheck="true">//                ";userIds：" + userIds.stream().map(String::valueOf).collect(Collectors.joining(";")));</span>
+
+        <span class="token comment" spellcheck="true">// 范围查询,key-键名如order_id,value-Range类型,key对应范围</span>
+        Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Range<span class="token operator">&lt;</span>Long<span class="token operator">>></span> columnNameAndRangeValuesMap <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getColumnNameAndRangeValuesMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Range<span class="token operator">&lt;</span>Long<span class="token operator">></span> orderIdRange <span class="token operator">=</span> columnNameAndRangeValuesMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"order_id"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Range<span class="token operator">&lt;</span>Long<span class="token operator">></span> userIdRange <span class="token operator">=</span> columnNameAndRangeValuesMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"user_id"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 分片</span>
+        List<span class="token operator">&lt;</span>String<span class="token operator">></span> shardList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>CollectionUtils<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span>orderIds<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> availableTargetNames<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">for</span><span class="token punctuation">(</span>Long orderId<span class="token operator">:</span> orderIds<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">long</span> sharding <span class="token operator">=</span> orderId <span class="token operator">%</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+            shardList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>shardingValue<span class="token punctuation">.</span><span class="token function">getLogicTableName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span><span class="token string">"_"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>sharding<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> shardList<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="HintShardingStrategy：不需要分片键的强制分片策略"><a href="#HintShardingStrategy：不需要分片键的强制分片策略" class="headerlink" title="HintShardingStrategy：不需要分片键的强制分片策略"></a>HintShardingStrategy：不需要分片键的强制分片策略</h3><p>配置参数：</p>
+<ol>
+<li>hint.algorithm-class-name：分片算法实现类，实现类继承HintShardingAlgorithm接口</li>
+</ol>
+<pre class=" language-properties"><code class="language-properties"><span class="token comment" spellcheck="true">## =======不需要分片键的强制分片策略=======</span>
+<span class="token comment" spellcheck="true">## 分片算法实现类</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_order.table-strategy.hint.algorithm-class-name</span><span class="token punctuation">=</span><span class="token attr-value">com.dm.shardingsphere.algorithem.TableStrategyComplexAlgorithm</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TableStrategyHintAlgorithm</span> <span class="token keyword">implements</span> <span class="token class-name">HintShardingAlgorithm</span><span class="token operator">&lt;</span>Long<span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> Collection<span class="token operator">&lt;</span>String<span class="token operator">></span> <span class="token function">doSharding</span><span class="token punctuation">(</span>Collection<span class="token operator">&lt;</span>String<span class="token operator">></span> availableTargetNames<span class="token punctuation">,</span> HintShardingValue<span class="token operator">&lt;</span>Long<span class="token operator">></span> shardingValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"TableStrategyHintAlgorithm:====================================================="</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 数据节点</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"availableTargetNames："</span> <span class="token operator">+</span> String<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">";"</span><span class="token punctuation">,</span> availableTargetNames<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        String logicTableName <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getLogicTableName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        String columnName <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getColumnName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Collection<span class="token operator">&lt;</span>Long<span class="token operator">></span> values <span class="token operator">=</span> shardingValue<span class="token punctuation">.</span><span class="token function">getValues</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>CollectionUtils<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span>values<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> availableTargetNames<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> values<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>value <span class="token operator">-</span><span class="token operator">></span> logicTableName<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span><span class="token string">"_"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span>Collectors<span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> List<span class="token operator">&lt;</span>TOrder<span class="token operator">></span> <span class="token function">queryOrderByHint</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    HintManager hintManager <span class="token operator">=</span> HintManager<span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        hintManager<span class="token punctuation">.</span><span class="token function">addTableShardingValue</span><span class="token punctuation">(</span><span class="token string">"t_order"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> orderMapper<span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span>TOrder<span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">userId</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+        hintManager<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="绑定表"><a href="#绑定表" class="headerlink" title="绑定表"></a>绑定表</h2><pre class=" language-sql"><code class="language-sql"><span class="token keyword">SELECT</span> <span class="token number">b</span><span class="token punctuation">.</span>address_id<span class="token punctuation">,</span><span class="token number">a</span><span class="token punctuation">.</span><span class="token operator">*</span> <span class="token keyword">FROM</span> t_order_item <span class="token number">a</span> <span class="token keyword">LEFT</span> <span class="token keyword">JOIN</span> t_order <span class="token number">b</span> <span class="token keyword">ON</span> <span class="token number">a</span><span class="token punctuation">.</span>order_id <span class="token operator">=</span> <span class="token number">b</span><span class="token punctuation">.</span>order_id</code></pre>
+<p>类似这种SQL通过分片策略执行结束后</p>
+<p><img src="!%5B%5D(https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/image-20210205172009398.png" alt="image-20210205172009398"></p>
+<p>出现了笛卡尔积现象，会消耗大量的性能。</p>
+<p>解决这种办法就是让t_order和t_order_item走同样的分片策略，并且绑定在一起</p>
+<pre class=" language-properties"><code class="language-properties"><span class="token attr-name">spring.shardingsphere.sharding.binding-tables[0]</span><span class="token punctuation">=</span><span class="token attr-value">t_order,t_order_item</span></code></pre>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210205172445.png"></p>
+<p>t_order_0查t_order_item_0;t_order_1查t_order_item_1</p>
+<h2 id="广播表"><a href="#广播表" class="headerlink" title="广播表"></a>广播表</h2><pre class=" language-properties"><code class="language-properties"><span class="token comment" spellcheck="true"># 广播表</span>
+<span class="token attr-name">spring.shardingsphere.sharding.broadcast-tables</span><span class="token punctuation">=</span><span class="token attr-value">t_dict</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_dict.key-generator.column</span><span class="token punctuation">=</span><span class="token attr-value">dict_id</span>
+<span class="token attr-name">spring.shardingsphere.sharding.tables.t_dict.key-generator.type</span><span class="token punctuation">=</span><span class="token attr-value">SNOWFLAKE</span>
+</code></pre>
+<h2 id="ShardingSphere的SQL使用限制"><a href="#ShardingSphere的SQL使用限制" class="headerlink" title="ShardingSphere的SQL使用限制"></a>ShardingSphere的SQL使用限制</h2><p><a target="_blank" rel="noopener" href="https://shardingsphere.apache.org/document/current/cn/features/sharding/use-norms/sql/">官方SQL限制说明</a></p>
+<p><strong>支持的SQL</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">SQL</th>
+<th align="left">必要条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">SELECT * FROM tbl_name</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">SELECT * FROM tbl_name WHERE (col1 = ? or col2 = ?) and col3 = ?</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">SELECT * FROM tbl_name WHERE col1 = ? ORDER BY col2 DESC LIMIT ?</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">SELECT COUNT(*), SUM(col1), MIN(col1), MAX(col1), AVG(col1) FROM tbl_name WHERE col1 = ?</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">SELECT COUNT(col1) FROM tbl_name WHERE col2 = ? GROUP BY col1 ORDER BY col3 DESC LIMIT ?, ?</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">INSERT INTO tbl_name (col1, col2,…) VALUES (?, ?, ….)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">INSERT INTO tbl_name VALUES (?, ?,….)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">INSERT INTO tbl_name (col1, col2, …) VALUES (?, ?, ….), (?, ?, ….)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">INSERT INTO tbl_name (col1, col2, …) SELECT col1, col2, … FROM tbl_name WHERE col3 = ?</td>
+<td align="left">INSERT表和SELECT表必须为相同表或绑定表</td>
+</tr>
+<tr>
+<td align="left">REPLACE INTO tbl_name (col1, col2, …) SELECT col1, col2, … FROM tbl_name WHERE col3 = ?</td>
+<td align="left">REPLACE表和SELECT表必须为相同表或绑定表</td>
+</tr>
+<tr>
+<td align="left">UPDATE tbl_name SET col1 = ? WHERE col2 = ?</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">DELETE FROM tbl_name WHERE col1 = ?</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">CREATE TABLE tbl_name (col1 int, …)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">ALTER TABLE tbl_name ADD col1 varchar(10)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">DROP TABLE tbl_name</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">TRUNCATE TABLE tbl_name</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">CREATE INDEX idx_name ON tbl_name</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">DROP INDEX idx_name ON tbl_name</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">DROP INDEX idx_name</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">SELECT DISTINCT * FROM tbl_name WHERE col1 = ?</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">SELECT COUNT(DISTINCT col1) FROM tbl_name</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">SELECT subquery_alias.col1 FROM (select tbl_name.col1 from tbl_name where tbl_name.col2=?) subquery_alias</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p><strong>不支持的SQL</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">SQL</th>
+<th align="left">不支持原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">INSERT INTO tbl_name (col1, col2, …) VALUES(1+2, ?, …)</td>
+<td align="left">VALUES语句不支持运算表达式</td>
+</tr>
+<tr>
+<td align="left">INSERT INTO tbl_name (col1, col2, …) SELECT * FROM tbl_name WHERE col3 = ?</td>
+<td align="left">SELECT子句暂不支持使用*号简写及内置的分布式主键生成器</td>
+</tr>
+<tr>
+<td align="left">REPLACE INTO tbl_name (col1, col2, …) SELECT * FROM tbl_name WHERE col3 = ?</td>
+<td align="left">SELECT子句暂不支持使用*号简写及内置的分布式主键生成器</td>
+</tr>
+<tr>
+<td align="left">SELECT * FROM tbl_name1 UNION SELECT * FROM tbl_name2</td>
+<td align="left">UNION</td>
+</tr>
+<tr>
+<td align="left">SELECT * FROM tbl_name1 UNION ALL SELECT * FROM tbl_name2</td>
+<td align="left">UNION ALL</td>
+</tr>
+<tr>
+<td align="left">SELECT SUM(DISTINCT col1), SUM(col1) FROM tbl_name</td>
+<td align="left">详见DISTINCT支持情况详细说明</td>
+</tr>
+<tr>
+<td align="left">SELECT * FROM tbl_name WHERE to_date(create_time, ‘yyyy-mm-dd’) = ?</td>
+<td align="left">会导致全路由</td>
+</tr>
+<tr>
+<td align="left">(SELECT * FROM tbl_name)</td>
+<td align="left">暂不支持加括号的查询</td>
+</tr>
+<tr>
+<td align="left">SELECT MAX(tbl_name.col1) FROM tbl_name</td>
+<td align="left">查询列是函数表达式时,查询列前不能使用表名;若查询表存在别名,则可使用表的别名</td>
+</tr>
+</tbody></table>
+<p><strong>DISTINCT支持情况详细说明</strong></p>
+<p><strong>支持的SQL</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">SQL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">SELECT DISTINCT * FROM tbl_name WHERE col1 = ?</td>
+</tr>
+<tr>
+<td align="left">SELECT DISTINCT col1 FROM tbl_name</td>
+</tr>
+<tr>
+<td align="left">SELECT DISTINCT col1, col2, col3 FROM tbl_name</td>
+</tr>
+<tr>
+<td align="left">SELECT DISTINCT col1 FROM tbl_name ORDER BY col1</td>
+</tr>
+<tr>
+<td align="left">SELECT DISTINCT col1 FROM tbl_name ORDER BY col2</td>
+</tr>
+<tr>
+<td align="left">SELECT DISTINCT(col1) FROM tbl_name</td>
+</tr>
+<tr>
+<td align="left">SELECT AVG(DISTINCT col1) FROM tbl_name</td>
+</tr>
+<tr>
+<td align="left">SELECT SUM(DISTINCT col1) FROM tbl_name</td>
+</tr>
+<tr>
+<td align="left">SELECT COUNT(DISTINCT col1) FROM tbl_name</td>
+</tr>
+<tr>
+<td align="left">SELECT COUNT(DISTINCT col1) FROM tbl_name GROUP BY col1</td>
+</tr>
+<tr>
+<td align="left">SELECT COUNT(DISTINCT col1 + col2) FROM tbl_name</td>
+</tr>
+<tr>
+<td align="left">SELECT COUNT(DISTINCT col1), SUM(DISTINCT col1) FROM tbl_name</td>
+</tr>
+<tr>
+<td align="left">SELECT COUNT(DISTINCT col1), col1 FROM tbl_name GROUP BY col1</td>
+</tr>
+<tr>
+<td align="left">SELECT col1, COUNT(DISTINCT col1) FROM tbl_name GROUP BY col1</td>
+</tr>
+</tbody></table>
+<p><strong>不支持的SQL</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">SQL</th>
+<th align="left">不支持原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">SELECT SUM(DISTINCT tbl_name.col1), SUM(tbl_name.col1) FROM tbl_name</td>
+<td align="left">查询列是函数表达式时,查询列前不能使用表名;若查询表存在别名,则可使用表的别名</td>
+</tr>
+</tbody></table>
+<h2 id="分库分表建议"><a href="#分库分表建议" class="headerlink" title="分库分表建议"></a>分库分表建议</h2><p>从上面SQL限制也可以看出，分库分表带来的必然是SQL使用上很难，并且系统复杂度增加了。<strong>所以尽量不要分库分表。</strong></p>
+<p>其实分库分表主要解决问题是数据库单机容量问题和查询性能问题。其实对于性能我们可以用很多方式解决，比如读写分离，利用缓存。对于单机容量我们可以使用分布式存储的数据库Hbase,Hive,ES等。</p>
+<p>如果确定分库分表需要在项目初期就要开始，不然后期数据维护很难。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">dm</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://dmsupine.com/2021/02/08/shardingsphere-ji-ben-gai-nian-ji-kuai-su-ru-men/">https://dmsupine.com/2021/02/08/shardingsphere-ji-ben-gai-nian-ji-kuai-su-ru-men/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">dm</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/MySQL/">
+                                    <span class="chip bg-color">MySQL</span>
+                                </a>
+                            
+                                <a href="/tags/ShardingSphere/">
+                                    <span class="chip bg-color">ShardingSphere</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">
+                                    <span class="chip bg-color">分库分表</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '7cd3cc130d22faf50d67',
+        clientSecret: 'ecb1dcf619b16ec30db44cf41749e18419d4856d',
+        repo: 'dm13579.github.io',
+        owner: 'dm13579',
+        admin: "dm13579",
+        id: '2021-02-08T20-15-00',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2021/02/08/shardingsphere-ji-ben-gai-nian-ji-kuai-su-ru-men/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/21.jpg" class="responsive-img" alt="ShardingSphere基本概念及快速入门">
+                        
+                        <span class="card-title">ShardingSphere基本概念及快速入门</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Apache ShardingSphere 是一套开源的分布式数据库解决方案组成的生态圈，它由 JDBC、Proxy 和 Sidecar（规划中）这 3 款既能够独立部署，又支持混合部署配合使用的产品组成。 它们均提供标准化的数据水平扩展、
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-02-08
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/MySQL/">
+                        <span class="chip bg-color">MySQL</span>
+                    </a>
+                    
+                    <a href="/tags/ShardingSphere/">
+                        <span class="chip bg-color">ShardingSphere</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">
+                        <span class="chip bg-color">分库分表</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/02/05/redis-sheng-chan-shi-jian-yu-xing-neng-you-hua/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/0.jpg" class="responsive-img" alt="Redis生产实践与性能优化">
+                        
+                        <span class="card-title">Redis生产实践与性能优化</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            缓存穿透缓存穿透是指访问一个不存在的key（这个key不在缓存层），穿透了缓存层直接打到了DB，如果访问量大的话是有把DB打崩的可能性。
+解决方案：
+
+缓存空对象，即使访问的是一个不存在的对象，我们也可以吧访问的key值缓存，value直接
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-02-05
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Java/">
+                        <span class="chip bg-color">Java</span>
+                    </a>
+                    
+                    <a href="/tags/Redis/">
+                        <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">
+                        <span class="chip bg-color">生产实践</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%BC%93%E5%AD%98/">
+                        <span class="chip bg-color">缓存</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 泉涸<br />'
+            + '文章作者: dm<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2020-2020 DongMing. 版权所有
+
+            
+            &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+            <span class="white-color">62k</span>
+            
+
+            <br>
+            <span id="sitetime"></span>
+
+            
+            
+            <br>
+            
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <i class="fa fa-heart-o"></i>
+                本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv" style='display:none'>
+                人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+            </span>
+            
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/dm13579" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:dongming053021@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1903959864" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 1903959864" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+        var t1 = Date.UTC(2020, 08, 20, 00, 00, 00); //北京时间2018-2-13 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/search.xml", 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "别走啊！", clearTimeout(st)) : (document.title = "回来喽！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) }) </script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+
+</html>
