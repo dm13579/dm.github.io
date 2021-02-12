@@ -9,8 +9,103 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Fri, 05 Feb 2021 09:39:40 GMT</pubDate>
+    <pubDate>Mon, 08 Feb 2021 07:22:43 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>ShardingProxy安装及使用</title>
+      <link>https://dmsupine.com/2021/02/15/shardingproxy-an-zhuang-ji-shi-yong/</link>
+      <guid>https://dmsupine.com/2021/02/15/shardingproxy-an-zhuang-ji-shi-yong/</guid>
+      <pubDate>Mon, 15 Feb 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;ShardingProxy搭建&quot;&gt;&lt;a href=&quot;#ShardingProxy搭建&quot; class=&quot;headerlink&quot; title=&quot;ShardingProxy搭建&quot;&gt;&lt;/a&gt;ShardingProxy搭建&lt;/h2&gt;&lt;h3</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
+      
+      <category domain="https://dmsupine.com/tags/MySQL/">MySQL</category>
+      
+      <category domain="https://dmsupine.com/tags/ShardingSphere/">ShardingSphere</category>
+      
+      <category domain="https://dmsupine.com/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">分库分表</category>
+      
+      
+      <comments>https://dmsupine.com/2021/02/15/shardingproxy-an-zhuang-ji-shi-yong/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>ShardingSphere数据分片内核原理及源码流程</title>
+      <link>https://dmsupine.com/2021/02/13/shardingsphere-nei-he-yuan-li/</link>
+      <guid>https://dmsupine.com/2021/02/13/shardingsphere-nei-he-yuan-li/</guid>
+      <pubDate>Sat, 13 Feb 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;p&gt;ShardingSphere数据分片这一部分内核主要是解析引擎、路由引擎、改写引擎、执行引擎、归并引擎五部分。这里主要是对这五部分进行剖析。&lt;/p&gt;
+&lt;p&gt;在数据分片这块Sharding-JDBC和Sharding-Proxy内核原理这一块是一致的。&lt;/p&gt;
+&lt;p&gt;官方文档</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/MySQL/">MySQL</category>
+      
+      <category domain="https://dmsupine.com/tags/ShardingSphere/">ShardingSphere</category>
+      
+      <category domain="https://dmsupine.com/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">分库分表</category>
+      
+      
+      <comments>https://dmsupine.com/2021/02/13/shardingsphere-nei-he-yuan-li/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>MySQL单机及主从搭建</title>
+      <link>https://dmsupine.com/2021/02/10/mysql-dan-ji-ji-zhu-cong-da-jian/</link>
+      <guid>https://dmsupine.com/2021/02/10/mysql-dan-ji-ji-zhu-cong-da-jian/</guid>
+      <pubDate>Wed, 10 Feb 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;MySQL单机搭建&quot;&gt;&lt;a href=&quot;#MySQL单机搭建&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
+      
+      <category domain="https://dmsupine.com/tags/MySQL/">MySQL</category>
+      
+      
+      <comments>https://dmsupine.com/2021/02/10/mysql-dan-ji-ji-zhu-cong-da-jian/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>ShardingSphere基本概念及快速入门</title>
@@ -65,9 +160,9 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
-      <category domain="https://dmsupine.com/tags/Redis/">Redis</category>
-      
       <category domain="https://dmsupine.com/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">生产实践</category>
+      
+      <category domain="https://dmsupine.com/tags/Redis/">Redis</category>
       
       <category domain="https://dmsupine.com/tags/%E7%BC%93%E5%AD%98/">缓存</category>
       
@@ -160,11 +255,11 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
-      
       <category domain="https://dmsupine.com/tags/Kafka/">Kafka</category>
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       <category domain="https://dmsupine.com/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">生产实践</category>
       
@@ -193,11 +288,11 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
-      
       <category domain="https://dmsupine.com/tags/Kafka/">Kafka</category>
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       
       <comments>https://dmsupine.com/2021/01/23/kafka-ji-ben-shi-yong-ji-she-ji-yuan-li/#disqus_thread</comments>
@@ -224,13 +319,13 @@
       <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
       
       
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
+      
       <category domain="https://dmsupine.com/tags/KafKa/">KafKa</category>
       
       <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
       
       <category domain="https://dmsupine.com/tags/Linux/">Linux</category>
-      
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       
       <comments>https://dmsupine.com/2021/01/19/kafka-dan-ji-yi-ji-ji-qun-da-jian/#disqus_thread</comments>
@@ -288,9 +383,9 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
-      
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       <category domain="https://dmsupine.com/tags/RocketMQ/">RocketMQ</category>
       
@@ -321,11 +416,11 @@
       <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
       
       
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
+      
       <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
       
       <category domain="https://dmsupine.com/tags/Linux/">Linux</category>
-      
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       <category domain="https://dmsupine.com/tags/RocketMQ/">RocketMQ</category>
       
