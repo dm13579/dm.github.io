@@ -9,8 +9,39 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Thu, 25 Feb 2021 12:15:00 GMT</pubDate>
+    <pubDate>Fri, 05 Mar 2021 12:15:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Spring解决循环依赖</title>
+      <link>https://dmsupine.com/2021/03/05/spring-jie-jue-xun-huan-yi-lai-yu-sheng-ming-zhou-qi/</link>
+      <guid>https://dmsupine.com/2021/03/05/spring-jie-jue-xun-huan-yi-lai-yu-sheng-ming-zhou-qi/</guid>
+      <pubDate>Fri, 05 Mar 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;这篇文章是接着前一篇SpringIOC容器加载流程和源码剖析一起的。主要内容Spring </description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      
+      <comments>https://dmsupine.com/2021/03/05/spring-jie-jue-xun-huan-yi-lai-yu-sheng-ming-zhou-qi/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>SpringIOC容器加载流程和源码剖析</title>
