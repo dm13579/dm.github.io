@@ -9,8 +9,39 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Fri, 05 Mar 2021 12:15:00 GMT</pubDate>
+    <pubDate>Wed, 10 Mar 2021 12:15:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Spring AOP原理解析</title>
+      <link>https://dmsupine.com/2021/03/10/springaop/</link>
+      <guid>https://dmsupine.com/2021/03/10/springaop/</guid>
+      <pubDate>Wed, 10 Mar 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;p&gt;Spring AOP 具体应用就是面向切面编程。AOP就是在我们原先的目标类上面进行一定程度的封装，在方法执行前、方法执行后、方法抛出异常，方法返回后调用某个方法。Spring</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      
+      <comments>https://dmsupine.com/2021/03/10/springaop/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Spring解决循环依赖</title>
