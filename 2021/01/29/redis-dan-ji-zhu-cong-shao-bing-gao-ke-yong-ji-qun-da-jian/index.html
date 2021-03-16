@@ -42,8 +42,8 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
-</head>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
 <body>
@@ -462,9 +462,9 @@
 <pre class=" language-shell"><code class="language-shell">## 下载
 wget http://download.redis.io/releases/redis-5.0.3.tar.gz
 ## 解压
-tar -zxvf redis-5.0.3.tar.gz  -C /
+tar -zxvf elasticsearch-7.10.2-linux-x86_64.tar.gz -C /
 ## 软链接
-ln -s /redis-5.0.3/ /redis</code></pre>
+ln -s /elasticsearch-7.10.2/ es/</code></pre>
 <h3 id="gcc编译"><a href="#gcc编译" class="headerlink" title="gcc编译"></a>gcc编译</h3><pre class=" language-shell"><code class="language-shell">## 安装gcc
 yum install gcc
 ## 进入到解压好的redis目录下，进行编译与安装
@@ -1035,10 +1035,6 @@ acks=0： 表示producer不需要等待任何broker确认收到消息的回复�
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                        <span class="chip bg-color">消息队列</span>
-                    </a>
-                    
                     <a href="/tags/Kafka/">
                         <span class="chip bg-color">Kafka</span>
                     </a>
@@ -1049,6 +1045,10 @@ acks=0： 表示producer不需要等待任何broker确认收到消息的回复�
                     
                     <a href="/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">
                         <span class="chip bg-color">生产实践</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                        <span class="chip bg-color">消息队列</span>
                     </a>
                     
                 </div>
@@ -1233,7 +1233,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">81.7k</span>
+            <span class="white-color">87.5k</span>
             
 
             <br>
