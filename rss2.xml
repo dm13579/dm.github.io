@@ -9,8 +9,39 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Fri, 26 Mar 2021 12:15:00 GMT</pubDate>
+    <pubDate>Wed, 07 Apr 2021 12:15:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>MyBatis核心源码剖析</title>
+      <link>https://dmsupine.com/2021/04/07/mybatis-yuan-ma-pou-xi/</link>
+      <guid>https://dmsupine.com/2021/04/07/mybatis-yuan-ma-pou-xi/</guid>
+      <pubDate>Wed, 07 Apr 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h3 id=&quot;MyBatis是一款ORM框架，它解决的问题是针对JDBC操作数据库和封装数据集繁琐的问题。下面我们看一下传统JDBC来创建连接和获取数据集的方式。&quot;&gt;&lt;a</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      <category domain="https://dmsupine.com/tags/MyBatis/">MyBatis</category>
+      
+      
+      <comments>https://dmsupine.com/2021/04/07/mybatis-yuan-ma-pou-xi/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>SpringMVC核心源码剖析</title>
