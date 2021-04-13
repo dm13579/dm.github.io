@@ -9,8 +9,41 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Wed, 07 Apr 2021 12:15:00 GMT</pubDate>
+    <pubDate>Tue, 13 Apr 2021 12:15:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Spring整合MyBatis源码剖析</title>
+      <link>https://dmsupine.com/2021/04/13/spring-zheng-he-mybatis-yuan-ma-pou-xi/</link>
+      <guid>https://dmsupine.com/2021/04/13/spring-zheng-he-mybatis-yuan-ma-pou-xi/</guid>
+      <pubDate>Tue, 13 Apr 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;p&gt;MyBatis整合MyBatis源码设计很多Spring IOC的内容，要想明白MyBatis如何整合进Spring需要对Spring IOC的加载流程和扩展点很熟悉，详情可以看&lt;a</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      <category domain="https://dmsupine.com/tags/MyBatis/">MyBatis</category>
+      
+      
+      <comments>https://dmsupine.com/2021/04/13/spring-zheng-he-mybatis-yuan-ma-pou-xi/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>MyBatis核心源码剖析</title>
