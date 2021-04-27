@@ -98,6 +98,40 @@
   
   <li class="hide-on-med-and-down nav-item">
     
+    <a href="/" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-list" style="zoom: 0.6;"></i>
+      
+      <span>媒体</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/books">
+          
+          <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>书单</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/movies">
+          
+          <i class="fas fa-film" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>观影</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
     <a href="/archives/" class="waves-effect waves-light">
       
       <i class="fas fa-archive" style="zoom: 0.6;"></i>
@@ -196,6 +230,41 @@
 			
 			分类
 		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-list"></i>
+			
+			媒体
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>
+
+                  <a href="/books " style="margin-left:75px">
+				  
+				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
+			      
+		          <span>书单</span>
+                  </a>
+                </li>
+              
+                <li>
+
+                  <a href="/movies " style="margin-left:75px">
+				  
+				   <i class="fa fas fa-film" style="position: absolute;left:50px" ></i>
+			      
+		          <span>观影</span>
+                  </a>
+                </li>
+              
+            </ul>
           
         </li>
         
@@ -311,11 +380,11 @@
                 
                 
                 
-                <a href="/categories/%E7%AC%94%E8%AE%B0/" title="笔记: 25">
+                <a href="/categories/%E7%AC%94%E8%AE%B0/" title="笔记: 26">
                     <span class="chip center-align waves-effect waves-light
                              chip-active "
                             style="background-color: #F9EBEA;">笔记
-                        <span class="tag-length">25</span>
+                        <span class="tag-length">26</span>
                     </span>
                 </a>
                 
@@ -339,6 +408,64 @@
 
     <article id="articles" class="container articles">
         <div class="row tags-posts">
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/04/27/springboot-qi-dong-yuan-li/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/7.jpg" class="responsive-img" alt="SpringBoot启动原理">
+                            
+                            <span class="card-title">SpringBoot启动原理</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                前言SpringBoot 的启动区别于传统的Spring需要搭建tomcat等相关的容器，SpringBoot默认是通过内置Tomcat启动，只需简单的运行java -jar xxx即可简单的启动一个SpringBoot工程。这里我们深入S
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-04-27
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Java/">
+                            <span class="chip bg-color">Java</span>
+                        </a>
+                        
+                        <a href="/tags/Spring/">
+                            <span class="chip bg-color">Spring</span>
+                        </a>
+                        
+                        <a href="/tags/SpringBoot/">
+                            <span class="chip bg-color">SpringBoot</span>
+                        </a>
+                        
+                        <a href="/tags/%E6%BA%90%E7%A0%81/">
+                            <span class="chip bg-color">源码</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
@@ -385,12 +512,12 @@
                             <span class="chip bg-color">Spring</span>
                         </a>
                         
-                        <a href="/tags/%E6%BA%90%E7%A0%81/">
-                            <span class="chip bg-color">源码</span>
-                        </a>
-                        
                         <a href="/tags/SpringBoot/">
                             <span class="chip bg-color">SpringBoot</span>
+                        </a>
+                        
+                        <a href="/tags/%E6%BA%90%E7%A0%81/">
+                            <span class="chip bg-color">源码</span>
                         </a>
                         
                     </div>
@@ -844,60 +971,6 @@ SpringIOC基本概念BeanFactorySp
                 </div>
             </div>
             
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2021/02/08/shardingsphere-ji-ben-gai-nian-ji-kuai-su-ru-men/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/21.jpg" class="responsive-img" alt="ShardingSphere基本概念及快速入门">
-                            
-                            <span class="card-title">ShardingSphere基本概念及快速入门</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                Apache ShardingSphere 是一套开源的分布式数据库解决方案组成的生态圈，它由 JDBC、Proxy 和 Sidecar（规划中）这 3 款既能够独立部署，又支持混合部署配合使用的产品组成。 它们均提供标准化的数据水平扩展、
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-02-08
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/MySQL/">
-                            <span class="chip bg-color">MySQL</span>
-                        </a>
-                        
-                        <a href="/tags/ShardingSphere/">
-                            <span class="chip bg-color">ShardingSphere</span>
-                        </a>
-                        
-                        <a href="/tags/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">
-                            <span class="chip bg-color">分库分表</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
         </div>
     </article>
 </main>
@@ -936,7 +1009,7 @@ SpringIOC基本概念BeanFactorySp
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">103.9k</span>
+            <span class="white-color">106k</span>
             
 
             <br>
@@ -1105,6 +1178,11 @@ $(function () {
 
     
 
+    
+    <script type="text/javascript" color="122 103 238"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-2" count="200"
+        src="/libs/background/canvas-nest.js"></script>
     
 
     
