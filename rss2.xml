@@ -9,8 +9,41 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Tue, 27 Apr 2021 12:15:00 GMT</pubDate>
+    <pubDate>Sat, 01 May 2021 12:15:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>SpringBoot使用外部tomcat</title>
+      <link>https://dmsupine.com/2021/05/01/springboot-shi-yong-wai-bu-tomcat/</link>
+      <guid>https://dmsupine.com/2021/05/01/springboot-shi-yong-wai-bu-tomcat/</guid>
+      <pubDate>Sat, 01 May 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;大家都知道SpringBoot有内置Tomcat的功能，在&lt;a</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
+      
+      <category domain="https://dmsupine.com/tags/SpringBoot/">SpringBoot</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      
+      <comments>https://dmsupine.com/2021/05/01/springboot-shi-yong-wai-bu-tomcat/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>SpringBoot启动原理</title>
@@ -36,9 +69,9 @@
       
       <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
-      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
-      
       <category domain="https://dmsupine.com/tags/SpringBoot/">SpringBoot</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
       
       
       <comments>https://dmsupine.com/2021/04/27/springboot-qi-dong-yuan-li/#disqus_thread</comments>
@@ -69,9 +102,9 @@
       
       <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
-      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
-      
       <category domain="https://dmsupine.com/tags/SpringBoot/">SpringBoot</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
       
       
       <comments>https://dmsupine.com/2021/04/20/springboot-zi-dong-zhuang-pei-yuan-li/#disqus_thread</comments>

@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 	<meta name="baidu-site-verification" content="lElrePz9Qe" />
 	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
-    <meta name="keywords" content="泉涸">
+    <meta name="keywords" content="归档: 2021/5, 泉涸">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,7 +29,7 @@
 </script>
 
 
-    <title>泉涸</title>
+    <title>归档: 2021/5 | 泉涸</title>
     <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -324,7 +324,6 @@
 
 </header>
 
-    
     <div class="bg-cover pd-header about-cover">
     <div class="container">
     <div class="row">
@@ -367,400 +366,176 @@
     </div>
 </div>
 
-
 <main class="content">
 
     
+    <div class="container archive-calendar">
+    <div class="card">
+        <div id="post-calendar" class="card-content"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/libs/echarts/echarts.min.js"></script>
+<script type="text/javascript">
+    let myChart = echarts.init(document.getElementById('post-calendar'));
 
     
 
-    <!-- 所有文章卡片 -->
-    <article id="articles" class="container articles">
-        <div class="row article-row">
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2021/01/23/kafka-ji-ben-shi-yong-ji-she-ji-yuan-li/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/45.jpg" class="responsive-img" alt="Kafka基本使用及设计原理">
-                            
-                            <span class="card-title">Kafka基本使用及设计原理</span>
-                        </div>
-                    </a>
+    let option = {
+        title: {
+            top: 0,
+            text: '文章日历',
+            left: 'center',
+            textStyle: {
+                color: '#3C4858'
+            }
+        },
+        tooltip: {
+            padding: 10,
+            backgroundColor: '#555',
+            borderColor: '#777',
+            borderWidth: 1,
+            formatter: function (obj) {
+                var value = obj.value;
+                return '<div style="font-size: 14px;">' + value[0] + '：' + value[1] + '</div>';
+            }
+        },
+        visualMap: {
+            show: true,
+            showLabel: true,
+            categories: [0, 1, 2, 3, 4],
+            calculable: true,
+            inRange: {
+                symbol: 'rect',
+                color: ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127']
+            },
+            itemWidth: 12,
+            itemHeight: 12,
+            orient: 'horizontal',
+            left: 'center',
+            bottom: 0
+        },
+        calendar: [{
+            left: 'center',
+            range: ["2020-04-30", "2021-04-30"],
+            cellSize: [13, 13],
+            splitLine: {
+                show: false
+            },
+            itemStyle: {
+                color: '#196127',
+                borderColor: '#fff',
+                borderWidth: 2
+            },
+            yearLabel: {
+                show: false
+            },
+            monthLabel: {
+                nameMap: 'cn',
+                fontSize: 11
+            },
+            dayLabel: {
+                formatter: '{start}  1st',
+                nameMap: 'cn',
+                fontSize: 11
+            }
+        }],
+        series: [{
+            type: 'heatmap',
+            coordinateSystem: 'calendar',
+            calendarIndex: 0,
+            data: [["2020-04-30", 0], ["2020-05-01", 0], ["2020-05-02", 0], ["2020-05-03", 0], ["2020-05-04", 0], ["2020-05-05", 0], ["2020-05-06", 0], ["2020-05-07", 0], ["2020-05-08", 0], ["2020-05-09", 0], ["2020-05-10", 0], ["2020-05-11", 0], ["2020-05-12", 0], ["2020-05-13", 0], ["2020-05-14", 0], ["2020-05-15", 0], ["2020-05-16", 0], ["2020-05-17", 0], ["2020-05-18", 0], ["2020-05-19", 0], ["2020-05-20", 0], ["2020-05-21", 0], ["2020-05-22", 0], ["2020-05-23", 0], ["2020-05-24", 0], ["2020-05-25", 0], ["2020-05-26", 0], ["2020-05-27", 0], ["2020-05-28", 0], ["2020-05-29", 0], ["2020-05-30", 0], ["2020-05-31", 0], ["2020-06-01", 0], ["2020-06-02", 0], ["2020-06-03", 0], ["2020-06-04", 0], ["2020-06-05", 0], ["2020-06-06", 0], ["2020-06-07", 0], ["2020-06-08", 0], ["2020-06-09", 0], ["2020-06-10", 0], ["2020-06-11", 0], ["2020-06-12", 0], ["2020-06-13", 0], ["2020-06-14", 0], ["2020-06-15", 0], ["2020-06-16", 0], ["2020-06-17", 0], ["2020-06-18", 0], ["2020-06-19", 0], ["2020-06-20", 0], ["2020-06-21", 0], ["2020-06-22", 0], ["2020-06-23", 0], ["2020-06-24", 0], ["2020-06-25", 0], ["2020-06-26", 0], ["2020-06-27", 0], ["2020-06-28", 0], ["2020-06-29", 0], ["2020-06-30", 0], ["2020-07-01", 0], ["2020-07-02", 0], ["2020-07-03", 0], ["2020-07-04", 0], ["2020-07-05", 0], ["2020-07-06", 0], ["2020-07-07", 0], ["2020-07-08", 0], ["2020-07-09", 0], ["2020-07-10", 0], ["2020-07-11", 0], ["2020-07-12", 0], ["2020-07-13", 0], ["2020-07-14", 0], ["2020-07-15", 0], ["2020-07-16", 0], ["2020-07-17", 0], ["2020-07-18", 0], ["2020-07-19", 0], ["2020-07-20", 0], ["2020-07-21", 0], ["2020-07-22", 0], ["2020-07-23", 0], ["2020-07-24", 0], ["2020-07-25", 0], ["2020-07-26", 0], ["2020-07-27", 0], ["2020-07-28", 0], ["2020-07-29", 0], ["2020-07-30", 0], ["2020-07-31", 0], ["2020-08-01", 0], ["2020-08-02", 0], ["2020-08-03", 0], ["2020-08-04", 0], ["2020-08-05", 0], ["2020-08-06", 0], ["2020-08-07", 0], ["2020-08-08", 0], ["2020-08-09", 0], ["2020-08-10", 0], ["2020-08-11", 0], ["2020-08-12", 0], ["2020-08-13", 0], ["2020-08-14", 0], ["2020-08-15", 0], ["2020-08-16", 0], ["2020-08-17", 0], ["2020-08-18", 0], ["2020-08-19", 0], ["2020-08-20", 0], ["2020-08-21", 0], ["2020-08-22", 0], ["2020-08-23", 0], ["2020-08-24", 0], ["2020-08-25", 1], ["2020-08-26", 0], ["2020-08-27", 1], ["2020-08-28", 0], ["2020-08-29", 0], ["2020-08-30", 0], ["2020-08-31", 0], ["2020-09-01", 1], ["2020-09-02", 0], ["2020-09-03", 0], ["2020-09-04", 0], ["2020-09-05", 0], ["2020-09-06", 0], ["2020-09-07", 1], ["2020-09-08", 1], ["2020-09-09", 0], ["2020-09-10", 0], ["2020-09-11", 0], ["2020-09-12", 0], ["2020-09-13", 0], ["2020-09-14", 0], ["2020-09-15", 0], ["2020-09-16", 1], ["2020-09-17", 0], ["2020-09-18", 0], ["2020-09-19", 0], ["2020-09-20", 0], ["2020-09-21", 0], ["2020-09-22", 0], ["2020-09-23", 0], ["2020-09-24", 0], ["2020-09-25", 0], ["2020-09-26", 0], ["2020-09-27", 0], ["2020-09-28", 0], ["2020-09-29", 0], ["2020-09-30", 0], ["2020-10-01", 0], ["2020-10-02", 0], ["2020-10-03", 0], ["2020-10-04", 0], ["2020-10-05", 0], ["2020-10-06", 0], ["2020-10-07", 0], ["2020-10-08", 1], ["2020-10-09", 0], ["2020-10-10", 0], ["2020-10-11", 0], ["2020-10-12", 0], ["2020-10-13", 0], ["2020-10-14", 0], ["2020-10-15", 0], ["2020-10-16", 0], ["2020-10-17", 0], ["2020-10-18", 0], ["2020-10-19", 0], ["2020-10-20", 0], ["2020-10-21", 0], ["2020-10-22", 0], ["2020-10-23", 0], ["2020-10-24", 0], ["2020-10-25", 0], ["2020-10-26", 1], ["2020-10-27", 0], ["2020-10-28", 0], ["2020-10-29", 0], ["2020-10-30", 0], ["2020-10-31", 0], ["2020-11-01", 0], ["2020-11-02", 0], ["2020-11-03", 0], ["2020-11-04", 0], ["2020-11-05", 1], ["2020-11-06", 0], ["2020-11-07", 0], ["2020-11-08", 0], ["2020-11-09", 0], ["2020-11-10", 0], ["2020-11-11", 0], ["2020-11-12", 0], ["2020-11-13", 0], ["2020-11-14", 0], ["2020-11-15", 0], ["2020-11-16", 0], ["2020-11-17", 0], ["2020-11-18", 0], ["2020-11-19", 0], ["2020-11-20", 0], ["2020-11-21", 0], ["2020-11-22", 0], ["2020-11-23", 0], ["2020-11-24", 0], ["2020-11-25", 0], ["2020-11-26", 0], ["2020-11-27", 0], ["2020-11-28", 0], ["2020-11-29", 0], ["2020-11-30", 0], ["2020-12-01", 0], ["2020-12-02", 0], ["2020-12-03", 0], ["2020-12-04", 1], ["2020-12-05", 0], ["2020-12-06", 0], ["2020-12-07", 0], ["2020-12-08", 0], ["2020-12-09", 0], ["2020-12-10", 0], ["2020-12-11", 0], ["2020-12-12", 0], ["2020-12-13", 0], ["2020-12-14", 0], ["2020-12-15", 0], ["2020-12-16", 0], ["2020-12-17", 0], ["2020-12-18", 0], ["2020-12-19", 0], ["2020-12-20", 0], ["2020-12-21", 0], ["2020-12-22", 0], ["2020-12-23", 0], ["2020-12-24", 0], ["2020-12-25", 0], ["2020-12-26", 0], ["2020-12-27", 0], ["2020-12-28", 1], ["2020-12-29", 0], ["2020-12-30", 0], ["2020-12-31", 0], ["2021-01-01", 0], ["2021-01-02", 0], ["2021-01-03", 0], ["2021-01-04", 1], ["2021-01-05", 0], ["2021-01-06", 0], ["2021-01-07", 0], ["2021-01-08", 0], ["2021-01-09", 0], ["2021-01-10", 0], ["2021-01-11", 0], ["2021-01-12", 1], ["2021-01-13", 0], ["2021-01-14", 0], ["2021-01-15", 0], ["2021-01-16", 0], ["2021-01-17", 0], ["2021-01-18", 0], ["2021-01-19", 1], ["2021-01-20", 0], ["2021-01-21", 0], ["2021-01-22", 0], ["2021-01-23", 1], ["2021-01-24", 0], ["2021-01-25", 1], ["2021-01-26", 0], ["2021-01-27", 0], ["2021-01-28", 0], ["2021-01-29", 1], ["2021-01-30", 0], ["2021-01-31", 0], ["2021-02-01", 1], ["2021-02-02", 0], ["2021-02-03", 0], ["2021-02-04", 0], ["2021-02-05", 1], ["2021-02-06", 0], ["2021-02-07", 0], ["2021-02-08", 1], ["2021-02-09", 0], ["2021-02-10", 1], ["2021-02-11", 0], ["2021-02-12", 0], ["2021-02-13", 1], ["2021-02-14", 0], ["2021-02-15", 1], ["2021-02-16", 0], ["2021-02-17", 0], ["2021-02-18", 0], ["2021-02-19", 0], ["2021-02-20", 0], ["2021-02-21", 0], ["2021-02-22", 0], ["2021-02-23", 0], ["2021-02-24", 0], ["2021-02-25", 1], ["2021-02-26", 0], ["2021-02-27", 0], ["2021-02-28", 0], ["2021-03-01", 0], ["2021-03-02", 0], ["2021-03-03", 0], ["2021-03-04", 0], ["2021-03-05", 1], ["2021-03-06", 0], ["2021-03-07", 0], ["2021-03-08", 0], ["2021-03-09", 0], ["2021-03-10", 1], ["2021-03-11", 0], ["2021-03-12", 0], ["2021-03-13", 0], ["2021-03-14", 0], ["2021-03-15", 0], ["2021-03-16", 0], ["2021-03-17", 1], ["2021-03-18", 0], ["2021-03-19", 0], ["2021-03-20", 0], ["2021-03-21", 0], ["2021-03-22", 0], ["2021-03-23", 0], ["2021-03-24", 0], ["2021-03-25", 0], ["2021-03-26", 1], ["2021-03-27", 0], ["2021-03-28", 0], ["2021-03-29", 0], ["2021-03-30", 0], ["2021-03-31", 0], ["2021-04-01", 0], ["2021-04-02", 0], ["2021-04-03", 0], ["2021-04-04", 0], ["2021-04-05", 0], ["2021-04-06", 0], ["2021-04-07", 1], ["2021-04-08", 0], ["2021-04-09", 0], ["2021-04-10", 0], ["2021-04-11", 0], ["2021-04-12", 0], ["2021-04-13", 1], ["2021-04-14", 0], ["2021-04-15", 0], ["2021-04-16", 0], ["2021-04-17", 0], ["2021-04-18", 0], ["2021-04-19", 0], ["2021-04-20", 1], ["2021-04-21", 0], ["2021-04-22", 0], ["2021-04-23", 0], ["2021-04-24", 0], ["2021-04-25", 0], ["2021-04-26", 0], ["2021-04-27", 1], ["2021-04-28", 0], ["2021-04-29", 0], ["2021-04-30", 0]]
+        }]
 
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                背景Kafka是一个分布式基于Zookeeper的分布式消息系统，支持多分区，多副本。是由Scala语言开发，现在是Apache基金会顶级开源项目。它有着高吞吐、低延迟的特性。这种特性主要应用于大数据场景，日志收集场景。不适合一些复杂的业务
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-23
-                            </span>
-                            <span class="publish-author">
+    };
+
+    myChart.setOption(option);
+</script>
+
+    
+
+    
+
+    <div id="cd-timeline" class="container">
+        
+        <div class="cd-timeline-block">
+
+            
+            
+            
+            <div class="cd-timeline-img year" data-aos="zoom-in-up">
+                <a href="/archives/2021">2021</a>
+            </div>
+            
+
+            
+            
+            
+            <div class="cd-timeline-img month" data-aos="zoom-in-up">
+                <a href="/archives/2021/05">05</a>
+            </div>
+            
+
+            
+            <div class="cd-timeline-img day" data-aos="zoom-in-up">
+                <span>01</span>
+            </div>
+            <article class="cd-timeline-content" data-aos="fade-up">
+                <div class="article col s12 m6">
+                    <div class="card">
+                        <a href="/2021/05/01/springboot-shi-yong-wai-bu-tomcat/">
+                            <div class="card-image">
                                 
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
                                 
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/14.jpg" class="responsive-img" alt="SpringBoot使用外部tomcat">
+                                
+                                <span class="card-title">SpringBoot使用外部tomcat</span>
+                            </div>
+                        </a>
+                        <div class="card-content article-content">
+                            <div class="summary block-with-text">
+                                
+                                    前言大家都知道SpringBoot有内置Tomcat的功能，在启动原理中有介绍SpringBoot内置Tomcat的原理。那么如果我们不像使用SpringBoot的内置Tomcat，想用自己的web容器怎么操作。springboot支持默认
+                                
+                            </div>
+                            <div class="publish-info">
+                                <span class="publish-date">
+                                    <i class="far fa-clock fa-fw icon-date"></i>2021-05-01
+                                </span>
+                                <span class="publish-author">
+                                    
+                                    <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                    
+                                    <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
                                     笔记
-                                </a>
-                                
-                                
-                            </span>
+                                    </a>
+                                    
+                                    
+                                </span>
+                            </div>
                         </div>
-                    </div>
 
-                    
-                    <div class="card-action article-tags">
                         
-                        <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                            <span class="chip bg-color">消息队列</span>
-                        </a>
-                        
-                        <a href="/tags/Kafka/">
-                            <span class="chip bg-color">Kafka</span>
-                        </a>
-                        
-                        <a href="/tags/Java/">
-                            <span class="chip bg-color">Java</span>
-                        </a>
+                        <div class="card-action article-tags">
+                            
+                            <a href="/tags/Java/"><span class="chip bg-color">Java</span></a>
+                            
+                            <a href="/tags/Spring/"><span class="chip bg-color">Spring</span></a>
+                            
+                            <a href="/tags/SpringBoot/"><span class="chip bg-color">SpringBoot</span></a>
+                            
+                            <a href="/tags/%E6%BA%90%E7%A0%81/"><span class="chip bg-color">源码</span></a>
+                            
+                        </div>
                         
                     </div>
-                    
                 </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2021/01/19/kafka-dan-ji-yi-ji-ji-qun-da-jian/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/13.jpg" class="responsive-img" alt="KafKa单机、集群、控制台搭建">
-                            
-                            <span class="card-title">KafKa单机、集群、控制台搭建</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                环境准备java版本：1.8
-操作系统：CentOS7
-zookeeper：3.5.8
-安装包：https://kafka.apache.org/downloads
-我这里选择的是kafka_2.11-2.4.1版本的KafKa，2.11是
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-19
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
-                                    安装手册
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/KafKa/">
-                            <span class="chip bg-color">KafKa</span>
-                        </a>
-                        
-                        <a href="/tags/%E5%AE%89%E8%A3%85/">
-                            <span class="chip bg-color">安装</span>
-                        </a>
-                        
-                        <a href="/tags/Linux/">
-                            <span class="chip bg-color">Linux</span>
-                        </a>
-                        
-                        <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                            <span class="chip bg-color">消息队列</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2021/01/12/rocketmq-sheng-chan-wen-ti/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/7.jpg" class="responsive-img" alt="RocketMQ生产问题实践">
-                            
-                            <span class="card-title">RocketMQ生产问题实践</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                RocketMQ如何保证消息不丢失RocketMQ的一个发送消息流程
-生产者 =&gt; Broker =&gt; 消费者     Broker master =&gt; slave =&gt; 磁盘
-
-生产者发送消息给到Broker
-Br
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-12
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                            <span class="chip bg-color">消息队列</span>
-                        </a>
-                        
-                        <a href="/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">
-                            <span class="chip bg-color">生产实践</span>
-                        </a>
-                        
-                        <a href="/tags/RocketMQ/">
-                            <span class="chip bg-color">RocketMQ</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2021/01/04/rocketmq-zheng-ti-li-jie-he-xiao-xi-yang-li/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/23.jpg" class="responsive-img" alt="RocketMQ整体理解和消息样例">
-                            
-                            <span class="card-title">RocketMQ整体理解和消息样例</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                RocketMQ架构设计
-在RocketMQ上主要分为4部分，Producer、Consumer、NameServer、Broker
-
-Producer：消息生产者，Producer通过NameServer拉取所有Broker集群，通过负载
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-04
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                            <span class="chip bg-color">消息队列</span>
-                        </a>
-                        
-                        <a href="/tags/Java/">
-                            <span class="chip bg-color">Java</span>
-                        </a>
-                        
-                        <a href="/tags/RocketMQ/">
-                            <span class="chip bg-color">RocketMQ</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/12/28/rocketmq-an-zhuang/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/39.jpg" class="responsive-img" alt="RocketMQ集群搭建">
-                            
-                            <span class="card-title">RocketMQ集群搭建</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                环境准备java版本：1.8
-操作系统：CentOS7
-安装包：https://rocketmq.apache.org/dowloading/releases/
-我这里选择的是4.7.1版本的rocketMQ
-RocketMQ 集群搭建注：
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-28
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
-                                    安装手册
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/%E5%AE%89%E8%A3%85/">
-                            <span class="chip bg-color">安装</span>
-                        </a>
-                        
-                        <a href="/tags/Linux/">
-                            <span class="chip bg-color">Linux</span>
-                        </a>
-                        
-                        <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                            <span class="chip bg-color">消息队列</span>
-                        </a>
-                        
-                        <a href="/tags/RocketMQ/">
-                            <span class="chip bg-color">RocketMQ</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/12/04/zookeeper-an-zhuang/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/17.jpg" class="responsive-img" alt="ZooKeeper安装及常用命令">
-                            
-                            <span class="card-title">ZooKeeper安装及常用命令</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                发现zookeeper3.5.3之后出了许多新特性，就趁此时机安装一下较新版本zookeeper，顺便记录一下安装步骤，方便以后查验。
-首先准备zookeeper,在这里我使用的是centos7，java环境是1.8.安装的zookeepe
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-04
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
-                                    安装手册
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/%E5%AE%89%E8%A3%85/">
-                            <span class="chip bg-color">安装</span>
-                        </a>
-                        
-                        <a href="/tags/Linux/">
-                            <span class="chip bg-color">Linux</span>
-                        </a>
-                        
-                        <a href="/tags/ZooKeeper/">
-                            <span class="chip bg-color">ZooKeeper</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
+            </article>
         </div>
-    </article>
+        
+    </div>
 
 </main>
-
-
-<div class="container paging">
-    <div class="row">
-        <div class="col s6 m4 l4">
-            
-            <a href="/page/3/"
-               class="left btn-floating btn-large waves-effect waves-light bg-color">
-                <i class="fas fa-angle-left"></i>
-            </a>
-            
-        </div>
-        <div class="page-info col m4 l4 hide-on-small-only">
-            <div class="center-align b-text-gray">4 / 6</div>
-        </div>
-        <div class="col s6 m4 l4">
-            
-            <a href="/page/5/"
-               class="right btn-floating btn-large waves-effect waves-light bg-color">
-                <i class="fas fa-angle-right"></i>
-            </a>
-            
-        </div>
-    </div>
-</div>
 
 
 

@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 	<meta name="baidu-site-verification" content="lElrePz9Qe" />
 	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
-    <meta name="keywords" content="KafKa">
+    <meta name="keywords" content="SpringBoot,Java">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,7 +29,7 @@
 </script>
 
 
-    <title>KafKa单机、集群、控制台搭建 | 泉涸</title>
+    <title>SpringBoot使用外部tomcat | 泉涸</title>
     <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -328,12 +328,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/13.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">KafKa单机、集群、控制台搭建</h1>
+                    <h1 class="description center-align post-title">SpringBoot使用外部tomcat</h1>
                 </div>
             </div>
         </div>
@@ -450,20 +450,20 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/KafKa/">
-                                <span class="chip bg-color">KafKa</span>
+                            <a href="/tags/Java/">
+                                <span class="chip bg-color">Java</span>
                             </a>
                         
-                            <a href="/tags/%E5%AE%89%E8%A3%85/">
-                                <span class="chip bg-color">安装</span>
+                            <a href="/tags/Spring/">
+                                <span class="chip bg-color">Spring</span>
                             </a>
                         
-                            <a href="/tags/Linux/">
-                                <span class="chip bg-color">Linux</span>
+                            <a href="/tags/SpringBoot/">
+                                <span class="chip bg-color">SpringBoot</span>
                             </a>
                         
-                            <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                                <span class="chip bg-color">消息队列</span>
+                            <a href="/tags/%E6%BA%90%E7%A0%81/">
+                                <span class="chip bg-color">源码</span>
                             </a>
                         
                     </div>
@@ -474,8 +474,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
-                                安装手册
+                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                笔记
                             </a>
                         
                     </div>
@@ -487,28 +487,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-01-19
+                    2021-05-01
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-01-19
+                    2021-05-01
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.7k
+                    1.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    7 分
+                    5 分
                 </div>
                 
 
@@ -523,187 +523,157 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>java版本：1.8</p>
-<p>操作系统：CentOS7</p>
-<p>zookeeper：3.5.8</p>
-<p>安装包：<a target="_blank" rel="noopener" href="https://kafka.apache.org/downloads">https://kafka.apache.org/downloads</a></p>
-<p>我这里选择的是kafka_2.11-2.4.1版本的KafKa，2.11是scala的版本，2.4.1是kafka的版本</p>
-<h2 id="KafKa单机搭建"><a href="#KafKa单机搭建" class="headerlink" title="KafKa单机搭建"></a>KafKa单机搭建</h2><p>Kafka是用Scala语言开发，需要JVM环境，所以需要安装Java。</p>
-<p>KafKa依赖zookeeper，所以需要安装zookeeper</p>
-<p>对于zookeeper和Java环境的安装这里就不写了</p>
-<h3 id="Kafka下载"><a href="#Kafka下载" class="headerlink" title="Kafka下载"></a>Kafka下载</h3><p>Kafka下载有多种方式，可以选择官网也可以选择镜像</p>
-<ul>
-<li><p>官网地址：<a target="_blank" rel="noopener" href="https://kafka.apache.org/downloads">https://kafka.apache.org/downloads</a></p>
-</li>
-<li><p>镜像地址：<a target="_blank" rel="noopener" href="https://mirror.bit.edu.cn/apache/kafka/2.4.1/kafka_2.11-2.4.1.tgz">https://mirror.bit.edu.cn/apache/kafka/2.4.1/kafka_2.11-2.4.1.tgz</a></p>
-</li>
-</ul>
-<pre class=" language-shell"><code class="language-shell">## 镜像下载
-wget https://mirror.bit.edu.cn/apache/kafka/2.4.1/kafka_2.11-2.4.1.tgz
-## 解压
-tar -zxvf kafka_2.11-2.4.1.tgz -C  /
-## 软链接
-ln -s /kafka_2.11-2.4.1/ /kafka
-cd&nbsp;/kafka</code></pre>
-<h3 id="配置修改"><a href="#配置修改" class="headerlink" title="配置修改"></a>配置修改</h3><pre class=" language-shell"><code class="language-shell">vim config/server.properties</code></pre>
-<p>这里需要说几个关键配置</p>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>默认值</th>
-<th>解释</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>broker.id</td>
-<td>0</td>
-<td>每个broker都可以用一个唯一的非负整数id进行标识；这个id可以作为broker的“名字”，你可以选择任意你喜欢的数字作为id，只要id是唯一的即可</td>
-</tr>
-<tr>
-<td>log.dirs</td>
-<td>/tmp/kafka-logs</td>
-<td>kafka存放数据的路径。这个路径并不是唯一的，可以是多个，路径之间只需要使用逗号分隔即可；每当创建新partition时，都会选择在包含最少partitions的路径下进行</td>
-</tr>
-<tr>
-<td>listeners</td>
-<td>PLAINTEXT://:9092</td>
-<td>server接受客户端连接的端口，ip配置kafka本机ip即可</td>
-</tr>
-<tr>
-<td>zookeeper.connect</td>
-<td>localhost:2181</td>
-<td>zooKeeper连接字符串的格式为：hostname:port，此处hostname和port分别是ZooKeeper集群中某个节点的host和port；zookeeper如果是集群，连接方式为hostname1:port1, hostname2:port2, hostname3:port3</td>
-</tr>
-<tr>
-<td>log.retention.hours</td>
-<td>168</td>
-<td>每个日志文件删除之前保存的时间。默认数据保存时间对所有topic都一样</td>
-</tr>
-<tr>
-<td>num.partitions</td>
-<td>1</td>
-<td>创建topic的默认分区数</td>
-</tr>
-<tr>
-<td>default.replication.factor</td>
-<td>1</td>
-<td>自动创建topic的默认副本数量，建议设置为大于等于2</td>
-</tr>
-<tr>
-<td>min.insync.replicas</td>
-<td>1</td>
-<td>当producer设置acks为-1时，min.insync.replicas指定replicas的最小数目（必须确认每一个repica的写数据都是成功的），如果这个数目没有达到，producer发送消息会产生</td>
-</tr>
-<tr>
-<td>delete.topic.enable</td>
-<td>false</td>
-<td>是否允许删除主题</td>
-</tr>
-</tbody></table>
-<p>简版：</p>
-<pre class=" language-shell"><code class="language-shell">#broker.id属性在kafka集群中必须要是唯一
-broker.id=0
-#kafka部署的机器ip和提供服务的端口号
-listeners=PLAINTEXT://192.168.186.131:9092
-#kafka的消息存储文件
-log.dir=/usr/local/data/kafka‐logs
-#kafka连接zookeeper的地址
-zookeeper.connect=localhost:2181</code></pre>
-<h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><pre class=" language-shell"><code class="language-shell">## -daemon 表示后台启动
-bin/kafka-server-start.sh -daemon config/server.properties</code></pre>
-<p>后台启动日志会打印在logs目录的server.log</p>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>主题创建一个名字为“test”的Topic，partition=1，备份因子=1</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test</code></pre>
-<p>发送消息</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-console-producer.sh --broker-list 192.168.186.131:9092 --topic test
-## 命令中输入要发送的消息的内容</code></pre>
-<p>消费Topic为test的消息</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-console-consumer.sh --bootstrap-server 192.168.186.131:9092 --topic test</code></pre>
-<h2 id="KafKa集群搭建"><a href="#KafKa集群搭建" class="headerlink" title="KafKa集群搭建"></a>KafKa集群搭建</h2><p>与单机搭建基本一致，主要改一下配置文件</p>
-<p>我们有3个配置文件server.properties，server-1.properties，server-2.properties</p>
-<p>server-1.properties:</p>
-<pre class=" language-shell"><code class="language-shell">#broker.id属性在kafka集群中必须要是唯一
-broker.id=1
-#kafka部署的机器ip和提供服务的端口号
-listeners=PLAINTEXT://192.168.186.131:9093
-log.dir=/data/kafka/kafka‐logs‐1
-#kafka连接zookeeper的地址，要把多个kafka实例组成集群，对应连接的zookeeper必须相同
-zookeeper.connect=localhost:2181</code></pre>
-<p>server-2.properties:</p>
-<pre class=" language-shell"><code class="language-shell">#broker.id属性在kafka集群中必须要是唯一
-broker.id=2
-#kafka部署的机器ip和提供服务的端口号
-listeners=PLAINTEXT://192.168.186.131:9094
-log.dir=/data/kafka/kafka‐logs‐2
-#kafka连接zookeeper的地址，要把多个kafka实例组成集群，对应连接的zookeeper必须相同
-zookeeper.connect=localhost:2181</code></pre>
-<p>启动</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka‐server‐start.sh&nbsp;‐daemon&nbsp;config/server‐1.properties
-bin/kafka‐server‐start.sh&nbsp;‐daemon&nbsp;config/server‐2.properties</code></pre>
-<h2 id="Kafka客户端常用命令"><a href="#Kafka客户端常用命令" class="headerlink" title="Kafka客户端常用命令"></a>Kafka客户端常用命令</h2><p>创建一个新的topic，副本数设置为3，分区数设置为2</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 2 --topic my-repl-topic</code></pre>
-<p>查看topic分区情况</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic my-repl-topic</code></pre>
-<p>发消息</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-console-producer.sh --broker-list 192.168.186.131:9092,192.168.186.131:9093,192.168.186.131:9094 --topic my-repl-topic</code></pre>
-<p>消费消息</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-console-consumer.sh --bootstrap-server 192.168.186.131:9092,192.168.186.131:9093,192.168.186.131:9094 --from-beginning --topic my-repl-topic</code></pre>
-<h2 id="Kafka控制台搭建"><a href="#Kafka控制台搭建" class="headerlink" title="Kafka控制台搭建"></a>Kafka控制台搭建</h2><p>Kafka官方是没有开发自己的控制台。yahoo构建了一个Kafka控制台管理后台（CMAK）。这个管理工具可以查看Kafka集群的当前运行状态包括broker的状态</p>
-<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/yahoo/kafka-manager">https://github.com/yahoo/kafka-manager</a></p>
-<p>如果觉得编译过程太复杂，可以这里直接下载然后直接走安装后面的步骤</p>
-<p>下载链接：</p>
-<p><a target="_blank" rel="noopener" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/zip/cmak-3.0.0.5.zip">https://blog-dm.oss-cn-shanghai.aliyuncs.com/zip/cmak-3.0.0.5.zip</a>    （需要jdk11,否则报错）</p>
-<p>jdk11没有安装的可以使用老版本的kafka-manager,以下链接为kafka-manager1.3.3.7的版本，测试kafka_2.11-2.4.1可正常使用</p>
-<p><a target="_blank" rel="noopener" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/zip/kafka-manager-1.3.3.7.zip">https://blog-dm.oss-cn-shanghai.aliyuncs.com/zip/kafka-manager-1.3.3.7.zip</a>  （jdk8版本可用）</p>
-<h3 id="下载管理工具CMAK"><a href="#下载管理工具CMAK" class="headerlink" title="下载管理工具CMAK"></a>下载管理工具CMAK</h3><pre class=" language-shell"><code class="language-shell">## 下载
-wget https://github.com/yahoo/kafka-manager/archive/3.0.0.5.zip
-## 解压
-unzip CMAK-3.0.0.5.zip -d /</code></pre>
-<h3 id="sbt编译"><a href="#sbt编译" class="headerlink" title="sbt编译"></a>sbt编译</h3><p>yum安装sbt：</p>
-<p>这个后台管理工具和Kafka一样是scala语言编写需要编译</p>
-<pre class=" language-shell"><code class="language-shell">curl https://bintray.com/sbt/rpm/rpm > bintray-sbt-rpm.repo
-mv bintray-sbt-rpm.repo /etc/yum.repos.d/
-yum install sbt</code></pre>
-<p>修改仓库地址：（sbt 默认下载库文件很慢）填上阿里云的镜像 </p>
-<pre class=" language-shell"><code class="language-shell"> vim ~/.sbt/repositories</code></pre>
-<p>文件内容：</p>
-<pre class=" language-shell"><code class="language-shell">[repositories]
-  local
-  aliyun-nexus: https://maven.aliyun.com/nexus/content/groups/public/
-  jcenter: https://jcenter.bintray.com/
-  typesafe-ivy-releases: https://repo.typesafe.com/typesafe/ivy-releases/, [organization]/[module]/[revision]/[type]s/[artifact](-[classifier]).[ext], bootOnly
-  maven-central</code></pre>
-<p>验证sbt安装成功</p>
-<pre class=" language-shell"><code class="language-shell">sbt -version</code></pre>
-<h3 id="编译CMAK（前身叫Kafka-manager）"><a href="#编译CMAK（前身叫Kafka-manager）" class="headerlink" title="编译CMAK（前身叫Kafka-manager）"></a>编译CMAK（前身叫Kafka-manager）</h3><pre class=" language-shell"><code class="language-shell">## 来到刚刚解压目录下执行
-./sbt clean dist
-## 编译如果还是不行报Download failed. Obtain the jar manually and place it at /root/.sbt/launchers/0.13.9/sbt-launch.jar
-## 可以修改解压目录下sbt编译文件下的http://repo.typesafe.com为https://repo.typesafe.com</code></pre>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre class=" language-shell"><code class="language-shell">## 重新解压编译后的代码
-unzip cmak-3.0.0.5.zip -d /
-ln -s /cmak-3.0.0.5/ /cmak
-cd /cmak
-## 修改配置文件
-vim conf/application.conf</code></pre>
-<p>修改kafka-manager.zkhosts列表为自己的zk节点</p>
-<pre class=" language-shell"><code class="language-shell">cmak.zkhosts="192.168.186.131:2181"  （3.0.0.5 - jdk11）
-cmak.zkhosts="192.168.186.131:2181" （1.3.3.7 - jdk8）</code></pre>
-<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>后台启动，日志存储nohup.out，默认端口9000，-Dhttp.port=9999可修改端口</p>
-<pre class=" language-shell"><code class="language-shell">nohup bin/cmak -Dconfig.file=conf/application.conf &   （3.0.0.5 - jdk11）
-nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk8）</code></pre>
-<p>打开：ip:9000</p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210124030220.png"></p>
-<p>添加一个集群</p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210124030310.png"></p>
-<p>主界面：</p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210124030552.png"></p>
-<p>Broker:</p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/image-20210124141246214.png"></p>
-<p>Topic列表:</p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/image-20210124141303687.png"></p>
-<p>Topic详情：</p>
-<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/image-20210124141347466.png"></p>
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>大家都知道SpringBoot有内置Tomcat的功能，在<a href="https://dmsupine.com/2021/04/27/springboot-qi-dong-yuan-li/">启动原理</a>中有介绍SpringBoot内置Tomcat的原理。那么如果我们不像使用SpringBoot的内置Tomcat，想用自己的web容器怎么操作。springboot支持默认三大容器，Tomcat，Jetty，Undertow，可以在pom包中通过依赖控制。</p>
+<p>ServletWebServerFactoryAutoConfiguration注解上</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210422165140.png"></p>
+<p>这里就体现了SpringBoot内置容器有哪些</p>
+<h2 id="使用Undertow内置容器"><a href="#使用Undertow内置容器" class="headerlink" title="使用Undertow内置容器"></a>使用Undertow内置容器</h2><h3 id="pom"><a href="#pom" class="headerlink" title="pom"></a>pom</h3><p>排除tomcat依赖，增加undertow依赖</p>
+<pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!--排除tomcat依赖--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-web<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusions</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusion</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-tomcat<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusions</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+<span class="token comment" spellcheck="true">&lt;!--使用undertow容器--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-undertow<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210422164755.png"></p>
+<h2 id="使用jetty内置容器"><a href="#使用jetty内置容器" class="headerlink" title="使用jetty内置容器"></a>使用jetty内置容器</h2><h3 id="pom-1"><a href="#pom-1" class="headerlink" title="pom"></a>pom</h3><p>排除tomcat依赖，增加jetty依赖</p>
+<pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!--排除tomcat依赖--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-web<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusions</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusion</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-tomcat<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusions</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+<span class="token comment" spellcheck="true">&lt;!--使用jetty容器--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-jetty<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210422165034.png"></p>
+<h2 id="如何使用外部容器"><a href="#如何使用外部容器" class="headerlink" title="如何使用外部容器"></a>如何使用外部容器</h2><ol>
+<li>更改打包方式，排除tomcat pom依赖，这时候也不要加一些UnderTow或Jetty的包</li>
+<li>编写Tomcat启动类，找到SpringBoot主程序</li>
+<li>在tomcat容器中运行</li>
+</ol>
+<h3 id="pom-2"><a href="#pom-2" class="headerlink" title="pom"></a>pom</h3><p>排除依赖是为了让ServletWebServerFactoryAutoConfiguration不在自动装配任何一个容器类，但<strong>这里是可以不用排除依赖其实也是可以使用外部容器的</strong>，从代码中可以看出如果使用了外部servlet会优先使用外部sevlet而不会使用自动装配的sevlet。</p>
+<pre class=" language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>packaging</span><span class="token punctuation">></span></span>war<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>packaging</span><span class="token punctuation">></span></span>
+
+<span class="token comment" spellcheck="true">&lt;!--排除tomcat依赖--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-web<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusions</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusion</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-tomcat<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusions</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+<h3 id="编写Tomcat启动类"><a href="#编写Tomcat启动类" class="headerlink" title="编写Tomcat启动类"></a>编写Tomcat启动类</h3><p>实现SpringBootServletInitializer重写configure方法</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TomcatStartSpringBoot</span> <span class="token keyword">extends</span> <span class="token class-name">SpringBootServletInitializer</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> SpringApplicationBuilder <span class="token function">configure</span><span class="token punctuation">(</span>SpringApplicationBuilder builder<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> builder<span class="token punctuation">.</span><span class="token function">sources</span><span class="token punctuation">(</span>MyApplication<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="装载到tomcat容器"><a href="#装载到tomcat容器" class="headerlink" title="装载到tomcat容器"></a>装载到tomcat容器</h3><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210423110808.png"></p>
+<h2 id="使用外部容器原理"><a href="#使用外部容器原理" class="headerlink" title="使用外部容器原理"></a>使用外部容器原理</h2><ol>
+<li>Tomcat是使用SPI机制找到SpringServletContainerInitializer</li>
+<li>在其上标注了注解@HandlesTypes(WebApplicationInitializer.class)</li>
+<li>通过@HandlesTypes找到WebApplicationInitializer的所有实现类注入到onStartup方法的webAppInitializerClasses参数中</li>
+<li>然后执行WebApplicationInitializer实现类中的onStartup方法，初始化ContextLoaderListener和DispatcherServlet和启动Spring</li>
+</ol>
+<h3 id="SPI机制SpringServletContainerInitializer"><a href="#SPI机制SpringServletContainerInitializer" class="headerlink" title="SPI机制SpringServletContainerInitializer"></a>SPI机制SpringServletContainerInitializer</h3><p>在META-INF/services文件夹中找到javax.servlet.ServletContainerInitializer, 这个文件里面是ServletContainerInitializer的实现类SpringServletContainerInitializer，创建它的实例调用onstartUp</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210423142520.png"></p>
+<h3 id="HandlesTypes原理"><a href="#HandlesTypes原理" class="headerlink" title="HandlesTypes原理"></a>HandlesTypes原理</h3><p>HandlesTypes是在tomcat–ContextConfig#processServletContainerInitializers方法中注入的，主要过程如下</p>
+<ol>
+<li>通过SPI机制找到所有的ServletContainerInitializer的实现类，放到ServletContainerInitializer集合下</li>
+<li>如果在ServletContainerInitializer实现类上标注了HandlesTypes注解就继续，否则结束。找到之后这里只存储了注解的类名，这时候并没有HandlesTypes注解的接口所实现的类封装起来</li>
+<li>通过ContextConfig#processAnnotationsStream方法中的ClassParser从classes中获取到类然后在checkHandlesTypes方法中封装进initializerClassMap中</li>
+<li>在ContextConfig#webConfig方法中通过context#addServletContainerInitializer方法把initializerClassMap值放到了StandardContext中的initializers中</li>
+<li>在StandardContext#startInternal中调用ServletContainerInitializer#onStart方法</li>
+</ol>
+<h3 id="SpringServletContainerInitializer启动原理"><a href="#SpringServletContainerInitializer启动原理" class="headerlink" title="SpringServletContainerInitializer启动原理"></a>SpringServletContainerInitializer启动原理</h3><p>上面基本上是Tomcat和servlet的一些原理，下面才开始进入到Spring的一个底层了。</p>
+<p>从上面我们可以看出SpringServletContainerInitializer会通过SPI进行运行，而且会把WebApplicationInitializer的所有实现类注入到webAppInitializerClasses方法中，那么我们就可以自定义WebApplicationInitializer实现类进行一些操作了。这里我们就加了一个Tomcat启动类，就是上面加的TomcatStartSpringBoot，在这个启动类里面我们配置类SpringBoot启动类，以便于我们启动Spring容器。</p>
+<p>SpringServletContainerInitializer这个类其实也没什么就是把WebApplicationInitializer的实现类的onStartup方法挨个调一遍。</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210423234143.png"></p>
+<h3 id="SpringBootServletInitializer启动原理"><a href="#SpringBootServletInitializer启动原理" class="headerlink" title="SpringBootServletInitializer启动原理"></a>SpringBootServletInitializer启动原理</h3><p>我们实现的Tomcat启动类就是继承的SpringBootServletInitializer，我们只是重写了config方法，通过SpringServletContainerInitializer发现我们一定会调用SpringBootServletInitializer#onStartup方法</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onStartup</span><span class="token punctuation">(</span>ServletContext servletContext<span class="token punctuation">)</span> <span class="token keyword">throws</span> ServletException <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Logger initialization is deferred in case an ordered</span>
+    <span class="token comment" spellcheck="true">// LogServletContextInitializer is being used</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>logger <span class="token operator">=</span> LogFactory<span class="token punctuation">.</span><span class="token function">getLog</span><span class="token punctuation">(</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// ===========核心方法============</span>
+    WebApplicationContext rootAppContext <span class="token operator">=</span> <span class="token function">createRootApplicationContext</span><span class="token punctuation">(</span>
+        servletContext<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>rootAppContext <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        servletContext<span class="token punctuation">.</span><span class="token function">addListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ContextLoaderListener</span><span class="token punctuation">(</span>rootAppContext<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token annotation punctuation">@Override</span>
+            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">contextInitialized</span><span class="token punctuation">(</span>ServletContextEvent event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">// no-op because the application context is already initialized</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"No ContextLoaderListener registered, as "</span>
+                          <span class="token operator">+</span> <span class="token string">"createRootApplicationContext() did not "</span>
+                          <span class="token operator">+</span> <span class="token string">"return an application context"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>onStart方法中只有createRootApplicationContext比较重要</p>
+<h3 id="SpringBootServletInitializer-createRootApplicationContext"><a href="#SpringBootServletInitializer-createRootApplicationContext" class="headerlink" title="SpringBootServletInitializer#createRootApplicationContext"></a>SpringBootServletInitializer#createRootApplicationContext</h3><ol>
+<li>构建SpringApplicationBuilder对象，创建SpringApplication对象</li>
+<li>通过重写configure方法把SpringBoot启动类传到build中，通过build创建的SpringApplication调用run方法，成功来到SpringBoot的启动方法。</li>
+</ol>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> WebApplicationContext <span class="token function">createRootApplicationContext</span><span class="token punctuation">(</span>
+      ServletContext servletContext<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+   <span class="token comment" spellcheck="true">// new一个SpringApplicationBuilder对象，用其生产SpringApplication</span>
+   SpringApplicationBuilder builder <span class="token operator">=</span> <span class="token function">createSpringApplicationBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   builder<span class="token punctuation">.</span><span class="token function">main</span><span class="token punctuation">(</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   ApplicationContext parent <span class="token operator">=</span> <span class="token function">getExistingRootWebApplicationContext</span><span class="token punctuation">(</span>servletContext<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span>parent <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"Root context already created (using as parent)."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      servletContext<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span>
+            WebApplicationContext<span class="token punctuation">.</span>ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE<span class="token punctuation">,</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      builder<span class="token punctuation">.</span><span class="token function">initializers</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ParentContextApplicationContextInitializer</span><span class="token punctuation">(</span>parent<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+   builder<span class="token punctuation">.</span><span class="token function">initializers</span><span class="token punctuation">(</span>
+         <span class="token keyword">new</span> <span class="token class-name">ServletContextApplicationContextInitializer</span><span class="token punctuation">(</span>servletContext<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   builder<span class="token punctuation">.</span><span class="token function">contextClass</span><span class="token punctuation">(</span>AnnotationConfigServletWebServerApplicationContext<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token comment" spellcheck="true">// 将SpringBoot启动类传到build中构建SpringApplication对象</span>
+   <span class="token comment" spellcheck="true">//通过configure()方法扩展</span>
+   builder <span class="token operator">=</span> <span class="token function">configure</span><span class="token punctuation">(</span>builder<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   builder<span class="token punctuation">.</span><span class="token function">listeners</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">WebEnvironmentPropertySourceInitializer</span><span class="token punctuation">(</span>servletContext<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   SpringApplication application <span class="token operator">=</span> builder<span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span>application<span class="token punctuation">.</span><span class="token function">getAllSources</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> AnnotationUtils
+         <span class="token punctuation">.</span><span class="token function">findAnnotation</span><span class="token punctuation">(</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> Configuration<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span> <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      application<span class="token punctuation">.</span><span class="token function">addPrimarySources</span><span class="token punctuation">(</span>Collections<span class="token punctuation">.</span><span class="token function">singleton</span><span class="token punctuation">(</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+   Assert<span class="token punctuation">.</span><span class="token function">state</span><span class="token punctuation">(</span><span class="token operator">!</span>application<span class="token punctuation">.</span><span class="token function">getAllSources</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+         <span class="token string">"No SpringApplication sources have been defined. Either override the "</span>
+               <span class="token operator">+</span> <span class="token string">"configure method or add an @Configuration annotation"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token comment" spellcheck="true">// Ensure error pages are registered</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>registerErrorPageFilter<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      application<span class="token punctuation">.</span><span class="token function">addPrimarySources</span><span class="token punctuation">(</span>
+            Collections<span class="token punctuation">.</span><span class="token function">singleton</span><span class="token punctuation">(</span>ErrorPageFilterConfiguration<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+   <span class="token comment" spellcheck="true">// 运行SpringApplication run方法等价于SpringBoot启动类的SpringApplication.run(MyApplication.class);</span>
+   <span class="token keyword">return</span> <span class="token function">run</span><span class="token punctuation">(</span>application<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>外部容器启动无非就是通过SPI和HandlesType找到我们自定义的启动类，通过重写SpringBootServletInitializer#config方法把SpringBoot启动类传到SpringApplication中，通过SpringApplication#run创建容器。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -747,7 +717,7 @@ nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dmsupine.com/2021/01/19/kafka-dan-ji-yi-ji-ji-qun-da-jian/">https://dmsupine.com/2021/01/19/kafka-dan-ji-yi-ji-ji-qun-da-jian/</a>
+                    <a href="https://dmsupine.com/2021/05/01/springboot-shi-yong-wai-bu-tomcat/">https://dmsupine.com/2021/05/01/springboot-shi-yong-wai-bu-tomcat/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -785,20 +755,20 @@ nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/KafKa/">
-                                    <span class="chip bg-color">KafKa</span>
+                                <a href="/tags/Java/">
+                                    <span class="chip bg-color">Java</span>
                                 </a>
                             
-                                <a href="/tags/%E5%AE%89%E8%A3%85/">
-                                    <span class="chip bg-color">安装</span>
+                                <a href="/tags/Spring/">
+                                    <span class="chip bg-color">Spring</span>
                                 </a>
                             
-                                <a href="/tags/Linux/">
-                                    <span class="chip bg-color">Linux</span>
+                                <a href="/tags/SpringBoot/">
+                                    <span class="chip bg-color">SpringBoot</span>
                                 </a>
                             
-                                <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                                    <span class="chip bg-color">消息队列</span>
+                                <a href="/tags/%E6%BA%90%E7%A0%81/">
+                                    <span class="chip bg-color">源码</span>
                                 </a>
                             
                         </div>
@@ -969,7 +939,7 @@ nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk
         repo: 'dm13579.github.io',
         owner: 'dm13579',
         admin: "dm13579",
-        id: '2021-01-19T20-15-00',
+        id: '2021-05-01T20-15-00',
         distractionFreeMode: false,  // Facebook-like distraction free mode
         proxy:'https://aqueous-journey-79823.herokuapp.com/https://github.com/login/oauth/access_token'
     });
@@ -994,29 +964,30 @@ nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/01/23/kafka-ji-ben-shi-yong-ji-she-ji-yuan-li/">
+                <a href="/2021/05/01/springboot-shi-yong-wai-bu-tomcat/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/45.jpg" class="responsive-img" alt="Kafka基本使用及设计原理">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/14.jpg" class="responsive-img" alt="SpringBoot使用外部tomcat">
                         
-                        <span class="card-title">Kafka基本使用及设计原理</span>
+                        <span class="card-title">SpringBoot使用外部tomcat</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            背景Kafka是一个分布式基于Zookeeper的分布式消息系统，支持多分区，多副本。是由Scala语言开发，现在是Apache基金会顶级开源项目。它有着高吞吐、低延迟的特性。这种特性主要应用于大数据场景，日志收集场景。不适合一些复杂的业务
+                            前言大家都知道SpringBoot有内置Tomcat的功能，在启动原理中有介绍SpringBoot内置Tomcat的原理。那么如果我们不像使用SpringBoot的内置Tomcat，想用自己的web容器怎么操作。springboot支持默认
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-01-23
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-05-01
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1029,19 +1000,24 @@ nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                        <span class="chip bg-color">消息队列</span>
-                    </a>
-                    
-                    <a href="/tags/Kafka/">
-                        <span class="chip bg-color">Kafka</span>
-                    </a>
-                    
                     <a href="/tags/Java/">
                         <span class="chip bg-color">Java</span>
+                    </a>
+                    
+                    <a href="/tags/Spring/">
+                        <span class="chip bg-color">Spring</span>
+                    </a>
+                    
+                    <a href="/tags/SpringBoot/">
+                        <span class="chip bg-color">SpringBoot</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BA%90%E7%A0%81/">
+                        <span class="chip bg-color">源码</span>
                     </a>
                     
                 </div>
@@ -1055,28 +1031,24 @@ nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/01/12/rocketmq-sheng-chan-wen-ti/">
+                <a href="/2021/04/27/springboot-qi-dong-yuan-li/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/7.jpg" class="responsive-img" alt="RocketMQ生产问题实践">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/7.jpg" class="responsive-img" alt="SpringBoot启动原理">
                         
-                        <span class="card-title">RocketMQ生产问题实践</span>
+                        <span class="card-title">SpringBoot启动原理</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            RocketMQ如何保证消息不丢失RocketMQ的一个发送消息流程
-生产者 =&gt; Broker =&gt; 消费者     Broker master =&gt; slave =&gt; 磁盘
-
-生产者发送消息给到Broker
-Br
+                            前言SpringBoot 的启动区别于传统的Spring需要搭建tomcat等相关的容器，SpringBoot默认是通过内置Tomcat启动，只需简单的运行java -jar xxx即可简单的启动一个SpringBoot工程。这里我们深入S
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-12
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-04-27
                             </span>
                         <span class="publish-author">
                             
@@ -1093,16 +1065,20 @@ Br
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                        <span class="chip bg-color">消息队列</span>
+                    <a href="/tags/Java/">
+                        <span class="chip bg-color">Java</span>
                     </a>
                     
-                    <a href="/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">
-                        <span class="chip bg-color">生产实践</span>
+                    <a href="/tags/Spring/">
+                        <span class="chip bg-color">Spring</span>
                     </a>
                     
-                    <a href="/tags/RocketMQ/">
-                        <span class="chip bg-color">RocketMQ</span>
+                    <a href="/tags/SpringBoot/">
+                        <span class="chip bg-color">SpringBoot</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BA%90%E7%A0%81/">
+                        <span class="chip bg-color">源码</span>
                     </a>
                     
                 </div>
