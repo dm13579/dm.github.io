@@ -9,8 +9,39 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Sat, 01 May 2021 12:15:00 GMT</pubDate>
+    <pubDate>Fri, 07 May 2021 12:15:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Dubbo SPI机制</title>
+      <link>https://dmsupine.com/2021/05/07/dubbo-spi-ji-zhi/</link>
+      <guid>https://dmsupine.com/2021/05/07/dubbo-spi-ji-zhi/</guid>
+      <pubDate>Fri, 07 May 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;什么是-SPI&quot;&gt;&lt;a href=&quot;#什么是-SPI&quot; class=&quot;headerlink&quot; title=&quot;什么是 SPI&quot;&gt;&lt;/a&gt;什么是 SPI&lt;/h2&gt;&lt;p&gt;SPI全称是Service provider</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/Dubbo/">Dubbo</category>
+      
+      <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      
+      <comments>https://dmsupine.com/2021/05/07/dubbo-spi-ji-zhi/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>SpringBoot使用外部tomcat</title>
@@ -34,11 +65,11 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
       <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
       <category domain="https://dmsupine.com/tags/SpringBoot/">SpringBoot</category>
-      
-      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
       
       
       <comments>https://dmsupine.com/2021/05/01/springboot-shi-yong-wai-bu-tomcat/#disqus_thread</comments>
@@ -67,11 +98,11 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
       <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
       <category domain="https://dmsupine.com/tags/SpringBoot/">SpringBoot</category>
-      
-      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
       
       
       <comments>https://dmsupine.com/2021/04/27/springboot-qi-dong-yuan-li/#disqus_thread</comments>
@@ -100,11 +131,11 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
       <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
       <category domain="https://dmsupine.com/tags/SpringBoot/">SpringBoot</category>
-      
-      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
       
       
       <comments>https://dmsupine.com/2021/04/20/springboot-zi-dong-zhuang-pei-yuan-li/#disqus_thread</comments>
@@ -133,9 +164,9 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
-      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
-      
       <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
       <category domain="https://dmsupine.com/tags/MyBatis/">MyBatis</category>
       
@@ -198,9 +229,9 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
-      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
-      
       <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
       
       <comments>https://dmsupine.com/2021/03/26/springmvc-he-xin-yuan-ma-pou-xi/#disqus_thread</comments>
@@ -230,9 +261,9 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
-      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
-      
       <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
       
       <comments>https://dmsupine.com/2021/03/17/spring-shi-wu-guan-li-yuan-ma-pou-xi/#disqus_thread</comments>
@@ -261,9 +292,9 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
-      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
-      
       <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
       
       <comments>https://dmsupine.com/2021/03/10/springaop/#disqus_thread</comments>
@@ -292,9 +323,9 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
-      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
-      
       <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
       
       <comments>https://dmsupine.com/2021/03/05/spring-jie-jue-xun-huan-yi-lai-yu-sheng-ming-zhou-qi/#disqus_thread</comments>
@@ -323,9 +354,9 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
-      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
-      
       <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
       
       
       <comments>https://dmsupine.com/2021/02/25/springioc-rong-qi-jia-zai-liu-cheng-he-yuan-ma-pou-xi/#disqus_thread</comments>
@@ -575,13 +606,13 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
+      <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
       <category domain="https://dmsupine.com/tags/Kafka/">Kafka</category>
       
-      <category domain="https://dmsupine.com/tags/Java/">Java</category>
-      
       <category domain="https://dmsupine.com/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">生产实践</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       
       <comments>https://dmsupine.com/2021/01/25/kafka-sheng-chan-shi-jian-yu-xing-neng-you-hua/#disqus_thread</comments>
@@ -608,11 +639,11 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
+      <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
       <category domain="https://dmsupine.com/tags/Kafka/">Kafka</category>
       
-      <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       
       <comments>https://dmsupine.com/2021/01/23/kafka-ji-ben-shi-yong-ji-she-ji-yuan-li/#disqus_thread</comments>
@@ -639,13 +670,13 @@
       <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
       
       
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
+      
       <category domain="https://dmsupine.com/tags/KafKa/">KafKa</category>
       
       <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
       
       <category domain="https://dmsupine.com/tags/Linux/">Linux</category>
-      
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       
       <comments>https://dmsupine.com/2021/01/19/kafka-dan-ji-yi-ji-ji-qun-da-jian/#disqus_thread</comments>
@@ -672,9 +703,9 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
-      
       <category domain="https://dmsupine.com/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">生产实践</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       <category domain="https://dmsupine.com/tags/RocketMQ/">RocketMQ</category>
       
@@ -703,9 +734,9 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
-      
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       <category domain="https://dmsupine.com/tags/RocketMQ/">RocketMQ</category>
       
@@ -736,11 +767,11 @@
       <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
       
       
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
+      
       <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
       
       <category domain="https://dmsupine.com/tags/Linux/">Linux</category>
-      
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       <category domain="https://dmsupine.com/tags/RocketMQ/">RocketMQ</category>
       
