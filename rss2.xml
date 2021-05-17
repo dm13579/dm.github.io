@@ -9,8 +9,43 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Fri, 07 May 2021 12:15:00 GMT</pubDate>
+    <pubDate>Mon, 17 May 2021 12:15:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>SpringBoot与Dubbo整合源码分析</title>
+      <link>https://dmsupine.com/2021/05/17/springboot-yu-dubbo-zheng-he-yuan-ma-fen-xi/</link>
+      <guid>https://dmsupine.com/2021/05/17/springboot-yu-dubbo-zheng-he-yuan-ma-fen-xi/</guid>
+      <pubDate>Mon, 17 May 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;Demo&quot;&gt;&lt;a href=&quot;#Demo&quot; class=&quot;headerlink&quot; title=&quot;Demo&quot;&gt;&lt;/a&gt;Demo&lt;/h2&gt;&lt;p&gt;SpringBoot整合Dubbo只需加个依赖，服务提供者加注解@Service </description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/Dubbo/">Dubbo</category>
+      
+      <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      <category domain="https://dmsupine.com/tags/Spring/">Spring</category>
+      
+      <category domain="https://dmsupine.com/tags/SpringBoot/">SpringBoot</category>
+      
+      
+      <comments>https://dmsupine.com/2021/05/17/springboot-yu-dubbo-zheng-he-yuan-ma-fen-xi/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Dubbo SPI机制</title>
@@ -608,11 +643,11 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
+      
       <category domain="https://dmsupine.com/tags/Kafka/">Kafka</category>
       
       <category domain="https://dmsupine.com/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">生产实践</category>
-      
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       
       <comments>https://dmsupine.com/2021/01/25/kafka-sheng-chan-shi-jian-yu-xing-neng-you-hua/#disqus_thread</comments>
@@ -641,9 +676,9 @@
       
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
       
-      <category domain="https://dmsupine.com/tags/Kafka/">Kafka</category>
-      
       <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
+      
+      <category domain="https://dmsupine.com/tags/Kafka/">Kafka</category>
       
       
       <comments>https://dmsupine.com/2021/01/23/kafka-ji-ben-shi-yong-ji-she-ji-yuan-li/#disqus_thread</comments>
@@ -670,13 +705,13 @@
       <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
-      
       <category domain="https://dmsupine.com/tags/KafKa/">KafKa</category>
       
       <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
       
       <category domain="https://dmsupine.com/tags/Linux/">Linux</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       
       <comments>https://dmsupine.com/2021/01/19/kafka-dan-ji-yi-ji-ji-qun-da-jian/#disqus_thread</comments>
@@ -703,9 +738,9 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">生产实践</category>
-      
       <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
+      
+      <category domain="https://dmsupine.com/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">生产实践</category>
       
       <category domain="https://dmsupine.com/tags/RocketMQ/">RocketMQ</category>
       
@@ -767,11 +802,11 @@
       <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
-      
       <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
       
       <category domain="https://dmsupine.com/tags/Linux/">Linux</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       <category domain="https://dmsupine.com/tags/RocketMQ/">RocketMQ</category>
       
