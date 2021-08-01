@@ -9,8 +9,37 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Sun, 23 May 2021 12:15:00 GMT</pubDate>
+    <pubDate>Sat, 01 Aug 2020 14:05:25 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Dubbo服务引用</title>
+      <link>https://dmsupine.com/2021/08/01/dubbo-fu-wu-yin-yong/</link>
+      <guid>https://dmsupine.com/2021/08/01/dubbo-fu-wu-yin-yong/</guid>
+      <pubDate>Sun, 01 Aug 2021 14:05:25 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;在&lt;a</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/Dubbo/">Dubbo</category>
+      
+      <category domain="https://dmsupine.com/tags/RPC/">RPC</category>
+      
+      
+      <comments>https://dmsupine.com/2021/08/01/dubbo-fu-wu-yin-yong/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Dubbo服务导出源码</title>
@@ -673,9 +702,9 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
-      
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       <category domain="https://dmsupine.com/tags/Kafka/">Kafka</category>
       
@@ -706,9 +735,9 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
-      
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       <category domain="https://dmsupine.com/tags/Kafka/">Kafka</category>
       
@@ -801,9 +830,9 @@
       <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
       
       
-      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
-      
       <category domain="https://dmsupine.com/tags/Java/">Java</category>
+      
+      <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
       <category domain="https://dmsupine.com/tags/RocketMQ/">RocketMQ</category>
       
