@@ -1067,30 +1067,32 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/08/01/dubbo-fu-wu-yin-yong/">
+                <a href="/2021/08/12/dubbo-fu-wu-diao-yong-yuan-ma-jie-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/29.jpg" class="responsive-img" alt="Dubbo服务引用">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/44.jpg" class="responsive-img" alt="Dubbo服务调用源码">
                         
-                        <span class="card-title">Dubbo服务引用</span>
+                        <span class="card-title">Dubbo服务调用源码</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            前言在SpringBoot与Dubbo整合源码分析那一篇博文中有说到在Spring启动过程中会对@DubboReference标注的对象进行赋值，赋值的内容就是ReferenceBean#get方法返回的代理对象。而这代理对象的生成便是服务
+                            前言前面对于服务导出和服务引入有了比较详细的解释，这里主要是对服务的整个调用过程进行解析。首先我们看一下Dubbo在整个调用过程情况。官方源码解析;
+
+应用启动时，服务消费者首先会从注册中心拉取服务存到服务目录。
+调用的时候会先从服务目录吧
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-01
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-12
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1103,7 +1105,6 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -1111,8 +1112,12 @@
                         <span class="chip bg-color">Dubbo</span>
                     </a>
                     
-                    <a href="/tags/RPC/">
-                        <span class="chip bg-color">RPC</span>
+                    <a href="/tags/Java/">
+                        <span class="chip bg-color">Java</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BA%90%E7%A0%81/">
+                        <span class="chip bg-color">源码</span>
                     </a>
                     
                 </div>
@@ -1351,7 +1356,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">119.6k</span>
+            <span class="white-color">121.9k</span>
             
 
             <br>
