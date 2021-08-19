@@ -380,11 +380,11 @@
                 
                 
                 
-                <a href="/categories/%E7%AC%94%E8%AE%B0/" title="笔记: 34">
+                <a href="/categories/%E7%AC%94%E8%AE%B0/" title="笔记: 35">
                     <span class="chip center-align waves-effect waves-light
                              chip-active "
                             style="background-color: #F9EBEA;">笔记
-                        <span class="tag-length">34</span>
+                        <span class="tag-length">35</span>
                     </span>
                 </a>
                 
@@ -408,6 +408,67 @@
 
     <article id="articles" class="container articles">
         <div class="row tags-posts">
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/02/05/redis-sheng-chan-shi-jian-yu-xing-neng-you-hua/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/0.jpg" class="responsive-img" alt="Redis生产实践与性能优化">
+                            
+                            <span class="card-title">Redis生产实践与性能优化</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                缓存穿透缓存穿透是指访问一个不存在的key（这个key不在缓存层），穿透了缓存层直接打到了DB，如果访问量大的话是有把DB打崩的可能性。
+解决方案：
+
+缓存空对象，即使访问的是一个不存在的对象，我们也可以吧访问的key值缓存，value直接
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-02-05
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Java/">
+                            <span class="chip bg-color">Java</span>
+                        </a>
+                        
+                        <a href="/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">
+                            <span class="chip bg-color">生产实践</span>
+                        </a>
+                        
+                        <a href="/tags/Redis/">
+                            <span class="chip bg-color">Redis</span>
+                        </a>
+                        
+                        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">
+                            <span class="chip bg-color">分布式缓存</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
@@ -900,52 +961,6 @@ Producer：消息生产者，Producer通过NameServer拉取所有Broker集群，
                 </div>
             </div>
             
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/17.jpg" class="responsive-img" alt="ZooKeeper初探及使用场景">
-                            
-                            <span class="card-title">ZooKeeper初探及使用场景</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                认识ZooKeeperZooKeeper是一个分布式调度协调服务，分布式应用的产生必定会带来多节点之间的协调问题，这个时候ZooKeeper就出现了。很多开源中间件都用到了ZooKeeper,比如KafKa就是强依赖于ZooKeeper.它
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-08
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/ZooKeeper/">
-                            <span class="chip bg-color">ZooKeeper</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
         </div>
     </article>
 </main>
@@ -985,7 +1000,7 @@ Producer：消息生产者，Producer通过NameServer拉取所有Broker集群，
 
             
             &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-            <span class="white-color">125.1k</span>
+            <span class="white-color">127k</span>
             
 
             <br>
