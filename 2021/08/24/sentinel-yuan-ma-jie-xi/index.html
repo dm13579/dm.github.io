@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 	<meta name="baidu-site-verification" content="lElrePz9Qe" />
 	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
-    <meta name="keywords" content="MySQL事务">
+    <meta name="keywords" content="限流,Sentinel,源码">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,7 +29,7 @@
 </script>
 
 
-    <title>MySQL事务系统解析 | 泉涸</title>
+    <title>Sentinel源码解析 | 泉涸</title>
     <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -328,12 +328,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/34.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">MySQL事务系统解析</h1>
+                    <h1 class="description center-align post-title">Sentinel源码解析</h1>
                 </div>
             </div>
         </div>
@@ -450,12 +450,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/MySQL/">
-                                <span class="chip bg-color">MySQL</span>
+                            <a href="/tags/%E6%BA%90%E7%A0%81/">
+                                <span class="chip bg-color">源码</span>
                             </a>
                         
-                            <a href="/tags/%E4%BA%8B%E5%8A%A1/">
-                                <span class="chip bg-color">事务</span>
+                            <a href="/tags/%E9%99%90%E6%B5%81/">
+                                <span class="chip bg-color">限流</span>
+                            </a>
+                        
+                            <a href="/tags/Sentinel/">
+                                <span class="chip bg-color">Sentinel</span>
                             </a>
                         
                     </div>
@@ -479,28 +483,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-08-25
+                    2021-08-24
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-08-25
+                    2021-08-24
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.8k
+                    1.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    6 分
+                    5 分
                 </div>
                 
 
@@ -515,103 +519,164 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近啃MySQL相关的知识，了解到事务以及事务隔离机制，想要深入了解下事务是如何实现的下面是此次主要探讨的几点方向。这里先推荐几篇文章</p>
-<p><a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2017/12">数据库内核月报 － 2017 / 12</a></p>
-<p><a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2017/10">数据库内核月报 － 2017 / 10</a></p>
-<p><a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2015/04">数据库内核月报 － 2015 / 04</a></p>
-<ol>
-<li>事务及其ACID特性</li>
-<li>并发事务带来的问题</li>
-<li>事务隔离机制以及解决并发事务问题</li>
-<li>事务隔离机制如何实现（MVCC多版本并发控制机制）</li>
-</ol>
-<h2 id="事务及其ACID特性"><a href="#事务及其ACID特性" class="headerlink" title="事务及其ACID特性"></a>事务及其ACID特性</h2><p>事务一般具有4个特性，这4个特性一般简称ACID特性</p>
+                <h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><p>在Springcloud中引入sentinel我们发现只是引入了一个jar包就完事了，说明肯定是通过SpringBoot自动装配将sentinel引入进来，既然这样，那么我没找到spring.factories就能找到自动装配的类</p>
+<p>spring-cloud-alibaba-sentinel.jar打开找到spring.factories（<strong>版本不一样位置可能不同</strong>）</p>
+<pre class=" language-java"><code class="language-java">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>boot<span class="token punctuation">.</span>autoconfigure<span class="token punctuation">.</span>EnableAutoConfiguration<span class="token operator">=</span>\
+com<span class="token punctuation">.</span>alibaba<span class="token punctuation">.</span>cloud<span class="token punctuation">.</span>sentinel<span class="token punctuation">.</span>SentinelWebAutoConfiguration<span class="token punctuation">,</span>\
+com<span class="token punctuation">.</span>alibaba<span class="token punctuation">.</span>cloud<span class="token punctuation">.</span>sentinel<span class="token punctuation">.</span>SentinelWebFluxAutoConfiguration<span class="token punctuation">,</span>\
+com<span class="token punctuation">.</span>alibaba<span class="token punctuation">.</span>cloud<span class="token punctuation">.</span>sentinel<span class="token punctuation">.</span>endpoint<span class="token punctuation">.</span>SentinelEndpointAutoConfiguration<span class="token punctuation">,</span>\
+com<span class="token punctuation">.</span>alibaba<span class="token punctuation">.</span>cloud<span class="token punctuation">.</span>sentinel<span class="token punctuation">.</span>custom<span class="token punctuation">.</span>SentinelAutoConfiguration<span class="token punctuation">,</span>\
+com<span class="token punctuation">.</span>alibaba<span class="token punctuation">.</span>cloud<span class="token punctuation">.</span>sentinel<span class="token punctuation">.</span>feign<span class="token punctuation">.</span>SentinelFeignAutoConfiguration
+
+org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>cloud<span class="token punctuation">.</span>client<span class="token punctuation">.</span>circuitbreaker<span class="token punctuation">.</span>EnableCircuitBreaker<span class="token operator">=</span>\
+com<span class="token punctuation">.</span>alibaba<span class="token punctuation">.</span>cloud<span class="token punctuation">.</span>sentinel<span class="token punctuation">.</span>custom<span class="token punctuation">.</span>SentinelCircuitBreakerConfiguration
+</code></pre>
+<p>在Springcloud gateway使用的是webflux,所以我们猜测很有可能使用的是SentinelWebFluxAutoConfiguration，如果是普通应用使用的是web servlet环境那么应该使用的是SentinelWebAutoConfiguration，由于我们对Web环境更加熟悉，我们这里直接看普通web环境所引入的SentinelWebAutoConfiguration</p>
+<p>SentinelWebAutoConfiguration</p>
+<p>这里自动装配代码很简单，就是注入了一个Bean，并将这个bean绑定到web容器的拦截器中。所以我们在普通Web环境中解决Sentinel的方法是通过拦截器解决的（<strong>通过注解形式@SentinelResources方法是通过AOP解决的，SentinelResourceAspect这里暂不做解释</strong>）</p>
+<p>注意点：这里有个小问题，可能是我得sentinel版本问题。在设置拦截器路径匹配的时候他设置的路径规则是/*，而这便会导致某些路径不会被拦截器拦截，所以我们需要配置文件加上</p>
+<pre class=" language-yml"><code class="language-yml">spring.cloud.sentinel.filter.url-patterns=/**</code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Autowired</span>
+<span class="token keyword">private</span> Optional<span class="token operator">&lt;</span>SentinelWebInterceptor<span class="token operator">></span> sentinelWebInterceptorOptional<span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addInterceptors</span><span class="token punctuation">(</span>InterceptorRegistry registry<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>sentinelWebInterceptorOptional<span class="token punctuation">.</span><span class="token function">isPresent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    SentinelProperties<span class="token punctuation">.</span>Filter filterConfig <span class="token operator">=</span> properties<span class="token punctuation">.</span><span class="token function">getFilter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 将下面注册的bean绑定在拦截器中</span>
+    registry<span class="token punctuation">.</span><span class="token function">addInterceptor</span><span class="token punctuation">(</span>sentinelWebInterceptorOptional<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">order</span><span class="token punctuation">(</span>filterConfig<span class="token punctuation">.</span><span class="token function">getOrder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true">// 默认路径匹配为/*存在问题，配置文件重新配置</span>
+        <span class="token punctuation">.</span><span class="token function">addPathPatterns</span><span class="token punctuation">(</span>filterConfig<span class="token punctuation">.</span><span class="token function">getUrlPatterns</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span>
+        <span class="token string">"[Sentinel Starter] register SentinelWebInterceptor with urlPatterns: {}."</span><span class="token punctuation">,</span>
+        filterConfig<span class="token punctuation">.</span><span class="token function">getUrlPatterns</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// 这里引入了一个SentinelWebInterceptor的Bean,而这个bean是被sentinelWebInterceptorOptional所注入。</span>
+<span class="token comment" spellcheck="true">// 在addInterceptors中通过sentinelWebInterceptorOptional.get()方法将这个bean取出来</span>
+<span class="token annotation punctuation">@Bean</span>
+<span class="token annotation punctuation">@ConditionalOnProperty</span><span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token string">"spring.cloud.sentinel.filter.enabled"</span><span class="token punctuation">,</span>
+                       matchIfMissing <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> SentinelWebInterceptor <span class="token function">sentinelWebInterceptor</span><span class="token punctuation">(</span>
+    SentinelWebMvcConfig sentinelWebMvcConfig<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SentinelWebInterceptor</span><span class="token punctuation">(</span>sentinelWebMvcConfig<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="SentinelWebInterceptor"><a href="#SentinelWebInterceptor" class="headerlink" title="SentinelWebInterceptor"></a>SentinelWebInterceptor</h2><p>我们知道拦截器通常是有一个preHandle方法，在SentinelWebInterceptor中这个方法在它的抽象父类中。</p>
+<p>这里就是获取资源并对资源进行限流保护核心代码其实就一句 <code>Entry entry = SphU.entry(resourceName, ResourceTypeConstants.COMMON_WEB, EntryType.IN);</code>申请一个entry 申请成功则成功失败既限流。</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">preHandle</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">,</span> HttpServletResponse response<span class="token punctuation">,</span> Object handler<span class="token punctuation">)</span>
+    <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        String resourceName <span class="token operator">=</span> <span class="token function">getResourceName</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>StringUtil<span class="token punctuation">.</span><span class="token function">isNotEmpty</span><span class="token punctuation">(</span>resourceName<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// Parse the request origin using registered origin parser.</span>
+            String origin <span class="token operator">=</span> <span class="token function">parseOrigin</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            ContextUtil<span class="token punctuation">.</span><span class="token function">enter</span><span class="token punctuation">(</span>SENTINEL_SPRING_WEB_CONTEXT_NAME<span class="token punctuation">,</span> origin<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 核心代码</span>
+            <span class="token comment" spellcheck="true">// 申请一个entry资源，申请成功则通过请求，申请失败就进行限流熔断保护</span>
+            Entry entry <span class="token operator">=</span> SphU<span class="token punctuation">.</span><span class="token function">entry</span><span class="token punctuation">(</span>resourceName<span class="token punctuation">,</span> ResourceTypeConstants<span class="token punctuation">.</span>COMMON_WEB<span class="token punctuation">,</span> EntryType<span class="token punctuation">.</span>IN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token function">setEntryInRequest</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> baseWebMvcConfig<span class="token punctuation">.</span><span class="token function">getRequestAttributeName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> entry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">BlockException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">handleBlockException</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="SphU-entry"><a href="#SphU-entry" class="headerlink" title="SphU#entry"></a>SphU#entry</h2><p>从这里一直往下跟会到<code>CtSph#entryWithPriority</code>这个方法，这便是一切的开始。</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> Entry <span class="token function">entryWithPriority</span><span class="token punctuation">(</span>ResourceWrapper resourceWrapper<span class="token punctuation">,</span> <span class="token keyword">int</span> count<span class="token punctuation">,</span> <span class="token keyword">boolean</span> prioritized<span class="token punctuation">,</span> Object<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> args<span class="token punctuation">)</span>
+    <span class="token keyword">throws</span> BlockException <span class="token punctuation">{</span>
+       <span class="token comment" spellcheck="true">// =======省略代码=========</span>
+
+    <span class="token comment" spellcheck="true">// 构造一个Slot链条，使用责任链的方式进行调用</span>
+    ProcessorSlot<span class="token operator">&lt;</span>Object<span class="token operator">></span> chain <span class="token operator">=</span> <span class="token function">lookProcessChain</span><span class="token punctuation">(</span>resourceWrapper<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// =======省略代码=========</span>
+
+    Entry e <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CtEntry</span><span class="token punctuation">(</span>resourceWrapper<span class="token punctuation">,</span> chain<span class="token punctuation">,</span> context<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        chain<span class="token punctuation">.</span><span class="token function">entry</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> resourceWrapper<span class="token punctuation">,</span> null<span class="token punctuation">,</span> count<span class="token punctuation">,</span> prioritized<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">BlockException</span> e1<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        e<span class="token punctuation">.</span><span class="token function">exit</span><span class="token punctuation">(</span>count<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">throw</span> e1<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> e1<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// This should not happen, unless there are errors existing in Sentinel internal.</span>
+        RecordLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"Sentinel unexpected exception"</span><span class="token punctuation">,</span> e1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> e<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="lookProcessChain"><a href="#lookProcessChain" class="headerlink" title="lookProcessChain"></a>lookProcessChain</h3><p>这里主要是构建后续调用链</p>
+<p>NodeSelectorSlot-&gt;ClusterBuilderSlot-&gt;LogSlot-&gt;StatisticSlot-&gt;ParamFlowSlot-&gt;SystemSlot-&gt;AuthoritySlot-&gt;FlowSlot-&gt;DegradeSlot</p>
+<pre class=" language-java"><code class="language-java">ProcessorSlot<span class="token operator">&lt;</span>Object<span class="token operator">></span> <span class="token function">lookProcessChain</span><span class="token punctuation">(</span>ResourceWrapper resourceWrapper<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 先看这个资源有没有获取这个调用链</span>
+    ProcessorSlotChain chain <span class="token operator">=</span> chainMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>resourceWrapper<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// DCL 防并发</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>chain <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>LOCK<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            chain <span class="token operator">=</span> chainMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>resourceWrapper<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>chain <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">// Entry size limit.</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>chainMap<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">>=</span> Constants<span class="token punctuation">.</span>MAX_SLOT_CHAIN_SIZE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">return</span> null<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+               <span class="token comment" spellcheck="true">// 构建链条，DefaultSlotChainBuilder,GatewaySlotChainBuilder,HotParamSlotChainBuilder三种构建器，通过SPI获取到HotParamSlotChainBuilder</span>
+                <span class="token comment" spellcheck="true">// 链条 NodeSelectorSlot->ClusterBuilderSlot->LogSlot->StatisticSlot->ParamFlowSlot->SystemSlot->AuthoritySlot->FlowSlot->DegradeSlot</span>
+                chain <span class="token operator">=</span> SlotChainProvider<span class="token punctuation">.</span><span class="token function">newSlotChain</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                Map<span class="token operator">&lt;</span>ResourceWrapper<span class="token punctuation">,</span> ProcessorSlotChain<span class="token operator">></span> newMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token operator">&lt;</span>ResourceWrapper<span class="token punctuation">,</span> ProcessorSlotChain<span class="token operator">></span><span class="token punctuation">(</span>
+                    chainMap<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token comment" spellcheck="true">// 将链条放打Map中，key-资源，value-链条</span>
+                newMap<span class="token punctuation">.</span><span class="token function">putAll</span><span class="token punctuation">(</span>chainMap<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                newMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>resourceWrapper<span class="token punctuation">,</span> chain<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                chainMap <span class="token operator">=</span> newMap<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> chain<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="chain-entry"><a href="#chain-entry" class="headerlink" title="chain.entry"></a>chain.entry</h3><p>通过上面构造的链条开始调用</p>
+<p>entry-执行逻辑，fireEntry-执行下一个Slot,transformEntry-调用entry</p>
+<p>大致逻辑就是entry-&gt;fireEntry-&gt;transformEntry-&gt;entry</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210820144340.png"></p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210820144559.png"></p>
+<p>执行完之后有会在拦截器中的afterCompletion方法中进行退出</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">afterCompletion</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">,</span> HttpServletResponse response<span class="token punctuation">,</span>
+                            Object handler<span class="token punctuation">,</span> Exception ex<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+    Entry entry <span class="token operator">=</span> <span class="token function">getEntryInRequest</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> baseWebMvcConfig<span class="token punctuation">.</span><span class="token function">getRequestAttributeName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>entry <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 调用chain中的exit方法，和上诉调用链基本一致</span>
+        <span class="token function">traceExceptionAndExit</span><span class="token punctuation">(</span>entry<span class="token punctuation">,</span> ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">removeEntryInRequest</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    ContextUtil<span class="token punctuation">.</span><span class="token function">exit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="限流逻辑"><a href="#限流逻辑" class="headerlink" title="限流逻辑"></a>限流逻辑</h2><p>限流逻辑就藏在每一个Slot中，代码逻辑不复杂，就不详细解释</p>
 <ul>
-<li>A（原子性）：事务要么全部成功，要么全部失败</li>
-<li>C（一致性）：不管什么时候，数据都是一致的，不会读到中间状态的数据</li>
-<li>I（隔离性）：多个事务之间相互不影响</li>
-<li>D（持久性）：在事务执行过程中，不管怎么样数据都不能丢，MySQL是使用了redo log实现的。</li>
+<li><p>NodeSelectorSlot：为资源不同的线程创建node</p>
+</li>
+<li><p>ClusterBuilderSlot：为资源创建集群node</p>
+</li>
+<li><p>LogSlot：没做什么，打印日志</p>
+</li>
+<li><p>StatisticSlot：统计数据，这里先调用了下一个链条，等调用完毕进行一些处理，包括并不限于对一些数据进行统计，比如异常数据，通过数据</p>
+</li>
+<li><p>ParamFlowSlot：热点参数规则</p>
+</li>
+<li><p>SystemSlot：系统规则</p>
+</li>
+<li><p>AuthoritySlot：授权规则</p>
+</li>
+<li><p>FlowSlot：流控规则</p>
+</li>
+<li><p>DegradeSlot：降级规则</p>
+</li>
 </ul>
-<h2 id="并发事务带来的问题"><a href="#并发事务带来的问题" class="headerlink" title="并发事务带来的问题"></a>并发事务带来的问题</h2><p>并发事务带来了更新丢失，脏读，不可重读，幻读4种问题</p>
-<ul>
-<li>更新丢失：当多个事务同时执行一行数据时，第一个事务已经对行做了修改但第二个事务不知道就把第一个事务更新的数据给修改了，出现了更新丢失的情况。<strong>当前事务的更新覆盖了其他事务的更新</strong>。</li>
-<li>脏读：第一个事务已经做了写操作，但此时并没有提交事务，然后第二个事务读取到了这条数据，也就是第二条数据读取到了脏数据，这就是所谓的脏读。<strong>当前事务读取了其他事务的已经修改但未提交的数据</strong>。</li>
-<li>不可重读：一个事务开始查询了某个语句，第二次执行同样的语句发现查询的东西不一样了。<strong>当前事务在不同时刻执行同样的查询语句，查询出的结果不一样</strong></li>
-<li>幻读：一个事务按相同的查询条件查询读取已经检索过的数据，却发现其他事务插入了满足条件的数据。<strong>当前事务读取到了其他事务插入的数据</strong></li>
-</ul>
-<h2 id="事务隔离机制"><a href="#事务隔离机制" class="headerlink" title="事务隔离机制"></a>事务隔离机制</h2><p>事务隔离机制有4种，读未提交，读已提交，可重读，串行化</p>
-<ul>
-<li>RU(Read uncommitted)：读未提交</li>
-<li>RC(Read committed)：读已提交</li>
-<li>RR(Repeatable read)：重复读</li>
-<li>SERIALIZABLE(Serializable)：串行化</li>
-</ul>
-<h3 id="隔离级别对并发事务的解决"><a href="#隔离级别对并发事务的解决" class="headerlink" title="隔离级别对并发事务的解决"></a>隔离级别对并发事务的解决</h3><table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center">脏读</th>
-<th align="center">不可重读</th>
-<th align="center">幻读</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">读未提交</td>
-<td align="center">×</td>
-<td align="center">×</td>
-<td align="center">×</td>
-</tr>
-<tr>
-<td align="center">读已提交</td>
-<td align="center">√</td>
-<td align="center">×</td>
-<td align="center">×</td>
-</tr>
-<tr>
-<td align="center">重复读</td>
-<td align="center">√</td>
-<td align="center">√</td>
-<td align="center">×</td>
-</tr>
-<tr>
-<td align="center">串行化</td>
-<td align="center">√</td>
-<td align="center">√</td>
-<td align="center">√</td>
-</tr>
-</tbody></table>
-<p>读已提交，重复读是通过MVCC机制解决的并发问题。串行化是通过对数据库加锁控制其他事务对数据的操作解决并发问题。<strong>事务隔离级别越高对并发的问题越小，但相应的付出的代价也会越大</strong>；串行化肯定是并发影响最小的，当你访问某个数据时串行化直接来个行锁或表锁，其他的数据只能阻塞在后面等这边的数据处理完成后才可以进行访问。串行化对数据库性能影响太大所以<strong>MySQL综合考虑默认使用的是重复读隔离级别</strong>。</p>
-<h2 id="MVCC多版本并发控制机制"><a href="#MVCC多版本并发控制机制" class="headerlink" title="MVCC多版本并发控制机制"></a>MVCC多版本并发控制机制</h2><p>MVCC（Multi-Version Concurrency Control）：多版本并发控制机制，对一行数据的读写操作不通过加锁来保证隔离性，提高性能。MVCC不是MySQL所特有的在Oracle,PostgreSQL都有关于MVCC的实现，实现可能是不一样的。还有MVCC只在读已提交和重复度2个隔离级别下才干活。读未提交只读最新的数据（不管你事务提不提交）它不需要任何锁，串行化直接搞把锁，所以也不需要MVCC来控制。</p>
-<p>在介绍MVCC机制前先介绍2个概念，undo log和read view</p>
-<h3 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h3><p>undo log是日志版本链，当我们对记录做了变更操作就会产生一条undo记录，undo记录主要在每条数据后面加2个隐藏字段DATA_TRX_ID，DATA_ROLL_PTR其实应该是3个，如果表没有主键还会生成一个DB_ROW_ID。<a target="_blank" rel="noopener" href="http://www.searchdoc.cn/rdbms/mysql/dev.mysql.com/doc/refman/5.7/en/innodb-multi-versioning.com.coder114.cn.html">InnoDB多版本控制</a></p>
-<ul>
-<li>DATA_TRX_ID：事务编号，6字节，记录更新这条行记录的事务编号</li>
-<li>DATA_ROLL_PTR：回滚指针，7字节，记录</li>
-<li>DB_ROW_ID：主键编号，6字节，没有主键会自动生成</li>
-</ul>
-<p>事务id的生成是在对innodb进行了写操作而生成的。在InnoDB看来所有的事务在启动时候都是只读状态是只读事务此时不会生成事务编号。<a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2017/12">数据库内核月报 － 2017 / 12</a></p>
-<p>undo log记录过程：首先表里有一个数据，伴随着隐藏字段DATA_TRX_ID，DATA_ROLL_PTR，然后有一个事务100对其进行了修改，这时候我们会把原先的数据copy一份到undo log中去，然后把修改后的数据也放进undo log,但这条数据的DATA_TRX_ID = 100，DATA_ROLL_PTR指向原来的数据。如果这时候又来了一个事务200，此时事务100还没提交，事务200又进行了一次更新会把新数据写进undo log并且DATA_TRX_ID = 200，DATA_ROLL_PTR指向事务100的那条数据。</p>
-<p><img src="https://i.loli.net/2020/09/03/k1JtNnVGyXmRc2I.png" alt="日志版本链生成过程"></p>
-<p>最后在undo log中的日志版本链就是</p>
-<p><img src="https://i.loli.net/2020/09/03/rExVXKv4Gp5olIH.png" alt="日志版本链"></p>
-<h3 id="read-view（快照）"><a href="#read-view（快照）" class="headerlink" title="read view（快照）"></a>read view（快照）</h3><p>read view在MVCC里面主要做的就是可见性判断，read view 的生成时机就是RR,RC两种隔离级别的主要区别</p>
-<ul>
-<li>RR隔离级别，只要是开启事务后的第一次select查询操作便会生成一次read view,后面便不再维护read view了</li>
-<li>RC隔离级别，开启事务后，只要进行了查询语句便会生成一次read view</li>
-</ul>
-<h3 id="read-view创建过程"><a href="#read-view创建过程" class="headerlink" title="read view创建过程"></a>read view创建过程</h3><ol>
-<li>首先看当前所有未提交的事务，存储在数组中<strong>trx_ids</strong></li>
-<li>选取未提交事务的最小的事务编号为<strong>up_limit_id</strong>,</li>
-<li>选取已提交事务的最大的事务编号加1为<strong>low_limit_id</strong></li>
-</ol>
-<p>1）trx_id&lt;up_limit_id；小于最小未提交事务肯定是已提交事务，可见<br>2）trx_id&gt;low_limit_id；大于最大已提交事务肯定是后面创建的事务，不可见<br>3）up_limit_id&lt;=trx_id&lt;=low_limit_id；分2种情况</p>
-<ul>
-<li>trx_id在trx_ids中说明是未提交事务，不可见</li>
-<li>trx_id不在trx_ids中说明是已提交事务，可见</li>
-</ul>
-<p>MVCC如何利用日志版本链来进行查询的？</p>
-<p>根据图第二次查询结果还是hello,但此时undo log日志版本链最新的是hello2，这里主要走的过程是，看undolog日志版本链从最新往下看，最新是事务1，发现事务1在已提交事务和未提交事务区间内而且是在trx_ids中，说明是不可见的，所以继续undolog日志版本链往下看。发现是事务3，发现事务3在已提交事务&amp;未提交事务区间而且不再trx_id中所以是可见的。</p>
-<p>​    <img src="https://i.loli.net/2020/09/03/YuX6dImOpJKa4zW.png" alt="MVCC"></p>
+<h2 id="源码图"><a href="#源码图" class="headerlink" title="源码图"></a>源码图</h2><p><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/5f130126e0b34d44f0514d8b">processon</a>;</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/sentinel%E9%99%90%E6%B5%81,%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7%E6%BA%90%E7%A0%81.png"></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -655,7 +720,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dmsupine.com/2020/08/25/mysql-shi-wu-xi-tong-jie-xi/">https://dmsupine.com/2020/08/25/mysql-shi-wu-xi-tong-jie-xi/</a>
+                    <a href="https://dmsupine.com/2021/08/24/sentinel-yuan-ma-jie-xi/">https://dmsupine.com/2021/08/24/sentinel-yuan-ma-jie-xi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -693,12 +758,16 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/MySQL/">
-                                    <span class="chip bg-color">MySQL</span>
+                                <a href="/tags/%E6%BA%90%E7%A0%81/">
+                                    <span class="chip bg-color">源码</span>
                                 </a>
                             
-                                <a href="/tags/%E4%BA%8B%E5%8A%A1/">
-                                    <span class="chip bg-color">事务</span>
+                                <a href="/tags/%E9%99%90%E6%B5%81/">
+                                    <span class="chip bg-color">限流</span>
+                                </a>
+                            
+                                <a href="/tags/Sentinel/">
+                                    <span class="chip bg-color">Sentinel</span>
                                 </a>
                             
                         </div>
@@ -869,7 +938,7 @@
         repo: 'dm13579.github.io',
         owner: 'dm13579',
         admin: "dm13579",
-        id: '2020-08-25T02-15-00',
+        id: '2021-08-24T20-15-00',
         distractionFreeMode: false,  // Facebook-like distraction free mode
         proxy:'https://aqueous-journey-79823.herokuapp.com/https://github.com/login/oauth/access_token'
     });
@@ -894,84 +963,30 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/08/27/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/">
+                <a href="/2021/08/24/sentinel-yuan-ma-jie-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/12.jpg" class="responsive-img" alt="Java多线程介绍与线程池底层实现原理">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/34.jpg" class="responsive-img" alt="Sentinel源码解析">
                         
-                        <span class="card-title">Java多线程介绍与线程池底层实现原理</span>
+                        <span class="card-title">Sentinel源码解析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Java线程跟操作系统的关系CPU一般有4个安全等级ring0,ring1,ring2,ring3,操作系统的内部程序指令一般运行在ring0级别，而我们的应用程序会运行在ring3上面，比如JVM进程。为什么说JVM线程的创建是一个比较重
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-08-27
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E5%B9%B6%E5%8F%91/">
-                        <span class="chip bg-color">并发</span>
-                    </a>
-                    
-                    <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
-                        <span class="chip bg-color">线程池</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
-            </div>
-            <div class="card">
-                <a href="/2020/08/25/mysql-shi-wu-xi-tong-jie-xi/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/9.jpg" class="responsive-img" alt="MySQL事务系统解析">
-                        
-                        <span class="card-title">MySQL事务系统解析</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            前言最近啃MySQL相关的知识，了解到事务以及事务隔离机制，想要深入了解下事务是如何实现的下面是此次主要探讨的几点方向。这里先推荐几篇文章
-数据库内核月报 － 2017 / 12
-数据库内核月报 － 2017 / 10
-数据库内核月报 － 
+                            入口在Springcloud中引入sentinel我们发现只是引入了一个jar包就完事了，说明肯定是通过SpringBoot自动装配将sentinel引入进来，既然这样，那么我没找到spring.factories就能找到自动装配的类
+sp
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-25
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-24
                             </span>
                         <span class="publish-author">
                             
@@ -989,12 +1004,69 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/MySQL/">
-                        <span class="chip bg-color">MySQL</span>
+                    <a href="/tags/%E6%BA%90%E7%A0%81/">
+                        <span class="chip bg-color">源码</span>
                     </a>
                     
-                    <a href="/tags/%E4%BA%8B%E5%8A%A1/">
-                        <span class="chip bg-color">事务</span>
+                    <a href="/tags/%E9%99%90%E6%B5%81/">
+                        <span class="chip bg-color">限流</span>
+                    </a>
+                    
+                    <a href="/tags/Sentinel/">
+                        <span class="chip bg-color">Sentinel</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/08/18/sentinel-ji-ben-shi-yong/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/25.jpg" class="responsive-img" alt="Sentinel基本使用">
+                        
+                        <span class="card-title">Sentinel基本使用</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            前言在一个微服务系统中，经常会出现一个服务依赖于多个服务，而一个调用逻辑会调用多个服务的情况出现。如果出现某个服务提供者出现故障不可用，就会导致服务消费者不可用，又由于是同步调用最后线程全部阻塞在服务消费者身上，最后导致服务消费者也不可用。
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-18
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E9%99%90%E6%B5%81/">
+                        <span class="chip bg-color">限流</span>
+                    </a>
+                    
+                    <a href="/tags/Sentinel/">
+                        <span class="chip bg-color">Sentinel</span>
                     </a>
                     
                 </div>
