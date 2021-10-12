@@ -9,8 +9,72 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Tue, 24 Aug 2021 12:15:00 GMT</pubDate>
+    <pubDate>Sat, 11 Sep 2021 12:15:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>ELK单机集群搭建,增量索引方案</title>
+      <link>https://dmsupine.com/2021/09/11/elasticsearch-dan-ji-ji-qun-da-jian/</link>
+      <guid>https://dmsupine.com/2021/09/11/elasticsearch-dan-ji-ji-qun-da-jian/</guid>
+      <pubDate>Sat, 11 Sep 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;环境准备&quot;&gt;&lt;a href=&quot;#环境准备&quot; class=&quot;headerlink&quot; title=&quot;环境准备&quot;&gt;&lt;/a&gt;环境准备&lt;/h2&gt;&lt;p&gt;java版本：无需准备（es7.x内置JDK12）&lt;/p&gt;
+&lt;p&gt;操作系统：CentOS7&lt;/p&gt;
+&lt;p&gt;安装包：&lt;a</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/ElasticSearch/">ElasticSearch</category>
+      
+      <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
+      
+      <category domain="https://dmsupine.com/tags/Linux/">Linux</category>
+      
+      
+      <comments>https://dmsupine.com/2021/09/11/elasticsearch-dan-ji-ji-qun-da-jian/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Sentinel持久化改造</title>
+      <link>https://dmsupine.com/2021/09/05/sentinel-ke-hu-duan-chi-jiu-hua-yuan-ma-gai-zao/</link>
+      <guid>https://dmsupine.com/2021/09/05/sentinel-ke-hu-duan-chi-jiu-hua-yuan-ma-gai-zao/</guid>
+      <pubDate>Sun, 05 Sep 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;使用过Sentinel的都知道，只要服务一重启，在sentinel</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E7%AC%94%E8%AE%B0/">笔记</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/%E6%BA%90%E7%A0%81/">源码</category>
+      
+      <category domain="https://dmsupine.com/tags/%E9%99%90%E6%B5%81/">限流</category>
+      
+      <category domain="https://dmsupine.com/tags/Sentinel/">Sentinel</category>
+      
+      
+      <comments>https://dmsupine.com/2021/09/05/sentinel-ke-hu-duan-chi-jiu-hua-yuan-ma-gai-zao/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Sentinel源码解析</title>
@@ -919,11 +983,11 @@
       <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
       
       
-      <category domain="https://dmsupine.com/tags/KafKa/">KafKa</category>
-      
       <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
       
       <category domain="https://dmsupine.com/tags/Linux/">Linux</category>
+      
+      <category domain="https://dmsupine.com/tags/KafKa/">KafKa</category>
       
       <category domain="https://dmsupine.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</category>
       
