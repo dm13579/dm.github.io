@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -579,15 +579,17 @@
         AnnotationConfigApplicationContext ctx <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span>MainConfig<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         ctx<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"people"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>我们首先进入<code>AnnotationConfigApplicationContext</code>方法的父类<code>GenericApplicationContext</code>的无参构造方法,这里我们看到了</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token function">GenericApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
+  
     <span class="token comment" spellcheck="true">/**
      * ApplicationContext spring上下文对象初始beanFactory
      */</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>beanFactory <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultListableBeanFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>注意到这里使用的是<code>DefaultListableBeanFactory</code>是因为这个BeanFactory是最上层的，实现的功能最多。</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210214142304.png"></p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token function">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> annotatedClasses<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -597,15 +599,17 @@
     <span class="token function">register</span><span class="token punctuation">(</span>annotatedClasses<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token comment" spellcheck="true">// 调用一堆方法</span>
     <span class="token function">refresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="AnnotationConfigApplicationContext构造方法"><a href="#AnnotationConfigApplicationContext构造方法" class="headerlink" title="AnnotationConfigApplicationContext构造方法"></a>AnnotationConfigApplicationContext构造方法</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token function">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 注册一些内置的后置处理器包括了ConfigurationClassPostProcessor（配置类解析后置处理器）</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>reader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AnnotatedBeanDefinitionReader</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+    
     <span class="token comment" spellcheck="true">// 创建BeanDefinition扫描器,扫描包或者类，继而转换为BeanDefinition</span>
     <span class="token comment" spellcheck="true">// spring默认的扫描包不是这个scanner对象，这是给我们自己调用context.scan()扫描的</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>scanner <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ClassPathBeanDefinitionScanner</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="AnnotatedBeanDefinitionReader构造方法"><a href="#AnnotatedBeanDefinitionReader构造方法" class="headerlink" title="AnnotatedBeanDefinitionReader构造方法"></a>AnnotatedBeanDefinitionReader构造方法</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token function">AnnotatedBeanDefinitionReader</span><span class="token punctuation">(</span>BeanDefinitionRegistry registry<span class="token punctuation">,</span> Environment environment<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    Assert<span class="token punctuation">.</span><span class="token function">notNull</span><span class="token punctuation">(</span>registry<span class="token punctuation">,</span> <span class="token string">"BeanDefinitionRegistry must not be null"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    Assert<span class="token punctuation">.</span><span class="token function">notNull</span><span class="token punctuation">(</span>environment<span class="token punctuation">,</span> <span class="token string">"Environment must not be null"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -615,7 +619,8 @@
    <span class="token keyword">this</span><span class="token punctuation">.</span>conditionEvaluator <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ConditionEvaluator</span><span class="token punctuation">(</span>registry<span class="token punctuation">,</span> environment<span class="token punctuation">,</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token comment" spellcheck="true">//注册一些内置的后置处理器（包含解析配置类后置处理器）</span>
    AnnotationConfigUtils<span class="token punctuation">.</span><span class="token function">registerAnnotationConfigProcessors</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>registry<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="registerAnnotationConfigProcessors方法"><a href="#registerAnnotationConfigProcessors方法" class="headerlink" title="registerAnnotationConfigProcessors方法"></a>registerAnnotationConfigProcessors方法</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> Set<span class="token operator">&lt;</span>BeanDefinitionHolder<span class="token operator">></span> <span class="token function">registerAnnotationConfigProcessors</span><span class="token punctuation">(</span>
       BeanDefinitionRegistry registry<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> Object source<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
@@ -700,7 +705,8 @@
    <span class="token punctuation">}</span>
 
    <span class="token keyword">return</span> beanDefs<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>这里最主要的就是注册了解析我们配置类的后置处理器ConfigurationClassPostProcessor。这个后置处理器在后面refresh中会调用</p>
 <p>现在我们回到AnnotationConfigApplicationContext中的构造方法中register方法一直跟进去到doRegisterBean方法</p>
 <h3 id="doRegisterBean方法"><a href="#doRegisterBean方法" class="headerlink" title="doRegisterBean方法"></a>doRegisterBean方法</h3><pre class=" language-java"><code class="language-java"><span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token keyword">void</span> <span class="token function">doRegisterBean</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span>T<span class="token operator">></span> annotatedClass<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> Supplier<span class="token operator">&lt;</span>T<span class="token operator">></span> instanceSupplier<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> String name<span class="token punctuation">,</span>
@@ -745,7 +751,8 @@
     <span class="token comment" spellcheck="true">// beanDefinitionNames是一个List&lt;String>,用来保存beanName</span>
     <span class="token comment" spellcheck="true">// beanDefinitionMap是一个Map,用来保存beanName和beanDefinition</span>
     BeanDefinitionReaderUtils<span class="token punctuation">.</span><span class="token function">registerBeanDefinition</span><span class="token punctuation">(</span>definitionHolder<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>registry<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="refresh方法"><a href="#refresh方法" class="headerlink" title="refresh方法"></a>refresh方法</h3><p>Spring中最最最重要的方法，不管用什么容器最终都会到这个方法。</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">refresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> BeansException<span class="token punctuation">,</span> IllegalStateException <span class="token punctuation">{</span>
@@ -787,7 +794,8 @@
          <span class="token comment" spellcheck="true">// 最后容器刷新 发布刷新事件(Spring cloud也是从这里启动的)</span>
          <span class="token function">finishRefresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
       <span class="token punctuation">}</span>
-   <span class="token punctuation">}</span></code></pre>
+   <span class="token punctuation">}</span>
+</code></pre>
 <p>只是对于解析配置类生成BeanDefinition主要就是看2个方法，一个是<code>invokeBeanFactoryPostProcessors</code>，在这个方法中会调用我们上面在reader方法中注册的<code>ConfigurationClassPostProcessor</code>后置处理器，在这个后置处理器中会解析配置类加载成BeanDefinition。另一个方法就是<code>finishBeanFactoryInitialization</code>，这个方法中会实例化剩余的单例Bean,Bean的循环依赖就是这里解决的。</p>
 <h3 id="invokeBeanFactoryPostProcessors方法"><a href="#invokeBeanFactoryPostProcessors方法" class="headerlink" title="invokeBeanFactoryPostProcessors方法"></a>invokeBeanFactoryPostProcessors方法</h3><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// beanFactory:存在bean工厂中的后置处理器，存储在BeanDefinitionMap中，是上面初始化的时候存储的那6个后置处理器加上配置类共7个BeanDefinition</span>
 <span class="token comment" spellcheck="true">// beanFactoryPostProcessors:我们调用context的addBeanFactoryPostProcessor方法加入的后置处理器，这里是0</span>
@@ -845,13 +853,13 @@
          <span class="token function">sortPostProcessors</span><span class="token punctuation">(</span>currentRegistryProcessors<span class="token punctuation">,</span> beanFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
          <span class="token comment" spellcheck="true">//把当前的加入到总的里面去</span>
          registryProcessors<span class="token punctuation">.</span><span class="token function">addAll</span><span class="token punctuation">(</span>currentRegistryProcessors<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+         
          <span class="token comment" spellcheck="true">//在这里典型的BeanDefinitionRegistryPostProcessor就是ConfigurationClassPostProcessor</span>
          <span class="token comment" spellcheck="true">//用于进行bean定义的加载 比如我们的包扫描，@import等</span>
          <span class="token function">invokeBeanDefinitionRegistryPostProcessors</span><span class="token punctuation">(</span>currentRegistryProcessors<span class="token punctuation">,</span> registry<span class="token punctuation">)</span><span class="token punctuation">;</span>
          <span class="token comment" spellcheck="true">//调用完之后，马上clear掉</span>
          currentRegistryProcessors<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+          
          <span class="token comment" spellcheck="true">//去容器中获取BeanDefinitionRegistryPostProcessor的bean的处理器名称（内置的和上面注册的）</span>
          postProcessorNames <span class="token operator">=</span> beanFactory<span class="token punctuation">.</span><span class="token function">getBeanNamesForType</span><span class="token punctuation">(</span>BeanDefinitionRegistryPostProcessor<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
          <span class="token comment" spellcheck="true">//循环上一步获取的BeanDefinitionRegistryPostProcessor的类型名称</span>
@@ -966,7 +974,8 @@
       <span class="token comment" spellcheck="true">// Clear cached merged bean definitions since the post-processors might have</span>
       <span class="token comment" spellcheck="true">// modified the original metadata, e.g. replacing placeholders in values...</span>
       beanFactory<span class="token punctuation">.</span><span class="token function">clearMetadataCache</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token punctuation">}</span></code></pre>
+   <span class="token punctuation">}</span>
+</code></pre>
 <p>这里调用比较复杂，大概梳理一下，这里主要是对2种接后置处理器进行调用</p>
 <ol>
 <li>BeanDefinitionRegistryPostProcessor：带注册得Bean工厂后置处理器，调用方法是<code>postProcessBeanDefinitionRegistry</code></li>
@@ -1101,7 +1110,8 @@
             <span class="token comment" spellcheck="true">// for a shared cache since it'll be cleared by the ApplicationContext.</span>
             <span class="token punctuation">(</span><span class="token punctuation">(</span>CachingMetadataReaderFactory<span class="token punctuation">)</span> <span class="token keyword">this</span><span class="token punctuation">.</span>metadataReaderFactory<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">clearCache</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span></code></pre>
+    <span class="token punctuation">}</span>
+</code></pre>
 <p>ConfigurationClassUtils.checkConfigurationClassCandidate方法</p>
 <p>这个方法将配置类分成了2种一种是@Configuration,这种类型标注了属性configurationClass为full其他的标注为lite</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">boolean</span> <span class="token function">checkConfigurationClassCandidate</span><span class="token punctuation">(</span>BeanDefinition beanDef<span class="token punctuation">,</span> MetadataReaderFactory metadataReaderFactory<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1127,7 +1137,8 @@
         <span class="token punctuation">}</span>
 
         <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span></code></pre>
+    <span class="token punctuation">}</span>
+</code></pre>
 <p>核心方法parser.parse(candidates)解析配置类的地方</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">parse</span><span class="token punctuation">(</span>Set<span class="token operator">&lt;</span>BeanDefinitionHolder<span class="token operator">></span> configCandidates<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token comment" spellcheck="true">// 用于来保存延时的ImportSelectors，SpringBoot自动装配的的类AutoConfigurationImportSelector</span>
@@ -1157,7 +1168,8 @@
         <span class="token punctuation">}</span>
         <span class="token comment" spellcheck="true">//处理我们延时的DeferredImportSelectors springboot就是通过这步进行记载spring.factories文件中的自定装配的对象</span>
         <span class="token function">processDeferredImportSelectors</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span></code></pre>
+    <span class="token punctuation">}</span>
+</code></pre>
 <p>parse-&gt;processConfigurationClass-&gt;doProcessConfigurationClass-&gt;this.componentScanParser.parse</p>
 <p>这里就是解析ComponentScans，把该扫描的包路径集合封装好调用doScan进行扫描</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Set<span class="token operator">&lt;</span>BeanDefinitionHolder<span class="token operator">></span> <span class="token function">parse</span><span class="token punctuation">(</span>AnnotationAttributes componentScan<span class="token punctuation">,</span> <span class="token keyword">final</span> String declaringClass<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1224,7 +1236,8 @@
       <span class="token punctuation">}</span>
    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token comment" spellcheck="true">//真正的进行扫描解析</span>
-   <span class="token keyword">return</span> scanner<span class="token punctuation">.</span><span class="token function">doScan</span><span class="token punctuation">(</span>StringUtils<span class="token punctuation">.</span><span class="token function">toStringArray</span><span class="token punctuation">(</span>basePackages<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+   <span class="token keyword">return</span> scanner<span class="token punctuation">.</span><span class="token function">doScan</span><span class="token punctuation">(</span>StringUtils<span class="token punctuation">.</span><span class="token function">toStringArray</span><span class="token punctuation">(</span>basePackages<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> Set<span class="token operator">&lt;</span>BeanDefinitionHolder<span class="token operator">></span> <span class="token function">doScan</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> basePackages<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    Assert<span class="token punctuation">.</span><span class="token function">notEmpty</span><span class="token punctuation">(</span>basePackages<span class="token punctuation">,</span> <span class="token string">"At least one base package must be specified"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token comment" spellcheck="true">//创建bean定义的holder对象用于保存扫描后生成的bean定义对象</span>
@@ -1258,7 +1271,8 @@
       <span class="token punctuation">}</span>
    <span class="token punctuation">}</span>
    <span class="token keyword">return</span> beanDefinitions<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>findCandidateComponents-&gt;scanCandidateComponents方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> Set<span class="token operator">&lt;</span>BeanDefinition<span class="token operator">></span> <span class="token function">scanCandidateComponents</span><span class="token punctuation">(</span>String basePackage<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    Set<span class="token operator">&lt;</span>BeanDefinition<span class="token operator">></span> candidates <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LinkedHashSet</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1326,7 +1340,8 @@
    <span class="token punctuation">}</span>
    <span class="token comment" spellcheck="true">//返回</span>
    <span class="token keyword">return</span> candidates<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="finishBeanFactoryInitialization方法"><a href="#finishBeanFactoryInitialization方法" class="headerlink" title="finishBeanFactoryInitialization方法"></a>finishBeanFactoryInitialization方法</h3><p>这一部分在后续Spring如何解决循环依赖中</p>
 <h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/SpringIOC%E6%B5%81%E7%A8%8B.png" alt="SpringIOC流程"></p>
 <h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><p>SpringIOC的加载过程？</p>

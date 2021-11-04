@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -539,7 +539,8 @@
         <span class="token annotation punctuation">@Filter</span><span class="token punctuation">(</span>type <span class="token operator">=</span> FilterType<span class="token punctuation">.</span>CUSTOM<span class="token punctuation">,</span> classes <span class="token operator">=</span> AutoConfigurationExcludeFilter<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> @<span class="token keyword">interface</span> <span class="token class-name">SpringBootApplication</span> <span class="token punctuation">{</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>在这里的注解中，最主要的一个就是@EnableAutoConfiguration注解，这里面有一个@Import(AutoConfigurationImportSelector.class)注解，这里表示注入了一个AutoConfigurationImportSelector class的类，这个类里面有着自动装配的原理。</p>
 <h2 id="DeferredImportSelector"><a href="#DeferredImportSelector" class="headerlink" title="DeferredImportSelector"></a>DeferredImportSelector</h2><p>AutoConfigurationImportSelector 类实现了DeferredImportSelector，这个类是ImportSelector的一个变种，大家都知道ImportSelector的功能主要是批量注入BeanDefinition。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>context<span class="token punctuation">.</span>annotation<span class="token punctuation">;</span>
@@ -574,7 +575,7 @@
             <span class="token keyword">public</span> AnnotationMetadata <span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
                 <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>metadata<span class="token punctuation">;</span>
             <span class="token punctuation">}</span>
-
+            
             <span class="token keyword">public</span> String <span class="token function">getImportClassName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
                 <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>importClassName<span class="token punctuation">;</span>
             <span class="token punctuation">}</span>
@@ -603,7 +604,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>简单看下这个类，发现它继承了ImportSelector,说明它有着ImportSelector所拥有的的所有功能，它有区别于ImportSelector就是有一个</p>
 <p>getImportGroup方法，并且有一个Group的接口。</p>
 <p>这里我们看下官方的解释</p>
@@ -660,7 +662,8 @@
             <span class="token keyword">return</span> Collections<span class="token punctuation">.</span><span class="token function">singletonList</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Entry</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>metadata<span class="token punctuation">,</span> <span class="token string">"com.dm.bean.Log"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>以下面代码打印出所有容器中所有bean,从结果可以反映出getImportGroup，返回值的影响</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@SpringBootApplication</span>
 <span class="token annotation punctuation">@Slf4j</span>
@@ -679,7 +682,8 @@
         Arrays<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span>names<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>log<span class="token operator">:</span><span class="token operator">:</span>info<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">//        log.info("项目启动成功，容器注入javaBean:{}个.",names.length);</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="源码级别看DeferredImportSelector加载逻辑"><a href="#源码级别看DeferredImportSelector加载逻辑" class="headerlink" title="源码级别看DeferredImportSelector加载逻辑"></a>源码级别看DeferredImportSelector加载逻辑</h3><p>这段逻辑主要是SpringIOC的逻辑，这里不具体跟了，首先找到入口</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// Spring 核心类</span>
 AbstractApplicationContext#refresh
@@ -691,7 +695,8 @@ PostProcessorRegistrationDelegate#invokeBeanDefinitionRegistryPostProcessors
 <span class="token comment" spellcheck="true">// 解析bean定义</span>
 ConfigurationClassPostProcessor#postProcessBeanDefinitionRegistry
 <span class="token comment" spellcheck="true">// 解析</span>
-ConfigurationClassParser#parse</code></pre>
+ConfigurationClassParser#parse
+</code></pre>
 <p>在ConfigurationClassParser#parse这个方法中我们可以看到在配置类完全解析完之后调用了processDeferredImportSelectors方法来处理延时的DeferredImportSelectors。</p>
 <p>我们看看processDeferredImportSelectors方法干了什么</p>
 <h4 id="processDeferredImportSelectors"><a href="#processDeferredImportSelectors" class="headerlink" title="processDeferredImportSelectors"></a>processDeferredImportSelectors</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">processDeferredImportSelectors</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -735,7 +740,8 @@ ConfigurationClassParser#parse</code></pre>
                 <span class="token punctuation">}</span>
             <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span></code></pre>
+    <span class="token punctuation">}</span>
+</code></pre>
 <h4 id="getImports"><a href="#getImports" class="headerlink" title="getImports"></a>getImports</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Iterable<span class="token operator">&lt;</span>Group<span class="token punctuation">.</span>Entry<span class="token operator">></span> <span class="token function">getImports</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
    <span class="token keyword">for</span> <span class="token punctuation">(</span>DeferredImportSelectorHolder deferredImport <span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>deferredImports<span class="token punctuation">)</span> <span class="token punctuation">{</span>
        <span class="token comment" spellcheck="true">// 调用group的process方法,如果group没有group就为DefaultDeferredImportSelectorGroup，调用默认selectImports方法</span>
@@ -744,7 +750,8 @@ ConfigurationClassParser#parse</code></pre>
    <span class="token punctuation">}</span>
     <span class="token comment" spellcheck="true">// 调用group的selectImports方法</span>
    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>group<span class="token punctuation">.</span><span class="token function">selectImports</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="process-amp-amp-selectImports"><a href="#process-amp-amp-selectImports" class="headerlink" title="process&amp;&amp;selectImports"></a>process&amp;&amp;selectImports</h2><p>AutoConfigurationImportSelector#AutoConfigurationGroup#process&amp;&amp;selectImports</p>
 <p>从上面所说的DeferredImportSelector逻辑可以看出springBoot会首先执行process方法，然后在执行selectImports方法，我们进入process方法看看做了什么</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
@@ -755,7 +762,8 @@ ConfigurationClassParser#parse</code></pre>
     <span class="token keyword">for</span> <span class="token punctuation">(</span>String importClassName <span class="token operator">:</span> imports<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">this</span><span class="token punctuation">.</span>entries<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>importClassName<span class="token punctuation">,</span> annotationMetadata<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">public</span> String<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">selectImports</span><span class="token punctuation">(</span>AnnotationMetadata annotationMetadata<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isEnabled</span><span class="token punctuation">(</span>annotationMetadata<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -795,7 +803,8 @@ ConfigurationClassParser#parse</code></pre>
                     <span class="token string">"No auto configuration classes found in META-INF/spring.factories. If you "</span>
                     <span class="token operator">+</span> <span class="token string">"are using a custom packaging, make sure that file is correct."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> configurations<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>没排除前</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210414231848.png"></p>
 <p>进行OnBeanCondition  OnClassCondition  OnWebApplicationCondition匹配排除后</p>
@@ -857,7 +866,8 @@ ConfigurationClassParser#parse</code></pre>
 
     <span class="token punctuation">}</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="EnableConfigurationProperties"><a href="#EnableConfigurationProperties" class="headerlink" title="@EnableConfigurationProperties"></a>@EnableConfigurationProperties</h3><p>这个注解主要是表示了启用的配置类，在这里启用的配置类是ServerProperties</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@ConfigurationProperties</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"server"</span><span class="token punctuation">,</span> ignoreUnknownFields <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ServerProperties</span> <span class="token punctuation">{</span>
@@ -884,8 +894,9 @@ ConfigurationClassParser#parse</code></pre>
      * Value to use for the Server response header (if empty, no header is sent).
      */</span>
     <span class="token keyword">private</span> String serverHeader<span class="token punctuation">;</span>
-
-    。。。。。。。。。。。</code></pre>
+    
+    。。。。。。。。。。。
+</code></pre>
 <p>简单的copy了一个局部，从这局部我们也可以看出这个自动装配类的配置项主要有哪些，比如server.port,server.address等等</p>
 <h3 id="Conditional"><a href="#Conditional" class="headerlink" title="@Conditional"></a>@Conditional</h3><p>剩下的比较重要的就是@Conditional注解，这些注解共同决定了是否启用这个配置类</p>
 <table>
@@ -950,7 +961,8 @@ ConfigurationClassParser#parse</code></pre>
 <span class="token annotation punctuation">@ConditionalOnClass</span><span class="token punctuation">(</span><span class="token punctuation">{</span> Client<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> TransportClientFactoryBean<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
 <span class="token annotation punctuation">@ConditionalOnProperty</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"spring.data.elasticsearch"</span><span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"cluster-nodes"</span><span class="token punctuation">,</span> matchIfMissing <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
 <span class="token annotation punctuation">@EnableConfigurationProperties</span><span class="token punctuation">(</span>ElasticsearchProperties<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ElasticsearchAutoConfiguration</span> <span class="token punctuation">{</span></code></pre>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ElasticsearchAutoConfiguration</span> <span class="token punctuation">{</span>
+</code></pre>
 <p>从这里看共有2个@Conditional，@ConditionalOnClass和@ConditionalOnProperty</p>
 <ul>
 <li>必须存在Client.class和TransportClientFactoryBean.class</li>
@@ -1049,7 +1061,8 @@ ConfigurationClassParser#parse</code></pre>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">></span></span>
 
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project</span><span class="token punctuation">></span></span>
+</code></pre>
 <h5 id="DmAutoConfiguration"><a href="#DmAutoConfiguration" class="headerlink" title="DmAutoConfiguration"></a>DmAutoConfiguration</h5><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span>
 <span class="token annotation punctuation">@ConditionalOnProperty</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"dm.enable"</span><span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"auto"</span><span class="token punctuation">,</span> havingValue <span class="token operator">=</span> <span class="token string">"true"</span><span class="token punctuation">)</span>
 <span class="token annotation punctuation">@EnableConfigurationProperties</span><span class="token punctuation">(</span>DmProperties<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
@@ -1070,21 +1083,24 @@ ConfigurationClassParser#parse</code></pre>
         userServiceClient<span class="token punctuation">.</span><span class="token function">setWelcome</span><span class="token punctuation">(</span><span class="token string">"欢迎回来"</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> userServiceClient<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h5 id="DmProperties"><a href="#DmProperties" class="headerlink" title="DmProperties"></a>DmProperties</h5><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@ConfigurationProperties</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"dm"</span><span class="token punctuation">)</span>
 <span class="token annotation punctuation">@Data</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DmProperties</span> <span class="token punctuation">{</span>
 
     <span class="token keyword">private</span> String name<span class="token punctuation">;</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h5 id="UserServiceClient"><a href="#UserServiceClient" class="headerlink" title="UserServiceClient"></a>UserServiceClient</h5><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Data</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserServiceClient</span> <span class="token punctuation">{</span>
 
     <span class="token keyword">private</span> String name<span class="token punctuation">;</span>
 
     <span class="token keyword">private</span> String welcome<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>在DmAutoConfiguration注解上我们发现生效条件</p>
 <ul>
 <li>dm.enable.auto=true</li>
@@ -1092,7 +1108,8 @@ ConfigurationClassParser#parse</code></pre>
 </ul>
 <p>resources下面创建META-INF/spring.factories文件</p>
 <h5 id="spring-factories"><a href="#spring-factories" class="headerlink" title="spring.factories"></a>spring.factories</h5><pre class=" language-yml"><code class="language-yml">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.starter.dm.DmAutoConfiguration</code></pre>
+  com.starter.dm.DmAutoConfiguration
+</code></pre>
 <h4 id="dm-spring-boot-starter"><a href="#dm-spring-boot-starter" class="headerlink" title="dm-spring-boot-starter"></a>dm-spring-boot-starter</h4><p>这个包简单了，只是维护了一个pom包，是个空项目</p>
 <h5 id="pom-1"><a href="#pom-1" class="headerlink" title="pom"></a>pom</h5><pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
 
@@ -1123,13 +1140,15 @@ ConfigurationClassParser#parse</code></pre>
 
       <span class="token comment" spellcheck="true">&lt;!--如果当前starter 还需要其他的类库就在这里引用--></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project</span><span class="token punctuation">></span></span>
+</code></pre>
 <h4 id="使用项目"><a href="#使用项目" class="headerlink" title="使用项目"></a>使用项目</h4><p>项目引入dm-spring-boot-starter包即可</p>
 <pre class=" language-xml"><code class="language-xml"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>com.dm<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>dm-spring-boot-starter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>1.0-SNAPSHOT<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
- <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+ <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@SpringBootApplication</span>
 <span class="token annotation punctuation">@Slf4j</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyApplication</span> <span class="token keyword">implements</span> <span class="token class-name">CommandLineRunner</span> <span class="token punctuation">{</span>
@@ -1145,7 +1164,8 @@ ConfigurationClassParser#parse</code></pre>
     <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span>userServiceClient<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h5 id="配置类"><a href="#配置类" class="headerlink" title="配置类"></a>配置类</h5><p>application.yml</p>
 <pre class=" language-yml"><code class="language-yml">dm:
   enable:

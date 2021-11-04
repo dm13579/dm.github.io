@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -531,7 +531,8 @@ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.2-l
 ## 解压
 tar -zxvf elasticsearch-7.10.2-linux-x86_64.tar.gz -C /
 ## 软链接
-ln -s /elasticsearch-7.10.2/ es/</code></pre>
+ln -s /elasticsearch-7.10.2/ es/
+</code></pre>
 <h3 id="ElasticSearch建立用户组用户"><a href="#ElasticSearch建立用户组用户" class="headerlink" title="ElasticSearch建立用户组用户"></a>ElasticSearch建立用户组用户</h3><p>ElasticSearch 无法使用root权限安装所以需要创建用户组用户账号</p>
 <pre class=" language-shell"><code class="language-shell">## 创建es用户组
 groupadd es
@@ -543,9 +544,11 @@ usermod -G es esdm
 ## 赋权
 chown -R esdm /es
 chown -R esdm /elasticsearch-7.10.2
-chown -R esdm /es</code></pre>
+chown -R esdm /es
+</code></pre>
 <h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><pre class=" language-shell"><code class="language-shell">mkdir /data/es
-vim /es/config/elasticsearch.yml</code></pre>
+vim /es/config/elasticsearch.yml
+</code></pre>
 <p>elasticsearch.yml</p>
 <pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">cluster.name</span><span class="token punctuation">:</span> my<span class="token punctuation">-</span>application
 <span class="token key atrule">node.name</span><span class="token punctuation">:</span> node<span class="token punctuation">-</span><span class="token number">1</span>
@@ -562,7 +565,8 @@ vim /es/config/elasticsearch.yml</code></pre>
 <span class="token comment" spellcheck="true">## xpack配置加密</span>
 <span class="token comment" spellcheck="true">#xpack.security.enabled: true</span>
 <span class="token comment" spellcheck="true">#xpack.license.self_generated.type: basic</span>
-<span class="token comment" spellcheck="true">#xpack.security.transport.ssl.enabled: true</span></code></pre>
+<span class="token comment" spellcheck="true">#xpack.security.transport.ssl.enabled: true</span>
+</code></pre>
 <p>机器内存较小可以调整jvm.options内存大小</p>
 <h3 id="修改启动文件使其使用自带JDK11"><a href="#修改启动文件使其使用自带JDK11" class="headerlink" title="修改启动文件使其使用自带JDK11"></a>修改启动文件使其使用自带JDK11</h3><pre class=" language-shell"><code class="language-shell">if [ ! -z "$JAVA_HOME" ]; then
   JAVA="$JAVA_HOME/bin/java"
@@ -575,7 +579,8 @@ else
     JAVA="$ES_HOME/jdk/bin/java"
   fi
   JAVA_TYPE="bundled jdk"
-fi</code></pre>
+fi
+</code></pre>
 <p>改为</p>
 <pre class=" language-shell"><code class="language-shell">if [ "$(uname -s)" = "Darwin" ]; then
   # macOS has a different structure
@@ -583,27 +588,34 @@ fi</code></pre>
 else
   JAVA="$ES_HOME/jdk/bin/java"
 fi
-JAVA_TYPE="bundled jdk"</code></pre>
+JAVA_TYPE="bundled jdk"
+</code></pre>
 <h3 id="启动es实例"><a href="#启动es实例" class="headerlink" title="启动es实例"></a>启动es实例</h3><pre class=" language-shell"><code class="language-shell">su esdm
-nohup /es/bin/elasticsearch 2>&1 &</code></pre>
+nohup /es/bin/elasticsearch 2>&1 &
+</code></pre>
 <h3 id="报错修改"><a href="#报错修改" class="headerlink" title="报错修改"></a>报错修改</h3><p>普通用户打开文件的最大数限制</p>
 <p> max file descriptors [4096] for elasticsearch process is too low, increase to at least [65535]</p>
 <pre class=" language-shell"><code class="language-shell">su root
-vim /etc/security/limits.conf</code></pre>
+vim /etc/security/limits.conf
+</code></pre>
 <pre class=" language-shell"><code class="language-shell">*&nbsp;soft nofile&nbsp;65536
 *&nbsp;hard nofile&nbsp;131072
 *&nbsp;soft nproc&nbsp;2048
-*&nbsp;hard nproc&nbsp;4096</code></pre>
+*&nbsp;hard nproc&nbsp;4096
+</code></pre>
 <p>普通用户启动线程数限制</p>
 <p>max number of threads [1024] for user [es] likely too low, increase to at least [4096]</p>
 <pre class=" language-shell"><code class="language-shell">su root
-vim /etc/security/limits.d/20-nproc.conf</code></pre>
+vim /etc/security/limits.d/20-nproc.conf
+</code></pre>
 <p>普通用户虚拟内存修改</p>
 <p>max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]</p>
 <pre class=" language-shell"><code class="language-shell">su root
 vim /etc/sysctl.conf
-sysctl -p</code></pre>
-<pre class=" language-shell"><code class="language-shell">vm.max_map_count=262144</code></pre>
+sysctl -p
+</code></pre>
+<pre class=" language-shell"><code class="language-shell">vm.max_map_count=262144
+</code></pre>
 <h2 id="ik分词器"><a href="#ik分词器" class="headerlink" title="ik分词器"></a>ik分词器</h2><p>ik下载</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/medcl/elasticsearch-analysis-ik/">https://github.com/medcl/elasticsearch-analysis-ik/</a></li>
@@ -614,7 +626,8 @@ cd /es/plugins/ik
 ## 下载
 wget https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.10.2/elasticsearch-analysis-ik-7.10.2.zip
 ## 解压
-unzip elasticsearch-analysis-ik-7.10.2.zip</code></pre>
+unzip elasticsearch-analysis-ik-7.10.2.zip
+</code></pre>
 <p>重启es,ik配置成功</p>
 <h2 id="Kibana搭建"><a href="#Kibana搭建" class="headerlink" title="Kibana搭建"></a>Kibana搭建</h2><h3 id="Kibana下载"><a href="#Kibana下载" class="headerlink" title="Kibana下载"></a>Kibana下载</h3><ul>
 <li>官网地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/downloads/past-releases#kibana">https://www.elastic.co/cn/downloads/past-releases#kibana</a></li>
@@ -624,15 +637,20 @@ wget https://artifacts.elastic.co/downloads/kibana/kibana-7.10.2-linux-x86_64.ta
 ## 解压
 tar -zxvf kibana-7.10.2-linux-x86_64.tar.gz -C /
 ## 软链接
-ln -s /kibana-7.10.2-linux-x86_64/ kibana</code></pre>
-<h3 id="修改配置文件-1"><a href="#修改配置文件-1" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><pre class=" language-shell"><code class="language-shell">vim /kibana/config/kibana.yml</code></pre>
+ln -s /kibana-7.10.2-linux-x86_64/ kibana
+</code></pre>
+<h3 id="修改配置文件-1"><a href="#修改配置文件-1" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><pre class=" language-shell"><code class="language-shell">vim /kibana/config/kibana.yml
+</code></pre>
 <pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">server.port</span><span class="token punctuation">:</span> <span class="token number">5601</span>
 <span class="token key atrule">server.host</span><span class="token punctuation">:</span> <span class="token string">"192.168.186.131"</span>
-<span class="token key atrule">elasticsearch.hosts</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"http://localhost:9200"</span><span class="token punctuation">]</span></code></pre>
+<span class="token key atrule">elasticsearch.hosts</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"http://localhost:9200"</span><span class="token punctuation">]</span>
+</code></pre>
 <h3 id="赋权"><a href="#赋权" class="headerlink" title="赋权"></a>赋权</h3><pre class=" language-shell"><code class="language-shell">su root
-chown -R esdm /kibana-7.10.2-linux-x86_64/</code></pre>
+chown -R esdm /kibana-7.10.2-linux-x86_64/
+</code></pre>
 <h3 id="启动实例"><a href="#启动实例" class="headerlink" title="启动实例"></a>启动实例</h3><pre class=" language-shell"><code class="language-shell">su esdm
-/kibana/bin/kibana</code></pre>
+/kibana/bin/kibana
+</code></pre>
 <h2 id="Logstash-部署"><a href="#Logstash-部署" class="headerlink" title="Logstash 部署"></a>Logstash 部署</h2><p>我这里使用的是ELKF架构，所以Logstash监听的是filebeat</p>
 <p>请注意Logstash版本与ES版本保持一致</p>
 <p>Logstash7.x版本的没有安装，可能与这里有稍许出入,这里安装的是Losgstash6.x版本</p>
@@ -642,7 +660,8 @@ chown -R esdm /kibana-7.10.2-linux-x86_64/</code></pre>
 <pre class=" language-shell"><code class="language-shell">## 下载
 wget https://artifacts.elastic.co/downloads/logstash/logstash-6.4.3.tar.gz
 ## 解压
-tar -zxvf logstash-6.4.3.tar.gz -C /</code></pre>
+tar -zxvf logstash-6.4.3.tar.gz -C /
+</code></pre>
 <h3 id="修改配置文件-2"><a href="#修改配置文件-2" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><pre class=" language-shell"><code class="language-shell">input {
     beats {
       port => 5044
@@ -767,7 +786,8 @@ tar -zxvf logstash-6.4.3.tar.gz -C /</code></pre>
       }
     },
     "aliases": {}
-}</code></pre>
+}
+</code></pre>
 </li>
 <li><p>output中指定模板信息</p>
 <p>同样也是编写上面的模板json文件，放入指定目录，然后在output中指定模板文件位置即可</p>
@@ -776,7 +796,8 @@ tar -zxvf logstash-6.4.3.tar.gz -C /</code></pre>
   index => "mq-%{+YYYY.MM.dd}"
   template => "/path/to/mytemplate"
   template_name => "myname"
-}</code></pre>
+}
+</code></pre>
 </li>
 </ol>
 <h2 id="filebeat-部署"><a href="#filebeat-部署" class="headerlink" title="filebeat 部署"></a>filebeat 部署</h2><h3 id="filebeat-下载"><a href="#filebeat-下载" class="headerlink" title="filebeat 下载"></a>filebeat 下载</h3><ul>
@@ -785,7 +806,8 @@ tar -zxvf logstash-6.4.3.tar.gz -C /</code></pre>
 <pre class=" language-shell"><code class="language-shell">## 下载
 wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.4.3-linux-x86_64.tar.gz
 ## 解压
- tar -zxvf filebeat-6.4.3-linux-x86_64.tar.gz -C /</code></pre>
+ tar -zxvf filebeat-6.4.3-linux-x86_64.tar.gz -C /
+</code></pre>
 <h3 id="修改配置文件-3"><a href="#修改配置文件-3" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>filebeat.yml</p>
 <pre class=" language-shell"><code class="language-shell">filebeat.inputs:
 - type: log

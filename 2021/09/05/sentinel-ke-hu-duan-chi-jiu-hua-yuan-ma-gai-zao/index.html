@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -530,7 +530,8 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>com.alibaba.csp<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>sentinel-apache-dubbo-adapter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>1.8.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+</code></pre>
 <h3 id="nacos配置中心规则"><a href="#nacos配置中心规则" class="headerlink" title="nacos配置中心规则"></a>nacos配置中心规则</h3><pre><code>[
     {
         "resource": "TestResource",
@@ -540,7 +541,8 @@
         "limitApp": "default",
         "strategy": 0
     }
-]</code></pre>
+]
+</code></pre>
 <h3 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h3><p>data-id：nacos配置中心文件名，</p>
 <p>group-id：nacos配置中心组</p>
 <p>rule-type：com.alibaba.cloud.sentinel.datasource所规定的枚举配置</p>
@@ -566,7 +568,8 @@
             <span class="token key atrule">data-id</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>spring.application.name<span class="token punctuation">}</span><span class="token punctuation">-</span>sentinel<span class="token punctuation">-</span>degrade
             <span class="token key atrule">group-id</span><span class="token punctuation">:</span> SENTINEL
             <span class="token key atrule">rule-type</span><span class="token punctuation">:</span> degrade
-            <span class="token key atrule">data-type</span><span class="token punctuation">:</span> json</code></pre>
+            <span class="token key atrule">data-type</span><span class="token punctuation">:</span> json
+</code></pre>
 <p>此时经测试nacos修改配置可以直接生效。但有个问题，这种直接写sentinel json配置，使用起来比较复杂没有直接使用控制台来方便。<strong>那么我们就会想有没有办法让控制台的规则转化为json推送到sentinel上呢？</strong></p>
 <h2 id="控制台推送规则到nacos配置中心"><a href="#控制台推送规则到nacos配置中心" class="headerlink" title="控制台推送规则到nacos配置中心"></a>控制台推送规则到nacos配置中心</h2><p>代码地址：<a target="_blank" rel="noopener" href="https://github.com/dm13579/sentinel.git">https://github.com/dm13579/sentinel.git</a></p>
 <p>这里的改动主要涉及2点</p>
@@ -593,7 +596,8 @@
     <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> String GATEWAY_FLOW_DATA_ID_POSTFIX <span class="token operator">=</span> <span class="token string">"-sentinel-param"</span><span class="token punctuation">;</span>
     <span class="token keyword">private</span> <span class="token function">NacosConfigUtil</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="规则拉取"><a href="#规则拉取" class="headerlink" title="规则拉取"></a>规则拉取</h3><p>以限流规则为例</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Component</span><span class="token punctuation">(</span><span class="token string">"flowRuleNacosProvider"</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">FlowRuleNacosProvider</span> <span class="token keyword">implements</span> <span class="token class-name">DynamicRuleProvider</span><span class="token operator">&lt;</span>List<span class="token operator">&lt;</span>FlowRuleEntity<span class="token operator">>></span> <span class="token punctuation">{</span>
@@ -615,7 +619,8 @@
         <span class="token comment" spellcheck="true">// 转化规则到FlowRuleEntity</span>
         <span class="token keyword">return</span> list<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>rule <span class="token operator">-</span><span class="token operator">></span> FlowRuleEntity<span class="token punctuation">.</span><span class="token function">fromFlowRule</span><span class="token punctuation">(</span>appName<span class="token punctuation">,</span> ip<span class="token punctuation">,</span> port<span class="token punctuation">,</span> rule<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span>Collectors<span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="规则推送"><a href="#规则推送" class="headerlink" title="规则推送"></a>规则推送</h3><p>以限流规则为例</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Component</span><span class="token punctuation">(</span><span class="token string">"flowRuleNacosPublisher"</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">FlowRuleNacosPublisher</span> <span class="token keyword">implements</span> <span class="token class-name">DynamicRulePublisher</span><span class="token operator">&lt;</span>List<span class="token operator">&lt;</span>FlowRuleEntity<span class="token operator">>></span> <span class="token punctuation">{</span>
@@ -635,7 +640,8 @@
         <span class="token comment" spellcheck="true">// 推送规则到Nacos配置中心</span>
         configService<span class="token punctuation">.</span><span class="token function">publishConfig</span><span class="token punctuation">(</span>app <span class="token operator">+</span> NacosConfigUtil<span class="token punctuation">.</span>FLOW_DATA_ID_POSTFIX<span class="token punctuation">,</span> nacosProperties<span class="token punctuation">.</span>groupId<span class="token punctuation">,</span> ConvertUtils<span class="token punctuation">.</span><span class="token function">entityConvertToRule</span><span class="token punctuation">(</span>rules<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="相关工具类"><a href="#相关工具类" class="headerlink" title="相关工具类"></a>相关工具类</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ConvertUtils</span> <span class="token punctuation">{</span>
 
     <span class="token comment" spellcheck="true">/**
@@ -648,7 +654,8 @@
     <span class="token keyword">public</span> <span class="token keyword">static</span> String <span class="token function">entityConvertToRule</span><span class="token punctuation">(</span>List<span class="token operator">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">RuleEntity</span><span class="token operator">></span> entities<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> JSON<span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span>entities<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>RuleEntity<span class="token operator">:</span><span class="token operator">:</span>toRule<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span>Collectors<span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="FlowControllerV1"><a href="#FlowControllerV1" class="headerlink" title="FlowControllerV1"></a>FlowControllerV1</h3><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/*
  * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
@@ -931,7 +938,8 @@
         List<span class="token operator">&lt;</span>FlowRuleEntity<span class="token operator">></span> rules <span class="token operator">=</span> repository<span class="token punctuation">.</span><span class="token function">findAllByApp</span><span class="token punctuation">(</span>app<span class="token punctuation">)</span><span class="token punctuation">;</span>
         rulePublisher<span class="token punctuation">.</span><span class="token function">publish</span><span class="token punctuation">(</span>app<span class="token punctuation">,</span> rules<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

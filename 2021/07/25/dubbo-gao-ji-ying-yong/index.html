@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -535,12 +535,15 @@
 <span class="token comment" spellcheck="true">// 消费端服务级别</span>
 <span class="token annotation punctuation">@DubboReference</span><span class="token punctuation">(</span>loadbalance <span class="token operator">=</span> <span class="token string">"random"</span><span class="token punctuation">)</span>
 <span class="token comment" spellcheck="true">// 消费端方法级别</span>
-<span class="token annotation punctuation">@DubboReference</span><span class="token punctuation">(</span>methods <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token annotation punctuation">@Method</span><span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token string">"testCallback"</span><span class="token punctuation">,</span> loadbalance <span class="token operator">=</span> <span class="token string">"random"</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre>
+<span class="token annotation punctuation">@DubboReference</span><span class="token punctuation">(</span>methods <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token annotation punctuation">@Method</span><span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token string">"testCallback"</span><span class="token punctuation">,</span> loadbalance <span class="token operator">=</span> <span class="token string">"random"</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
 <h3 id="自定义扩展负载均衡"><a href="#自定义扩展负载均衡" class="headerlink" title="自定义扩展负载均衡"></a>自定义扩展负载均衡</h3><p>接口：LoadBalance</p>
 <p>通过Dubbo SPI进行扩展</p>
 <p>src/main/resource/META-INF/dubbo/com.alibaba.dubbo.rpc.cluster.LoadBalance文件添加内容</p>
-<pre class=" language-java"><code class="language-java">demo<span class="token operator">=</span>my<span class="token operator">=</span>com<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>dubbo<span class="token punctuation">.</span>DemoLoadBalance</code></pre>
-<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@DubboService</span><span class="token punctuation">(</span>loadbalance <span class="token operator">=</span> <span class="token string">"roundrobin"</span><span class="token punctuation">)</span></code></pre>
+<pre class=" language-java"><code class="language-java">demo<span class="token operator">=</span>my<span class="token operator">=</span>com<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>dubbo<span class="token punctuation">.</span>DemoLoadBalance
+</code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@DubboService</span><span class="token punctuation">(</span>loadbalance <span class="token operator">=</span> <span class="token string">"roundrobin"</span><span class="token punctuation">)</span>
+</code></pre>
 <h2 id="服务超时"><a href="#服务超时" class="headerlink" title="服务超时"></a>服务超时</h2><p>服务提供者和服务消费者都可以配置超时时间，意义确不一样。</p>
 <ul>
 <li>服务消费者的超时时间表示时间内没有收到响应结果抛出异常，但此时服务提供者不受影响继续执行直到执行完</li>
@@ -565,20 +568,25 @@
 </ol>
 <h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>force：在服务引用上标注<code>force: return 123</code>    表示强制返回123，不会进行服务调用</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@DubboReference</span><span class="token punctuation">(</span>mock <span class="token operator">=</span> <span class="token string">"force: return 123"</span><span class="token punctuation">)</span>
-<span class="token keyword">private</span> DemoService demoService<span class="token punctuation">;</span></code></pre>
+<span class="token keyword">private</span> DemoService demoService<span class="token punctuation">;</span>
+</code></pre>
 <p>fail：在服务引用上标注<code>fail: return 123</code>    在服务调用失败时返回123</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@DubboReference</span><span class="token punctuation">(</span>mock <span class="token operator">=</span> <span class="token string">"fail: return 123"</span><span class="token punctuation">)</span>
-<span class="token keyword">private</span> DemoService demoService<span class="token punctuation">;</span></code></pre>
+<span class="token keyword">private</span> DemoService demoService<span class="token punctuation">;</span>
+</code></pre>
 <p>throw：当调用出错时，抛出一个默认的 RPCException</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@DubboReference</span><span class="token punctuation">(</span>mock <span class="token operator">=</span> <span class="token string">"throw"</span><span class="token punctuation">)</span>
-<span class="token keyword">private</span> DemoService demoService<span class="token punctuation">;</span></code></pre>
+<span class="token keyword">private</span> DemoService demoService<span class="token punctuation">;</span>
+</code></pre>
 <p>逻辑：调用出错时，mock一段逻辑返回</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@DubboReference</span><span class="token punctuation">(</span>mock<span class="token operator">=</span><span class="token string">"com.foo.BarServiceMock"</span><span class="token punctuation">)</span>
-<span class="token keyword">private</span> DemoService demoService<span class="token punctuation">;</span></code></pre>
+<span class="token keyword">private</span> DemoService demoService<span class="token punctuation">;</span>
+</code></pre>
 <h2 id="本地存根"><a href="#本地存根" class="headerlink" title="本地存根"></a>本地存根</h2><p>官网地址：<a target="_blank" rel="noopener" href="http://dubbo.apache.org/zh/docs/v2.7/user/examples/local-stub/">http://dubbo.apache.org/zh/docs/v2.7/user/examples/local-stub/</a></p>
 <p>本地存根简单来说就是在服务消费者端执行一段逻辑，这段逻辑可以在服务调用前或调用后执行，一般由服务提供者编码。可利用这种机制在<strong>服务调用前进行参数验证或服务调用后进行结果缓存等</strong></p>
 <h3 id="使用方法-1"><a href="#使用方法-1" class="headerlink" title="使用方法"></a>使用方法</h3><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@DubboReference</span><span class="token punctuation">(</span>stub <span class="token operator">=</span> <span class="token string">"true"</span><span class="token punctuation">)</span>
-<span class="token keyword">private</span> DemoService demoService<span class="token punctuation">;</span></code></pre>
+<span class="token keyword">private</span> DemoService demoService<span class="token punctuation">;</span>
+</code></pre>
 <p>接口层编写</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DemoServiceStub</span> <span class="token keyword">implements</span> <span class="token class-name">DemoService</span> <span class="token punctuation">{</span>
 
@@ -599,7 +607,8 @@
             <span class="token keyword">return</span> <span class="token string">"容错数据"</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="异步调用"><a href="#异步调用" class="headerlink" title="异步调用"></a>异步调用</h2><p>官网地址：<a target="_blank" rel="noopener" href="http://dubbo.apache.org/zh/docs/v2.7/user/examples/async-call/">http://dubbo.apache.org/zh/docs/v2.7/user/examples/async-call/</a></p>
 <p>异步调用顾名思义就是异步的，可以直接看使用方法</p>
 <h3 id="使用方法-2"><a href="#使用方法-2" class="headerlink" title="使用方法"></a>使用方法</h3><p>消费者</p>
@@ -619,16 +628,19 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"调用结束"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>接口层</p>
-<pre class=" language-java"><code class="language-java">CompletableFuture<span class="token operator">&lt;</span>String<span class="token operator">></span> <span class="token function">testAsync</span><span class="token punctuation">(</span>DemoDTO demoDTO<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<pre class=" language-java"><code class="language-java">CompletableFuture<span class="token operator">&lt;</span>String<span class="token operator">></span> <span class="token function">testAsync</span><span class="token punctuation">(</span>DemoDTO demoDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>提供者</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">public</span> CompletableFuture<span class="token operator">&lt;</span>String<span class="token operator">></span> <span class="token function">testAsync</span><span class="token punctuation">(</span>DemoDTO demoDTO<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"执行了异步服务"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token keyword">return</span> CompletableFuture<span class="token punctuation">.</span><span class="token function">supplyAsync</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token function">test</span><span class="token punctuation">(</span>demoDTO<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="泛化调用"><a href="#泛化调用" class="headerlink" title="泛化调用"></a>泛化调用</h2><p>官网地址：<a target="_blank" rel="noopener" href="http://dubbo.apache.org/zh/docs/v2.7/user/examples/generic-reference/">http://dubbo.apache.org/zh/docs/v2.7/user/examples/generic-reference/</a></p>
 <p>在没有API接口的情况下可以通过泛化调用的方式调用服务</p>
 <h3 id="使用方法-3"><a href="#使用方法-3" class="headerlink" title="使用方法"></a>使用方法</h3><p>消费者</p>
@@ -641,7 +653,8 @@
         DemoDTO demoDTO <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DemoDTO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         demoDTO<span class="token punctuation">.</span><span class="token function">setId</span><span class="token punctuation">(</span>112233344L<span class="token punctuation">)</span><span class="token punctuation">;</span>
         genericService<span class="token punctuation">.</span>$<span class="token function">invoke</span><span class="token punctuation">(</span><span class="token string">"test"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token string">"com.inroad.nest.demo.api.model.dto.DemoDTO"</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span>demoDTO<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span></code></pre>
+    <span class="token punctuation">}</span>
+</code></pre>
 <p>这里表示的是调用DubboDemoService下的test方法，传参是demoDTO，中间并没有像之前的引入接口包</p>
 <h2 id="泛化服务"><a href="#泛化服务" class="headerlink" title="泛化服务"></a>泛化服务</h2><p>官网地址：<a target="_blank" rel="noopener" href="http://dubbo.apache.org/zh/docs/v2.7/user/examples/generic-service/">http://dubbo.apache.org/zh/docs/v2.7/user/examples/generic-service/</a></p>
 <p>在服务端没有API接口的时候可以使用</p>
@@ -655,7 +668,8 @@
 
         <span class="token keyword">return</span> <span class="token string">"执行的方法是"</span> <span class="token operator">+</span> s<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>这时没有引用任何接口包</p>
 <p>消费者</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@DubboReference</span><span class="token punctuation">(</span>version <span class="token operator">=</span> <span class="token string">"generic"</span><span class="token punctuation">)</span>
@@ -664,7 +678,8 @@
 <span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/default"</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> String <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
     <span class="token keyword">return</span> demoService<span class="token punctuation">.</span><span class="token function">called</span><span class="token punctuation">(</span><span class="token string">"默认服务"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

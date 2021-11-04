@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -564,7 +564,8 @@
         <span class="token keyword">this</span><span class="token punctuation">.</span>keepAliveTime <span class="token operator">=</span> unit<span class="token punctuation">.</span><span class="token function">toNanos</span><span class="token punctuation">(</span>keepAliveTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">this</span><span class="token punctuation">.</span>threadFactory <span class="token operator">=</span> threadFactory<span class="token punctuation">;</span>
         <span class="token keyword">this</span><span class="token punctuation">.</span>handler <span class="token operator">=</span> handler<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>在一个简单的例子中介绍这7个参数</p>
 <p>首先来一个任务，我们会判断已经创建的线程数是否小于等于 corePoolSize（核心线程数），如果小于就会创建一个线程（线程会带着任务），如果大于就会往workQueue（阻塞队列）里面去放，如果阻塞队列里面也放满了，如果此时线程数（核心线程数+非核心线程数）小于maximumPoolSize（线程总数）就会去创建一个非核心线程，大于就会走handler（拒绝策略）</p>
 <p><strong>注意：核心线程只有创建的时候是直接拿到的任务，后续的任务全部都是去阻塞队列里面去拿的。</strong></p>
@@ -580,7 +581,8 @@
     <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> SHUTDOWN   <span class="token operator">=</span>  <span class="token number">0</span> <span class="token operator">&lt;&lt;</span> COUNT_BITS<span class="token punctuation">;</span>
     <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> STOP       <span class="token operator">=</span>  <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> COUNT_BITS<span class="token punctuation">;</span>
     <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> TIDYING    <span class="token operator">=</span>  <span class="token number">2</span> <span class="token operator">&lt;&lt;</span> COUNT_BITS<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> TERMINATED <span class="token operator">=</span>  <span class="token number">3</span> <span class="token operator">&lt;&lt;</span> COUNT_BITS<span class="token punctuation">;</span></code></pre>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> TERMINATED <span class="token operator">=</span>  <span class="token number">3</span> <span class="token operator">&lt;&lt;</span> COUNT_BITS<span class="token punctuation">;</span>
+</code></pre>
 <ul>
 <li>RUNNING：线程池在RUNNING状态，可以接受新任务，和处理所有任务，线程刚创建就是RUNNING状态</li>
 <li>SHUTDOWN：不接受新任务，但处理已经有的任务，<strong>shutdown方法</strong>将RUNNING-&gt;SHUTDOWN</li>
@@ -621,7 +623,8 @@
     <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">addWorker</span><span class="token punctuation">(</span>command<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
         <span class="token comment" spellcheck="true">// 创建非核心线程失败了，就直接走拒绝策略</span>
         <span class="token function">reject</span><span class="token punctuation">(</span>command<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="addWorker方法源码分析"><a href="#addWorker方法源码分析" class="headerlink" title="addWorker方法源码分析"></a>addWorker方法源码分析</h3><p>addWorder方法主要工作是创建一个新的线程</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
  * firstTask：是线程创建时的第一个任务
@@ -712,7 +715,8 @@
             <span class="token function">addWorkerFailed</span><span class="token punctuation">(</span>w<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> workerStarted<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="Worker对象的run方法"><a href="#Worker对象的run方法" class="headerlink" title="Worker对象的run方法"></a>Worker对象的run方法</h3><p>Worker是一个ThreadPoolExecutor内部类，此时才是真正干活的线程</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 他这里继承了AQS和实现了Runable</span>
 <span class="token comment" spellcheck="true">// 实现Runable是为了让自己成为一个线程</span>
@@ -777,7 +781,8 @@
                 <span class="token punctuation">}</span>
             <span class="token punctuation">}</span>
         <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span></code></pre>
+    <span class="token punctuation">}</span>
+</code></pre>
 <h3 id="runWorker方法"><a href="#runWorker方法" class="headerlink" title="runWorker方法"></a>runWorker方法</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">runWorker</span><span class="token punctuation">(</span>Worker w<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     Thread wt <span class="token operator">=</span> Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     Runnable task <span class="token operator">=</span> w<span class="token punctuation">.</span>firstTask<span class="token punctuation">;</span>
@@ -820,7 +825,8 @@
     <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
         <span class="token function">processWorkerExit</span><span class="token punctuation">(</span>w<span class="token punctuation">,</span> completedAbruptly<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="getTask方法"><a href="#getTask方法" class="headerlink" title="getTask方法"></a>getTask方法</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> Runnable <span class="token function">getTask</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// timeOut：上次从队列拿任务时是否超时</span>
     <span class="token keyword">boolean</span> timedOut <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// Did the last poll() time out?</span>
@@ -870,7 +876,8 @@
             timedOut <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="processWorkerExit方法"><a href="#processWorkerExit方法" class="headerlink" title="processWorkerExit方法"></a>processWorkerExit方法</h3><p>processWorkerExit方法在于runWorker的finally代码块里面的，执行任务发生异常或正常结束任务会走的方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">processWorkerExit</span><span class="token punctuation">(</span>Worker w<span class="token punctuation">,</span> <span class="token keyword">boolean</span> completedAbruptly<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// completedAbruptly这个参数在runWorker里面传入的，</span>
@@ -911,7 +918,8 @@
         <span class="token comment" spellcheck="true">// 如果是异常终止的会 addWorker(null, false)加一个null任务的线程</span>
         <span class="token function">addWorker</span><span class="token punctuation">(</span>null<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="延迟类线程池"><a href="#延迟类线程池" class="headerlink" title="延迟类线程池"></a>延迟类线程池</h2><p>线程池家族里面有一类特殊的线程池，叫做延迟类线程池ScheduledThreadPoolExecutor，先看一下它的继承关系</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20200907114109.png"></p>
 <p>很明显它继承了ThreadPoolExcutor,所以他也是一个线程池，只是在线程池上对他进行了增强，在看一下它的构造方法</p>
@@ -934,7 +942,8 @@
                                        RejectedExecutionHandler handler<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">super</span><span class="token punctuation">(</span>corePoolSize<span class="token punctuation">,</span> Integer<span class="token punctuation">.</span>MAX_VALUE<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> NANOSECONDS<span class="token punctuation">,</span>
           <span class="token keyword">new</span> <span class="token class-name">DelayedWorkQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> threadFactory<span class="token punctuation">,</span> handler<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>从中可以看出它不需要很多的参数，在线程池中的大部分参数它不要设置，比如最大线程数和超时时间和超时时间单位，在延迟类线程池中只需要传入一个核心线程数就可以创建一个延迟线程池了。</p>
 <h3 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h3><p>它和线程池的处理不一样，来了一个任务它不会直接创建工作线程，而是直接丢到队列里面去。线程去队列里面去拿任务执行。</p>
 <p>他这里的队列有点特别，它是DelayQueue，它会根据时间排序。因为他要保证延迟线程池里面不同的线程所延迟时间不同，他需要根据延迟时间吧他们排好序，先执行的应该在最前面。</p>
@@ -942,7 +951,8 @@
 <ol>
 <li><p>schedule方法，延迟执行，scheduler第二个参数和第三个参数规定了延迟时间。</p>
 <pre class=" language-java"><code class="language-java">ScheduledThreadPoolExecutor scheduledThreadPoolExecutor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ScheduledThreadPoolExecutor</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-scheduledThreadPoolExecutor<span class="token punctuation">.</span><span class="token function">schedule</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"1"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+scheduledThreadPoolExecutor<span class="token punctuation">.</span><span class="token function">schedule</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"1"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 </li>
 <li><p>scheduleWithFixedDelay方法，延迟执行，周期执行，等待之前的任务执行完成才开始计算周期时间。第一个参数：任务，第二个参数：初始化延时时间，第三个参数是周期时间，第四个参数时间单位</p>
 <p>下面这段代码执行会是执行完第一个任务睡5秒，5秒睡完才开始计算时间计算到周期时间才会执行第二个任务</p>
@@ -963,7 +973,8 @@ scheduledThreadPoolExecutor<span class="token punctuation">.</span><span class="
     <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"这是scheduleWithFixedDelay调度2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span>TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span>TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 </li>
 <li><p>scheduleAtFixedRate方法，延迟执行，周期执行，不等待前一个任务执行完，就开始计算周期时间；第一个参数：任务，第二个参数：初始化延时时间，第三个参数是周期时间，第四个参数时间单位</p>
 <p>下面这段代码就是先执行第一个任务，任务已执行不管你执行完没完我就计算周期时间</p>
@@ -984,7 +995,8 @@ scheduledThreadPoolExecutor<span class="token punctuation">.</span><span class="
     <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"这是scheduleAtFixedRate调度2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span>TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span>TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 </li>
 </ol>
 <p>下面看下源码是怎么实现的这几种提交方式</p>
@@ -1046,7 +1058,8 @@ scheduledThreadPoolExecutor<span class="token punctuation">.</span><span class="
     <span class="token comment" spellcheck="true">// 这里是提交任务的方法</span>
     <span class="token function">delayedExecute</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> t<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>我们对比一下scheduleAtFixedRate和scheduleWithFixedDelay这2个方法基本没什么区别。仔细对比发现他们之间除了参数名字不一致以外，还有一个很关键的区别在封装ScheduledFutureTask任务时，scheduleAtFixedRate传的是unit.toNanos(period)，而scheduleWithFixedDelay传的是unit.toNanos(-delay)，一个是正数一个是负数，其余就没区别了。这里的具体原因在后面修改周期时间那里会有介绍。</p>
 <h3 id="delayedExecute方法"><a href="#delayedExecute方法" class="headerlink" title="delayedExecute方法"></a>delayedExecute方法</h3><p>delayedExecute是提交任务的方法，任务封装成ScheduledFutureTask，就要把这个任务放进任务队列里面去了。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">delayedExecute</span><span class="token punctuation">(</span>RunnableScheduledFuture<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> task<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1056,7 +1069,7 @@ scheduledThreadPoolExecutor<span class="token punctuation">.</span><span class="
     <span class="token keyword">else</span> <span class="token punctuation">{</span>
         <span class="token comment" spellcheck="true">// 是运行状态将任务放进队列里面去</span>
         <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">getQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+        
         <span class="token comment" spellcheck="true">// task.isPeriodic()从构造方法可以看出周期任务period != 0,延迟任务是=0</span>
         <span class="token comment" spellcheck="true">// isPeriodic方法只是通过period != 0 是true否则是false</span>
         <span class="token comment" spellcheck="true">// canRunInCurrentRunState 获取了当前是周期任务还是延迟任务。</span>
@@ -1085,7 +1098,8 @@ scheduledThreadPoolExecutor<span class="token punctuation">.</span><span class="
     <span class="token comment" spellcheck="true">// 这里是为了避免有任务但没线程执行的尴尬</span>
     <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>wc <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
         <span class="token function">addWorker</span><span class="token punctuation">(</span>null<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="SchduledFutureTask的run方法"><a href="#SchduledFutureTask的run方法" class="headerlink" title="SchduledFutureTask的run方法"></a>SchduledFutureTask的run方法</h3><p>真正执行任务的方法</p>
 <pre class=" language-java"><code class="language-java"> <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
      <span class="token comment" spellcheck="true">// task.isPeriodic()从构造方法可以看出周期任务period != 0,延迟任务是=0</span>
@@ -1118,7 +1132,8 @@ scheduledThreadPoolExecutor<span class="token punctuation">.</span><span class="
     <span class="token keyword">else</span>
         <span class="token comment" spellcheck="true">// 现在时间加周期时间</span>
         time <span class="token operator">=</span> <span class="token function">triggerTime</span><span class="token punctuation">(</span><span class="token operator">-</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="DelayedWorkQueue"><a href="#DelayedWorkQueue" class="headerlink" title="DelayedWorkQueue"></a>DelayedWorkQueue</h3><p>DelayedWorkQueue是优先级队列，ScheduledThreadPoolExecutor它所使用的队列就是DelayedWorkQueue。之所以使用DelayedWorkQueue，是因为定时任务执行，总要取出最近要执行的任务，所以一定要取队列中最靠前的任务。</p>
 <p>他是一个堆结构，底层是数组；它不能保证所有的元素一定是顺序的，但能保证你从堆顶拿到的元素一定是所有里面最大或最小的。</p>
 <script>

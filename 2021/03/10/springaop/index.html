@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -579,7 +579,8 @@
 <span class="token annotation punctuation">@EnableAspectJAutoProxy</span>
 <span class="token annotation punctuation">@ComponentScan</span><span class="token punctuation">(</span><span class="token string">"com.dm"</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainConfig</span> <span class="token punctuation">{</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>我们从<code>@EnableAspectJAutoProxy</code>这个注解入手，到@Import(AspectJAutoProxyRegistrar.class)</p>
 <p>然后通过父类的<code>registerBeanDefinitions</code>方法注册Bean定义，分析<code>registerBeanDefinitions</code>方法发现注册了<code>AnnotationAwareAspectJAutoProxyCreator</code>这个类并且解析了注解上配置的属性proxyTargetClass和exposeProxy</p>
 <p>现在重点关注<code>AnnotationAwareAspectJAutoProxyCreator</code>这个类</p>
@@ -619,13 +620,15 @@
    <span class="token punctuation">}</span>
 
    <span class="token keyword">return</span> null<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">protected</span> <span class="token keyword">boolean</span> <span class="token function">isInfrastructureClass</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> beanClass<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    <span class="token comment" spellcheck="true">// 除了是切面相关的基础的bean(Advice,Pointcut,Advisor,AopInfrastructureBean) 还判断了是不是切面</span>
    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">isInfrastructureClass</span><span class="token punctuation">(</span>beanClass<span class="token punctuation">)</span> <span class="token operator">||</span>
          <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>aspectJAdvisorFactory <span class="token operator">!=</span> null <span class="token operator">&amp;&amp;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>aspectJAdvisorFactory<span class="token punctuation">.</span><span class="token function">isAspect</span><span class="token punctuation">(</span>beanClass<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">protected</span> <span class="token keyword">boolean</span> <span class="token function">shouldSkip</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> beanClass<span class="token punctuation">,</span> String beanName<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 找到候选的Advisors(通知  前置通知、后置通知等..)</span>
@@ -637,7 +640,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">shouldSkip</span><span class="token punctuation">(</span>beanClass<span class="token punctuation">,</span> beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>findCandidateAdvisors-&gt;findAdvisorBeans</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">protected</span> List<span class="token operator">&lt;</span>Advisor<span class="token operator">></span> <span class="token function">findCandidateAdvisors</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -649,7 +653,8 @@
     <span class="token punctuation">}</span>
     <span class="token comment" spellcheck="true">//返回我们所有的通知</span>
     <span class="token keyword">return</span> advisors<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>aspectJAdvisorsBuilder.buildAspectJAdvisors方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> List<span class="token operator">&lt;</span>Advisor<span class="token operator">></span> <span class="token function">buildAspectJAdvisors</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 用于保存切面的名称,该地方aspectNames 是我们的类级别的缓存，用户缓存已经解析出来的切面信息</span>
@@ -735,7 +740,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> advisors<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="创建代理"><a href="#创建代理" class="headerlink" title="创建代理"></a>创建代理</h3><p>创建代理准备来说有2个地方</p>
 <ol>
 <li>正常来说都是初始化之后调用后置处理器<code>BeanPostProcessors.postProcessAfterInitialization</code>方法创建代理</li>
@@ -754,7 +760,8 @@
       <span class="token punctuation">}</span>
    <span class="token punctuation">}</span>
    <span class="token keyword">return</span> bean<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>wrapIfNecessary()方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> Object <span class="token function">wrapIfNecessary</span><span class="token punctuation">(</span>Object bean<span class="token punctuation">,</span> String beanName<span class="token punctuation">,</span> Object cacheKey<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    <span class="token comment" spellcheck="true">//已经被处理过（解析切面时targetSourcedBeans出现过） 就是自己实现创建动态代理逻辑</span>
@@ -787,7 +794,8 @@
 
    <span class="token keyword">this</span><span class="token punctuation">.</span>advisedBeans<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>cacheKey<span class="token punctuation">,</span> Boolean<span class="token punctuation">.</span>FALSE<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token keyword">return</span> bean<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="getAdvicesAndAdvisorsForBean方法"><a href="#getAdvicesAndAdvisorsForBean方法" class="headerlink" title="getAdvicesAndAdvisorsForBean方法"></a>getAdvicesAndAdvisorsForBean方法</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> Object<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">getAdvicesAndAdvisorsForBean</span><span class="token punctuation">(</span>
       Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> beanClass<span class="token punctuation">,</span> String beanName<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> TargetSource targetSource<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    <span class="token comment" spellcheck="true">//找到和当前bean匹配的advisor</span>
@@ -797,7 +805,8 @@
       <span class="token keyword">return</span> DO_NOT_PROXY<span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
    <span class="token keyword">return</span> advisors<span class="token punctuation">.</span><span class="token function">toArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>findEligibleAdvisors</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> List<span class="token operator">&lt;</span>Advisor<span class="token operator">></span> <span class="token function">findEligibleAdvisors</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> beanClass<span class="token punctuation">,</span> String beanName<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">//拿到接口方式的AOP</span>
@@ -810,7 +819,8 @@
         eligibleAdvisors <span class="token operator">=</span> <span class="token function">sortAdvisors</span><span class="token punctuation">(</span>eligibleAdvisors<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> eligibleAdvisors<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>findAdvisorsThatCanApply这里面做的事情主要是调用Aspectj的2次筛选，看Advisor是否命中class。</p>
 <p>下面就是Aspectj看是否命中class的代码</p>
 <p>findAdvisorsThatCanApply-&gt; AopUtils.findAdvisorsThatCanApply-&gt;canApply-&gt;canApply-&gt;canApply</p>
@@ -863,7 +873,8 @@
    <span class="token punctuation">}</span>
 
    <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="createProxy方法"><a href="#createProxy方法" class="headerlink" title="createProxy方法"></a>createProxy方法</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> Object <span class="token function">createProxy</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> beanClass<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> String beanName<span class="token punctuation">,</span>
       <span class="token annotation punctuation">@Nullable</span> Object<span class="token punctuation">[</span><span class="token punctuation">]</span> specificInterceptors<span class="token punctuation">,</span> TargetSource targetSource<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
@@ -903,7 +914,8 @@
    <span class="token punctuation">}</span>
    <span class="token comment" spellcheck="true">//真正的创建代理对象</span>
    <span class="token keyword">return</span> proxyFactory<span class="token punctuation">.</span><span class="token function">getProxy</span><span class="token punctuation">(</span><span class="token function">getProxyClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="代理方式的选用"><a href="#代理方式的选用" class="headerlink" title="代理方式的选用"></a>代理方式的选用</h4><p>proxyFactory.getProxy方法-&gt;createAopProxy方法-&gt; getAopProxyFactory().createAopProxy()</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">public</span> AopProxy <span class="token function">createAopProxy</span><span class="token punctuation">(</span>AdvisedSupport config<span class="token punctuation">)</span> <span class="token keyword">throws</span> AopConfigException <span class="token punctuation">{</span>
@@ -925,7 +937,8 @@
       <span class="token comment" spellcheck="true">//动态代理</span>
       <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">JdkDynamicAopProxy</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>从这也可以看出，springAOP 默认就是JDK动态代理，除非指定proxyTargetClass=true才会是Cglib代理</p>
 <h3 id="代理调用"><a href="#代理调用" class="headerlink" title="代理调用"></a>代理调用</h3><p>从JDK动态代理入手JdkDynamicAopProxy</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Object <span class="token function">invoke</span><span class="token punctuation">(</span>Object proxy<span class="token punctuation">,</span> Method method<span class="token punctuation">,</span> Object<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Throwable <span class="token punctuation">{</span>
@@ -1015,7 +1028,8 @@
          AopContext<span class="token punctuation">.</span><span class="token function">setCurrentProxy</span><span class="token punctuation">(</span>oldProxy<span class="token punctuation">)</span><span class="token punctuation">;</span>
       <span class="token punctuation">}</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>责任链调用</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Object <span class="token function">proceed</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Throwable <span class="token punctuation">{</span>
    <span class="token comment" spellcheck="true">//从-1开始,结束条件执行目标方法是下标=拦截器的长度-1(执行到了最后一个拦截器的时候)</span>
@@ -1044,7 +1058,8 @@
       <span class="token comment" spellcheck="true">//在这个地方需要注意，抵用第一个拦截器的invoke方法，传入的是this当前的方法拦截器对象</span>
       <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>MethodInterceptor<span class="token punctuation">)</span> interceptorOrInterceptionAdvice<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><p>![](<a target="_blank" rel="noopener" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/Spring">https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/Spring</a> AOP.png)</p>
 <script>
         document.querySelectorAll('.github-emoji')

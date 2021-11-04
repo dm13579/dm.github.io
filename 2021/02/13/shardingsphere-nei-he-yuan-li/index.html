@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -525,7 +525,8 @@
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210207103208.png"></p>
 <h2 id="解析引擎"><a href="#解析引擎" class="headerlink" title="解析引擎"></a>解析引擎</h2><p>解析过程分为词法解析和语法解析。 词法解析器用于将SQL拆解为不可再分的原子符号，称为Token。并根据不同数据库方言所提供的字典，将其归类为关键字，表达式，字面量和操作符。 再使用语法解析器将SQL转换为抽象语法树(简称AST， Abstract Syntax Tree)。</p>
 <p>例如对下面一条SQL语句：</p>
-<pre class=" language-sql"><code class="language-sql"><span class="token keyword">SELECT</span> id<span class="token punctuation">,</span> name <span class="token keyword">FROM</span> t_user <span class="token keyword">WHERE</span> <span class="token keyword">status</span> <span class="token operator">=</span> <span class="token string">'ACTIVE'</span> <span class="token operator">AND</span> age <span class="token operator">></span> <span class="token number">18</span></code></pre>
+<pre class=" language-sql"><code class="language-sql"><span class="token keyword">SELECT</span> id<span class="token punctuation">,</span> name <span class="token keyword">FROM</span> t_user <span class="token keyword">WHERE</span> <span class="token keyword">status</span> <span class="token operator">=</span> <span class="token string">'ACTIVE'</span> <span class="token operator">AND</span> age <span class="token operator">></span> <span class="token number">18</span>
+</code></pre>
 <p>会被解析成下面这样一颗树：</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210207103634.png"></p>
 <p>为了便于理解，抽象语法树中的关键字的 Token 用绿色表示，变量的 Token 用红色表示，灰色表示需要进⼀步拆分。通过对抽象语法树的遍历，可以标记出所有可能需要改写的位置。SQL的一次解析过程是不可逆的，所有token按SQL原本的顺序依次进行解析，性能很高。并且在解析过程中，需要考虑各种数据库SQL方言的异同，提供不同的解析模版。</p>

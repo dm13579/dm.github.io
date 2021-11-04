@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -555,14 +555,16 @@ ServerBootstrap bootstrap <span class="token operator">=</span> <span class="tok
 bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>group<span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>多线程模型</p>
 <pre class=" language-java"><code class="language-java">NioEventLoopGroup eventGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ServerBootstrap bootstrap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerBootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>eventGroup<span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>主从多线程模型(最常用)</p>
 <pre class=" language-java"><code class="language-java">NioEventLoopGroup bossGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 NioEventLoopGroup workerGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -570,7 +572,8 @@ ServerBootstrap bootstrap <span class="token operator">=</span> <span class="tok
 bootstrap<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>bossGroup<span class="token punctuation">,</span>workerGroup<span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span>NioServerSocketChannel<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span>ChannelOption<span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+    <span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerHandlerInitializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>Netty的线程模型是对于上诉的Reactor模式进行了一定的升级，但核心思想没有变。</p>
 <p><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/5ee107f7f346fb1ae5592b33">Netty线程模型图</a></p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/clipboard.png" alt="Netty线程模型架构"></p>
@@ -598,7 +601,8 @@ bootstrap<span class="token punctuation">.</span><span class="token function">gr
         bossGroup<span class="token punctuation">.</span><span class="token function">shutdownGracefully</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         workerGroup<span class="token punctuation">.</span><span class="token function">shutdownGracefully</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <ul>
 <li>Selector：通过Selector监听多个连接的channel事件，通过selector轮训所有注册的channel,</li>
 <li>NioEventLoopGroup：相当于一个线程池，内部维护类一组线程（NioEventLoop），每个线程处理多个Channel上的事件。</li>
@@ -615,7 +619,8 @@ bootstrap<span class="token punctuation">.</span><span class="token function">gr
 <h2 id="Netty常见问题"><a href="#Netty常见问题" class="headerlink" title="Netty常见问题"></a>Netty常见问题</h2><h3 id="编解码问题"><a href="#编解码问题" class="headerlink" title="编解码问题"></a>编解码问题</h3><pre class=" language-java"><code class="language-java"> ChannelPipeline pipeline <span class="token operator">=</span> ch<span class="token punctuation">.</span><span class="token function">pipeline</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
  pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token string">"decoder"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">StringDecoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">// 解码器</span>
  pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token string">"encoder"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">StringEncoder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">// 编码器</span>
- pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyServerHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+ pipeline<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyServerHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>首先服务器之间的通讯只能是字节，然后我们要把消息发送到客户端，首先要对发送内容进行编码，客户端要对收到内容进行解码.上诉代码就是一个编解码的pipeline.通过分析StringEncoder编码器应该继承的是ChannelOutboundHandlerAdapter或者实现了ChannelOutboundHandler满足出站事件。StringDecoder解码器应该继承的是ChannelInboundHandlerAdapter或者实现了ChannelInboundHandler满足入站事件。看一下继承关系图，发现分析正确</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20200907231616.png" alt="StringDecoder继承关系图"></p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20200907231755.png" alt="StringEncoder继承关系图"></p>
@@ -636,7 +641,8 @@ bootstrap<span class="token punctuation">.</span><span class="token function">gr
 <p>以刚刚的例子来说零拷贝技术就是客户端发一条数据到服务端，服务端将这条数据socket缓冲区然后拷贝到直接内存，然后堆内存会有一个DirectByteBuffer映射到这一块直接内存，然后JVM对数据进行修改将数据直接改到直接内存，然后直接内存拷贝给socket缓冲区总共发生2次拷贝，零拷贝就是减少数据之间的拷贝。</p>
 <h4 id="直接内存优缺点"><a href="#直接内存优缺点" class="headerlink" title="直接内存优缺点"></a>直接内存优缺点</h4><p>优点：</p>
 <pre><code>        * 不占用堆内存
-        * 内存读写快</code></pre>
+        * 内存读写快
+</code></pre>
 <p>缺点</p>
 <ul>
 <li>申请空间慢</li>

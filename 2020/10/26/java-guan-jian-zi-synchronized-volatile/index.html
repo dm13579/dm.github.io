@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -615,11 +615,13 @@
         e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>counter<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>上诉代码你执行无数次产生的结果都是不一致的,而且不一定为10000，这里即证明了i++不是原子性的,怎么解决在下面会有介绍。</p>
 <pre class=" language-java"><code class="language-java"><span class="token number">9324</span>
 
-Process finished with exit code <span class="token number">0</span></code></pre>
+Process finished with exit code <span class="token number">0</span>
+</code></pre>
 <h3 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h3><p>单线程模型下不存在可见性问题，可见性问题必然是多线程下产生的。</p>
 <p>在上面的JMM模型中，如果线程A从主内存拿走一个变量并在工作内存中进行了写操作且没同步到主内存，这时候线程B也从主内存拿走了这个变量，但此时这个变量值是线程A没修改之前的值。从这个例子中可以看出线程A修改的值线程B不可见。</p>
 <p>下面是验证代码，运行代码会发现程序不会停止，说明了不可见，但在while(!flag)里面加上System.out.println发现又可见了，很奇怪，个人觉得是由于System.out.println里面含有同步块的问题。</p>
@@ -642,7 +644,8 @@ Process finished with exit code <span class="token number">0</span></code></pre>
         <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         b<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h3><p>在了解有序性之前需要首先了解一个现象叫指令重排，</p>
 <h4 id="指令重排"><a href="#指令重排" class="headerlink" title="指令重排"></a>指令重排</h4><p>指令重排简单来说有的代码JVM结果不变的情况下会自动优化，使本来是1,2,3执行的代码优化为2,1,3等等。虽然说指令重排是在保证结果不变的情况下来产生的这里会涉及到<strong>as-if-serial语义</strong>和<strong>happens-before原则</strong>，但在特定情况下就会产生差别，使结果的不确定性使你的程序无法控制。下面贴一个代码来证明指令重排的现象。</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Slf4j</span>
@@ -708,7 +711,8 @@ Process finished with exit code <span class="token number">0</span></code></pre>
 <span class="token number">11</span><span class="token operator">:</span><span class="token number">43</span><span class="token operator">:</span><span class="token number">28.814</span> <span class="token punctuation">[</span>main<span class="token punctuation">]</span> INFO com<span class="token punctuation">.</span>dm<span class="token punctuation">.</span>jmm<span class="token punctuation">.</span>util<span class="token punctuation">.</span>test <span class="token operator">-</span> 第<span class="token number">656300</span>次 <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span>）
 <span class="token number">11</span><span class="token operator">:</span><span class="token number">43</span><span class="token operator">:</span><span class="token number">28.815</span> <span class="token punctuation">[</span>main<span class="token punctuation">]</span> INFO com<span class="token punctuation">.</span>dm<span class="token punctuation">.</span>jmm<span class="token punctuation">.</span>util<span class="token punctuation">.</span>test <span class="token operator">-</span> 第<span class="token number">656301</span>次 <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span>）
 <span class="token number">11</span><span class="token operator">:</span><span class="token number">43</span><span class="token operator">:</span><span class="token number">28.815</span> <span class="token punctuation">[</span>main<span class="token punctuation">]</span> INFO com<span class="token punctuation">.</span>dm<span class="token punctuation">.</span>jmm<span class="token punctuation">.</span>util<span class="token punctuation">.</span>test <span class="token operator">-</span> 第<span class="token number">656302</span>次 <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span>）
-第<span class="token number">656303</span>次 <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span>）</code></pre>
+第<span class="token number">656303</span>次 <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span>）
+</code></pre>
 <p>从这段代码可以推测出结果应该是(0,1); (1,0); ,(1,1)三个结果，0,0这个结果理论上是不会产生的，但执行后发现程序终止了(0,0)结果产生了。(0,0)的产生必然发生了指令重排，因为不发生指令重排a,b必然有一个为1，不管线程怎么走，a,b必然为1那，x,y也至少有一个为1，出现了(0,0)则代表a=1和x=b之间发生了重排序或者b=1和y=a发生了重排序。</p>
 <p>执行结果不可控在代码里面是很恐怖的，as-if-serial语义保证了单线程执行结果不能被改变，happens-before原则保证了正确同步的多线程执行结果不能被改变，JVM会根据2个原则进行指令重排保证语义的正确。</p>
 <ul>
@@ -756,7 +760,8 @@ Process finished with exit code <span class="token number">0</span></code></pre>
 <span class="token comment" spellcheck="true">// 执行结果</span>
 <span class="token number">10000</span>
 
-Process finished with exit code <span class="token number">0</span></code></pre>
+Process finished with exit code <span class="token number">0</span>
+</code></pre>
 <p>这段代码与上面的代码唯一不一样的地方就是在counter自增的地方加了一个synchronized同步块。而这同步块解决了原子性问题。</p>
 <h2 id="解决可见性问题"><a href="#解决可见性问题" class="headerlink" title="解决可见性问题"></a>解决可见性问题</h2><p>一般解决可见性问题可以使用volatile来解决。</p>
 <p>同样贴上代码</p>
@@ -777,7 +782,8 @@ Process finished with exit code <span class="token number">0</span></code></pre>
         flag <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     b<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>这段代码与上面的代码唯一不一样的地方就是flag变量加了一个volatile关键字。而这解决了可见性问题。</p>
 <h2 id="解决有序性问题"><a href="#解决有序性问题" class="headerlink" title="解决有序性问题"></a>解决有序性问题</h2><p>解决有序性问题同样也可以使用volatile关键字。这里就不贴代码了。在上诉代码里面给x,y,a,b加个volatile就OK了、</p>
 <h2 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h2><p>上面提到最多的就是volatile关键字。volatile关键字解决了有序性问题，可见性问题，但是他没有解决原子性问题。你可以用上诉counter自增代码测试一下。结果和不加volatile是一致的，不确定结果。</p>
@@ -847,7 +853,8 @@ Process finished with exit code <span class="token number">0</span></code></pre>
         <span class="token punctuation">}</span>
         <span class="token keyword">return</span> instance<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>双重检查这里就不必说了，但这段代码有一个致命的地方，就是在instance = new Object();</p>
 <p>在new 一个对象通常是有3个步骤</p>
 <ol>

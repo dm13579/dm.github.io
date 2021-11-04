@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -539,12 +539,13 @@
          stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span>StringUtils<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token string">""</span> <span class="token operator">:</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
          <span class="token comment" spellcheck="true">// 设置一个过期时间</span>
          stringRedisTemplate<span class="token punctuation">.</span><span class="token function">expire</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> <span class="token number">60</span><span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+        
          <span class="token keyword">return</span> value<span class="token punctuation">;</span>
      <span class="token punctuation">}</span><span class="token keyword">else</span><span class="token punctuation">{</span>
          <span class="token keyword">return</span> cache<span class="token punctuation">;</span>
      <span class="token punctuation">}</span>
- <span class="token punctuation">}</span></code></pre>
+ <span class="token punctuation">}</span>
+</code></pre>
 </li>
 <li><p>布隆过滤器</p>
 <p>对于恶意攻击，向服务器请求大量不存在的数据造成的缓存穿透，可以用布隆过滤器先做一次过滤，对于不存在的数据布隆过滤器一般都能够过滤掉，不让请求再往后端发送。当布隆过滤器说<strong>某个值存在时，这个值可能不存在；当它说不存在时，那就肯定不存在。</strong></p>
@@ -604,7 +605,8 @@
      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
          <span class="token keyword">return</span> cache<span class="token punctuation">;</span>
      <span class="token punctuation">}</span>
- <span class="token punctuation">}</span></code></pre>
+ <span class="token punctuation">}</span>
+</code></pre>
 </li>
 </ol>
 <h2 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h2><p>大批量缓存同一时间失效，请求全部打到DB层，可能会造成数据库瞬间压力过大甚至挂掉，对于这种情况我们在批量增加缓存时最好将这一批数据的缓存过期时间设置为一个时间段内的不同时间。</p>
@@ -620,12 +622,13 @@
          stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span>StringUtils<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token string">""</span> <span class="token operator">:</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
          <span class="token comment" spellcheck="true">// 设置一个过期时间(60到120)</span>
          stringRedisTemplate<span class="token punctuation">.</span><span class="token function">expire</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span><span class="token keyword">new</span> <span class="token class-name">Random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token number">60</span><span class="token punctuation">)</span>  <span class="token operator">+</span> <span class="token number">60</span><span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+        
          <span class="token keyword">return</span> value<span class="token punctuation">;</span>
      <span class="token punctuation">}</span><span class="token keyword">else</span><span class="token punctuation">{</span>
          <span class="token keyword">return</span> cache<span class="token punctuation">;</span>
      <span class="token punctuation">}</span>
- <span class="token punctuation">}</span></code></pre>
+ <span class="token punctuation">}</span>
+</code></pre>
 <h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>缓存雪崩是指缓存层扛不住压力崩溃了，流量直接打到了后端数据层。存储层也会级联宕机。</p>
 <ol>
 <li>保证缓存层服务高可用，用哨兵架构或集群架构。</li>
@@ -725,7 +728,8 @@
         logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="Redis清除策略"><a href="#Redis清除策略" class="headerlink" title="Redis清除策略"></a>Redis清除策略</h2><h3 id="被动删除"><a href="#被动删除" class="headerlink" title="被动删除"></a>被动删除</h3><p>Redis是惰性删除的，key过期了Redis是不会主动删除的（需看策略），是在key被查询一次的时候判断一下有没有过期，过期直接删除。</p>
 <h3 id="主动删除"><a href="#主动删除" class="headerlink" title="主动删除"></a>主动删除</h3><p>由于惰性删除策略无法保证冷数据被及时删掉，所以redis需要清理掉，主要以下2种策略</p>
 <ol>

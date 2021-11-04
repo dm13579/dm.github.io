@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -540,7 +540,8 @@
     └── springframework
         └── boot
             └── loader
-                └── springboot启动所需的class</code></pre>
+                └── springboot启动所需的class
+</code></pre>
 <p>在SpringBoot中会将所有所需的jar包都打包在BOOT-INF下的lib下面，而对于java中是无法加载jar中的jar，所以SpringBoot实现了自定义类加载器，这个类加载器通过org.springframework.boot.loader.JarLauncher创建了LaunchedURLClassLoader用以加载SpringBoot中的jar，在MANIFEST.MF中的Main-Class中有指定JarLauncher</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210417161322.png"></p>
 <h3 id="JarLauncher"><a href="#JarLauncher" class="headerlink" title="JarLauncher"></a>JarLauncher</h3><p>在一执行java -jar 就会来到JarLauncher中执行main方法</p>
@@ -588,7 +589,8 @@
 
 <span class="token keyword">protected</span> ClassLoader <span class="token function">createClassLoader</span><span class="token punctuation">(</span>URL<span class="token punctuation">[</span><span class="token punctuation">]</span> urls<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
     <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">LaunchedURLClassLoader</span><span class="token punctuation">(</span>urls<span class="token punctuation">,</span> <span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="SpringBoot是如何知道要加载哪些类的呢？"><a href="#SpringBoot是如何知道要加载哪些类的呢？" class="headerlink" title="SpringBoot是如何知道要加载哪些类的呢？"></a>SpringBoot是如何知道要加载哪些类的呢？</h3><p>这里我们来带Launcher#launch中createClassLoader(getClassPathArchives())方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">protected</span> List<span class="token operator">&lt;</span>Archive<span class="token operator">></span> <span class="token function">getClassPathArchives</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
@@ -620,7 +622,8 @@
 
 <span class="token keyword">static</span> <span class="token keyword">final</span> String BOOT_INF_CLASSES <span class="token operator">=</span> <span class="token string">"BOOT-INF/classes/"</span><span class="token punctuation">;</span>
 
-<span class="token keyword">static</span> <span class="token keyword">final</span> String BOOT_INF_LIB <span class="token operator">=</span> <span class="token string">"BOOT-INF/lib/"</span><span class="token punctuation">;</span></code></pre>
+<span class="token keyword">static</span> <span class="token keyword">final</span> String BOOT_INF_LIB <span class="token operator">=</span> <span class="token string">"BOOT-INF/lib/"</span><span class="token punctuation">;</span>
+</code></pre>
 <p>从这段代码就可以看出来它是加载的BOOT-INF/classes/和BOOT-INF/lib/，然后把获取到的archives List传到LaunchedURLClassLoader去加载</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
 <li>SpringBoot通过maven打包成一个fat jar后</li>
@@ -646,7 +649,8 @@
    <span class="token function">setListeners</span><span class="token punctuation">(</span><span class="token punctuation">(</span>Collection<span class="token punctuation">)</span> <span class="token function">getSpringFactoriesInstances</span><span class="token punctuation">(</span>ApplicationListener<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token comment" spellcheck="true">// 从调用堆栈中，通过方法名是否是main推算出mainApplicationClass </span>
    <span class="token keyword">this</span><span class="token punctuation">.</span>mainApplicationClass <span class="token operator">=</span> <span class="token function">deduceMainApplicationClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>我们跟进getSpringFactoriesInstances#loadSpringFactories</p>
 <p>发现这里它把所有的spring.factories中的key都存放在了一个cache中，包括之前的自动配置类，所以后面的自动配置类获取是直接从cache中拿的。</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210417170628.png"></p>
@@ -711,7 +715,8 @@
       <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalStateException</span><span class="token punctuation">(</span>ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
    <span class="token keyword">return</span> context<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="prepareEnvironment"><a href="#prepareEnvironment" class="headerlink" title="prepareEnvironment"></a>prepareEnvironment</h4><p>初始化环境</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> ConfigurableEnvironment <span class="token function">prepareEnvironment</span><span class="token punctuation">(</span>
       SpringApplicationRunListeners listeners<span class="token punctuation">,</span>
@@ -730,7 +735,8 @@
    <span class="token punctuation">}</span>
    ConfigurationPropertySources<span class="token punctuation">.</span><span class="token function">attach</span><span class="token punctuation">(</span>environment<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token keyword">return</span> environment<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="prepareContext"><a href="#prepareContext" class="headerlink" title="prepareContext"></a>prepareContext</h4><p>初始化上下文</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">prepareContext</span><span class="token punctuation">(</span>ConfigurableApplicationContext context<span class="token punctuation">,</span>
       ConfigurableEnvironment environment<span class="token punctuation">,</span> SpringApplicationRunListeners listeners<span class="token punctuation">,</span>
@@ -762,7 +768,8 @@
    <span class="token function">load</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> sources<span class="token punctuation">.</span><span class="token function">toArray</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token comment" spellcheck="true">// 发布ApplicationPreparedEvent事件</span>
    listeners<span class="token punctuation">.</span><span class="token function">contextLoaded</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="tomcat启动"><a href="#tomcat启动" class="headerlink" title="tomcat启动"></a>tomcat启动</h3><p>在run方法中会初始化ApplicationContext上下文AnnotationConfigServletWebServerApplicationContext它继承了AbstractApplicationContext，在这其中AnnotationConfigServletWebServerApplicationContext重写了onRefresh方法，也就是在AbstractApplicationContext#refresh中的onRefresh,所以在new一个ApplicationContext上下文的时候会通过onRefresh创建tomcat，我们通过AnnotationConfigServletWebServerApplicationContext#onRefresh看看究竟做了什么</p>
 <h4 id="onRefresh"><a href="#onRefresh" class="headerlink" title="onRefresh"></a>onRefresh</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onRefresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -795,7 +802,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token function">initPropertySources</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="getWebServerFactory"><a href="#getWebServerFactory" class="headerlink" title="getWebServerFactory"></a>getWebServerFactory</h4><p>getWebServerFactory主要做的事是从bean工厂中获取ServletWebServerFactory类型的bean，</p>
 <p>那么ServletWebServerFactory这个类型的类什么时候注入到spring容器中的呢？</p>
 <p>我们可以看下ServletWebServerFactoryAutoConfiguration这个自动配置类</p>
@@ -808,7 +816,8 @@
       ServletWebServerFactoryConfiguration<span class="token punctuation">.</span>EmbeddedTomcat<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span>
       ServletWebServerFactoryConfiguration<span class="token punctuation">.</span>EmbeddedJetty<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span>
       ServletWebServerFactoryConfiguration<span class="token punctuation">.</span>EmbeddedUndertow<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ServletWebServerFactoryAutoConfiguration</span> <span class="token punctuation">{</span></code></pre>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ServletWebServerFactoryAutoConfiguration</span> <span class="token punctuation">{</span>
+</code></pre>
 <p>从自动配置类中发现import了一个EmbeddedTomcat类，而在这个类中又注入了bean  TomcatServletWebServerFactory</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span>
 <span class="token annotation punctuation">@ConditionalOnClass</span><span class="token punctuation">(</span><span class="token punctuation">{</span> Servlet<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> Tomcat<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> UpgradeProtocol<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
@@ -820,7 +829,8 @@
       <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">TomcatServletWebServerFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210417181810.png"></p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210417181852.png"></p>
 <h4 id="getWebServer"><a href="#getWebServer" class="headerlink" title="getWebServer"></a>getWebServer</h4><p>getWebServer主要做的事是创建内嵌tomcat</p>
@@ -837,7 +847,8 @@
    <span class="token keyword">for</span> <span class="token punctuation">(</span>ServletContextInitializer beans <span class="token operator">:</span> <span class="token function">getServletContextInitializerBeans</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       beans<span class="token punctuation">.</span><span class="token function">onStartup</span><span class="token punctuation">(</span>servletContext<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p> factory.getWebServer(getSelfInitializer())这个方法中传入了getSelfInitializer，但并不会调用，会最后回调，回调完之后就创建了servlet组件，所以我们只需要关注它是如何回调的</p>
 <p>这里是将传入的参一步步注入到TomcatStart中去然后将TomcatStart注入到TomcatEmbeddedContext中去。最后通过tomcat.start方法运行</p>
 <p>大致调用栈是</p>
@@ -847,7 +858,8 @@
             -- context.addServletContainerInitializer(starter, NO_CLASSES);
     -- TomcatServletWebServerFactory#getTomcatWebServer
         -- TomcatWebServer#initialize
-            -- this.tomcat.start();</code></pre>
+            -- this.tomcat.start();
+</code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

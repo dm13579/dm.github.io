@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -541,7 +541,8 @@
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>com.alibaba.cloud<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-cloud-starter-alibaba-sentinel<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+</code></pre>
 <h3 id="添加yml配置"><a href="#添加yml配置" class="headerlink" title="添加yml配置"></a>添加yml配置</h3><pre class=" language-yml"><code class="language-yml">spring:
   cloud:
     sentinel:
@@ -549,7 +550,8 @@
       eager: true
       transport:
         dashboard: localhost:8080   ## sentinel控制台ip:port
-        client-ip: localhost</code></pre>
+        client-ip: localhost
+</code></pre>
 <h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210818173350.png"></p>
 <p>连续访问后</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210818173419.png"></p>

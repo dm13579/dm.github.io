@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -525,17 +525,23 @@
 <p>我这里直接从github上面下载对应的源码包，rz命令上传</p>
 <p>地址：<a target="_blank" rel="noopener" href="https://zookeeper.apache.org/releases.html">https://zookeeper.apache.org/releases.html</a></p>
 <p>rz/sz安装命令</p>
-<pre class=" language-shell"><code class="language-shell">yum install lrzsz</code></pre>
+<pre class=" language-shell"><code class="language-shell">yum install lrzsz
+</code></pre>
 <p>安装包解压</p>
-<pre class=" language-shell"><code class="language-shell">tar -zxvf apache-zookeeper-3.5.8-bin.tar.gz -C /</code></pre>
+<pre class=" language-shell"><code class="language-shell">tar -zxvf apache-zookeeper-3.5.8-bin.tar.gz -C /
+</code></pre>
 <p>增加软链接（纯粹为了方便，不影响安装）</p>
-<pre class=" language-shell"><code class="language-shell">ln -s /apache-zookeeper-3.5.8-bin/ /zk</code></pre>
+<pre class=" language-shell"><code class="language-shell">ln -s /apache-zookeeper-3.5.8-bin/ /zk
+</code></pre>
 <p>进入zk目录，重命名配置文件</p>
-<pre class=" language-shell"><code class="language-shell">cp conf/zoo_sample.cfg conf/zoo.cfg</code></pre>
+<pre class=" language-shell"><code class="language-shell">cp conf/zoo_sample.cfg conf/zoo.cfg
+</code></pre>
 <p>启动zookeeper</p>
-<pre class=" language-shell"><code class="language-shell">./bin/zkServer.sh start ./conf/zoo.cfg</code></pre>
+<pre class=" language-shell"><code class="language-shell">./bin/zkServer.sh start ./conf/zoo.cfg
+</code></pre>
 <p>连接zk服务端</p>
-<pre class=" language-shell"><code class="language-shell">./bin/zkCli.sh -server 127.0.0.1:2181</code></pre>
+<pre class=" language-shell"><code class="language-shell">./bin/zkCli.sh -server 127.0.0.1:2181
+</code></pre>
 <p>至此zookeeper安装完毕</p>
 <h2 id="ZooKeeper集群安装"><a href="#ZooKeeper集群安装" class="headerlink" title="ZooKeeper集群安装"></a>ZooKeeper集群安装</h2><p>为了方便这里我直接安装的是伪集群，集群架构1主2从1观察者，总共4个节点</p>
 <p>步骤和上面单机一样，不过我们这里需要4个配置文件，并修改配置</p>
@@ -543,7 +549,8 @@
 <pre class=" language-shell"><code class="language-shell">cp conf/zoo.cfg conf/zoo1.cfg
 cp conf/zoo.cfg conf/zoo2.cfg
 cp conf/zoo.cfg conf/zoo3.cfg
-cp conf/zoo.cfg conf/zoo4.cfg</code></pre>
+cp conf/zoo.cfg conf/zoo4.cfg
+</code></pre>
 <p>修改配置</p>
 <pre class=" language-shell"><code class="language-shell">tickTime=2000
 initLimit=10
@@ -555,22 +562,26 @@ clientPort=2181
 server.1=127.0.0.1:2001:3001
 server.2=127.0.0.1:2002:3002
 server.3=127.0.0.1:2003:3003
-server.4=127.0.0.1:2004:3004:observer</code></pre>
+server.4=127.0.0.1:2004:3004:observer
+</code></pre>
 <p>创建4个目录，就是上面的dataDir目录</p>
 <pre class=" language-shell"><code class="language-shell">mkdir data1
 mkdir data2
 mkdir data3
-mkdir data4</code></pre>
+mkdir data4
+</code></pre>
 <p>创建文件myid,标识服务server id</p>
 <pre class=" language-shell"><code class="language-shell">echo 1 > data1/myid
 echo 2 > data2/myid
 echo 3 > data3/myid
-echo 4 > data4/myid</code></pre>
+echo 4 > data4/myid
+</code></pre>
 <p>启动4个实例</p>
 <pre class=" language-shell"><code class="language-shell">./bin/zkServer.sh start conf/zoo1.cfg
 ./bin/zkServer.sh start conf/zoo2.cfg
 ./bin/zkServer.sh start conf/zoo3.cfg
-./bin/zkServer.sh start conf/zoo4.cfg</code></pre>
+./bin/zkServer.sh start conf/zoo4.cfg
+</code></pre>
 <p>可查询状态</p>
 <pre class=" language-shell"><code class="language-shell">./bin/zkServer.sh status conf/zoo1.cfg 
 ./bin/zkServer.sh status conf/zoo2.cfg
@@ -597,22 +608,27 @@ ZooKeeper JMX enabled by default
 Using config: conf/zoo4.cfg
 Client port found: 2184. Client address: localhost.
 Mode: observer
-#========================</code></pre>
+#========================
+</code></pre>
 <p>从状态返回很明显1,3节点为follower,2节点为leader,4节点为observer</p>
 <p>连接服务端</p>
-<pre class=" language-shell"><code class="language-shell">./bin/zkCli.sh -server 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183,127.0.0.1:2184</code></pre>
+<pre class=" language-shell"><code class="language-shell">./bin/zkCli.sh -server 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183,127.0.0.1:2184
+</code></pre>
 <h2 id="启动参数配置"><a href="#启动参数配置" class="headerlink" title="启动参数配置"></a>启动参数配置</h2><p>启动参数都是在zkServer.sh里面的ZOOMAIN参数里面配置</p>
-<pre class=" language-shell"><code class="language-shell">ZOOMAIN="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=$JMXLOCALONLY org.apache.zookeeper.server.quorum.QuorumPeerMain"</code></pre>
+<pre class=" language-shell"><code class="language-shell">ZOOMAIN="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=$JMXLOCALONLY org.apache.zookeeper.server.quorum.QuorumPeerMain"
+</code></pre>
 <h3 id="TTL节点"><a href="#TTL节点" class="headerlink" title="TTL节点"></a>TTL节点</h3><p>ttl节点默认是禁止的。如果要想使用ttl节点必须在启动参数配置</p>
 <p>没有开启的情况</p>
 <pre class=" language-shell"><code class="language-shell">[zk: 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183,127.0.0.1:2184(CONNECTED) 0] create -t 500 /tsetttl
-KeeperErrorCode = Unimplemented for /tsetttl</code></pre>
+KeeperErrorCode = Unimplemented for /tsetttl
+</code></pre>
 <p>开启需要在启动配置加  <strong>-Dzookeeper.extendedTypesEnabled=true</strong></p>
 <h2 id="ACL超级管理员配置"><a href="#ACL超级管理员配置" class="headerlink" title="ACL超级管理员配置"></a>ACL超级管理员配置</h2><p>配置参数 <strong>-Dzookeeper.skipACL=yes</strong>可以跳过权限验证，一般安全就配置为false</p>
 <p>获取加密密文</p>
 <pre class=" language-shell"><code class="language-shell">echo -n zk:123456 | openssl dgst -binary -sha1 | openssl base64
 # 返回值
-N0YquoLgOZWu74hzsd3OJTZZUw0=</code></pre>
+N0YquoLgOZWu74hzsd3OJTZZUw0=
+</code></pre>
 <p>启动脚本添加**-Dzookeeper.DigestAuthenticationProvider.superDigest=zk:N0YquoLgOZWu74hzsd3OJTZZUw0=**</p>
 <script>
         document.querySelectorAll('.github-emoji')

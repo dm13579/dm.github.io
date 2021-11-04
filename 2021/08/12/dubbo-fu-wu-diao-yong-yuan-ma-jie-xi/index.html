@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -588,7 +588,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> result<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="FailoverClusterInvoker"><a href="#FailoverClusterInvoker" class="headerlink" title="FailoverClusterInvoker"></a>FailoverClusterInvoker</h3><p>这个Invoker主要负责的是集群容错，包括负载均衡，异常重试</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Result <span class="token function">doInvoke</span><span class="token punctuation">(</span>Invocation invocation<span class="token punctuation">,</span> <span class="token keyword">final</span> List<span class="token operator">&lt;</span>Invoker<span class="token operator">&lt;</span>T<span class="token operator">>></span> invokers<span class="token punctuation">,</span> LoadBalance loadbalance<span class="token punctuation">)</span> <span class="token keyword">throws</span> RpcException <span class="token punctuation">{</span>
     List<span class="token operator">&lt;</span>Invoker<span class="token operator">&lt;</span>T<span class="token operator">>></span> copyInvokers <span class="token operator">=</span> invokers<span class="token punctuation">;</span>
@@ -641,7 +642,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RpcException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="DubboInvoker"><a href="#DubboInvoker" class="headerlink" title="DubboInvoker"></a>DubboInvoker</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> Result <span class="token function">doInvoke</span><span class="token punctuation">(</span><span class="token keyword">final</span> Invocation invocation<span class="token punctuation">)</span> <span class="token keyword">throws</span> Throwable <span class="token punctuation">{</span>
     RpcInvocation inv <span class="token operator">=</span> <span class="token punctuation">(</span>RpcInvocation<span class="token punctuation">)</span> invocation<span class="token punctuation">;</span>
     <span class="token keyword">final</span> String methodName <span class="token operator">=</span> RpcUtils<span class="token punctuation">.</span><span class="token function">getMethodName</span><span class="token punctuation">(</span>invocation<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -680,7 +682,8 @@
     <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">RemotingException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RpcException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>这里会通过ReferenceCountExchangeClient#request继续往后调用，直到调用到HeaderExchangeChannel#request会发送请求直到调用到NettyChannel#send逻辑</p>
 <p>下面是调用逻辑图</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210812163038.png"></p>
@@ -710,7 +713,8 @@
         <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RemotingException</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token string">"Failed to send message "</span> <span class="token operator">+</span> PayloadDropper<span class="token punctuation">.</span><span class="token function">getRequestWithoutData</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" to "</span> <span class="token operator">+</span> <span class="token function">getRemoteAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
                                     <span class="token operator">+</span> <span class="token string">"in timeout("</span> <span class="token operator">+</span> timeout <span class="token operator">+</span> <span class="token string">"ms) limit"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="服务提供方接受请求"><a href="#服务提供方接受请求" class="headerlink" title="服务提供方接受请求"></a>服务提供方接受请求</h2><p>服务消费者通过Netty发送请求给提供方，提供方会通过Netty接收请求。这这里的逻辑在NettyServer中体现，这里构造了netty（服务导出的时候构建）。</p>
 <p>所以从netty里面的pipeline大致可以看出他的编解码逻辑和handler是谁</p>
 <p>编解码逻辑在这里就不细说了，具体代码细节可以看官网</p>
@@ -752,13 +756,15 @@
     channelFuture<span class="token punctuation">.</span><span class="token function">syncUninterruptibly</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     channel <span class="token operator">=</span> channelFuture<span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>从这段代码可以很明显的发现处理请求的时NettyServerHandler</p>
 <p>NettyServerHandler接受到请求会交由channelRead方法处理</p>
 <h3 id="NettyServerHandler"><a href="#NettyServerHandler" class="headerlink" title="NettyServerHandler"></a>NettyServerHandler</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">channelRead</span><span class="token punctuation">(</span>ChannelHandlerContext ctx<span class="token punctuation">,</span> Object msg<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
     NettyChannel channel <span class="token operator">=</span> NettyChannel<span class="token punctuation">.</span><span class="token function">getOrAddChannel</span><span class="token punctuation">(</span>ctx<span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> url<span class="token punctuation">,</span> handler<span class="token punctuation">)</span><span class="token punctuation">;</span>
     handler<span class="token punctuation">.</span><span class="token function">received</span><span class="token punctuation">(</span>channel<span class="token punctuation">,</span> msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="MultiMessageHandler"><a href="#MultiMessageHandler" class="headerlink" title="MultiMessageHandler"></a>MultiMessageHandler</h4><p>判断接收到的数据是否是MultiMessage，如果是则获取MultiMessage中的单个Message</p>
 <h4 id="HeartbeatHandler"><a href="#HeartbeatHandler" class="headerlink" title="HeartbeatHandler"></a>HeartbeatHandler</h4><p>判断是不是心跳消息，如果是直接返回</p>
 <h4 id="AllChannelHandler"><a href="#AllChannelHandler" class="headerlink" title="AllChannelHandler"></a>AllChannelHandler</h4><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210812170014.png"></p>
@@ -809,12 +815,14 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="DecodeHandler"><a href="#DecodeHandler" class="headerlink" title="DecodeHandler"></a>DecodeHandler</h4><p>按Dubbo协议的数据格式，解析当前请求的path，version，方法，方法参数等等，然后把解析好了的请求交给HeaderExchangeHandler</p>
 <h4 id="HeaderExchangeHandler"><a href="#HeaderExchangeHandler" class="headerlink" title="HeaderExchangeHandler"></a>HeaderExchangeHandler</h4><p>处理Request数据，首先构造一个Response对象，然后调用<code>ExchangeHandlerAdapter</code>得到一个<code>CompletionStage future</code>，然后给future通过whenComplete绑定一个回调函数，当future执行完了之后，就可以从回调函数中得到<code>ExchangeHandlerAdapter</code>的执行结果，并把执行结果设置给Response对象，通过channel发送出去</p>
 <p>ExchangeHandlerAdapter这个在DubboProtocol重写了</p>
 <p>所以我们来到DubboProtocol#ExchangeHandlerAdapter</p>
-<h4 id="DubboProtocol-ExchangeHandlerAdapter"><a href="#DubboProtocol-ExchangeHandlerAdapter" class="headerlink" title="DubboProtocol#ExchangeHandlerAdapter"></a>DubboProtocol#ExchangeHandlerAdapter</h4><pre class=" language-java"><code class="language-java">Result result <span class="token operator">=</span> invoker<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>inv<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h4 id="DubboProtocol-ExchangeHandlerAdapter"><a href="#DubboProtocol-ExchangeHandlerAdapter" class="headerlink" title="DubboProtocol#ExchangeHandlerAdapter"></a>DubboProtocol#ExchangeHandlerAdapter</h4><pre class=" language-java"><code class="language-java">Result result <span class="token operator">=</span> invoker<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>inv<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>这里的invoker是ProtocolFilterWrapper$CallbackRegistrationInvoker</p>
 <h4 id="ProtocolFilterWrapper-CallbackRegistrationInvoker"><a href="#ProtocolFilterWrapper-CallbackRegistrationInvoker" class="headerlink" title="ProtocolFilterWrapper$CallbackRegistrationInvoker"></a>ProtocolFilterWrapper$CallbackRegistrationInvoker</h4><p>这个invoker主要负责执行过滤器链</p>
 <h4 id="过滤器链"><a href="#过滤器链" class="headerlink" title="过滤器链"></a>过滤器链</h4><p>EchoFilter &gt;&gt; ClassLoaderFilter &gt;&gt; GenericFilter &gt;&gt; ContextFilter &gt;&gt; TraceFilter &gt;&gt; TimeoutFilter &gt;&gt; MonitorFilter &gt;&gt; ExceptionFilter</p>
@@ -850,7 +858,8 @@ CompletableFuture<span class="token operator">&lt;</span>Object<span class="toke
      <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
          <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RpcException</span><span class="token punctuation">(</span><span class="token string">"Failed to invoke remote proxy method "</span> <span class="token operator">+</span> invocation<span class="token punctuation">.</span><span class="token function">getMethodName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" to "</span> <span class="token operator">+</span> <span class="token function">getUrl</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">", cause: "</span> <span class="token operator">+</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
      <span class="token punctuation">}</span>
- <span class="token punctuation">}</span></code></pre>
+ <span class="token punctuation">}</span>
+</code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -594,7 +594,8 @@
     <span class="token keyword">protected</span> String<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">getServletMappings</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token string">"/"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>RootConfig</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
  * IOC容器,不扫描Controller的注解
@@ -704,7 +705,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>从这发现他会调用我们的MyStarterInitializer中的onStartup()方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onStartup</span><span class="token punctuation">(</span>ServletContext servletContext<span class="token punctuation">)</span> <span class="token keyword">throws</span> ServletException <span class="token punctuation">{</span>
@@ -712,7 +714,8 @@
    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onStartup</span><span class="token punctuation">(</span>servletContext<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token comment" spellcheck="true">//注册我们的DispatcherServlet 创建我们spring web 上下文对象</span>
    <span class="token function">registerDispatcherServlet</span><span class="token punctuation">(</span>servletContext<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>进到super.onStartup发现调用了registerContextLoaderListener方法</p>
 <h3 id="registerContextLoaderListener"><a href="#registerContextLoaderListener" class="headerlink" title="registerContextLoaderListener"></a>registerContextLoaderListener</h3><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
  * 注册我们上下文监听器对象
@@ -750,7 +753,8 @@
       logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"No ContextLoaderListener registered, as "</span> <span class="token operator">+</span>
             <span class="token string">"createRootApplicationContext() did not return an application context"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="registerDispatcherServlet方法"><a href="#registerDispatcherServlet方法" class="headerlink" title="registerDispatcherServlet方法"></a>registerDispatcherServlet方法</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">registerDispatcherServlet</span><span class="token punctuation">(</span>ServletContext servletContext<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">//获取我们的DispatcherServlet的名称</span>
     String servletName <span class="token operator">=</span> <span class="token function">getServletName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -874,7 +878,8 @@
         servletContext<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span>WebApplicationContext<span class="token punctuation">.</span>ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE<span class="token punctuation">,</span> err<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">throw</span> err<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>listener调用完毕后，容器会回调DispatcherServlet-&gt;init-&gt;FrameworkServlet.initServletBean-&gt;initWebApplicationContext</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 在该方法中,我们创建了Spring web应用的上下文对象</span>
 <span class="token keyword">protected</span> WebApplicationContext <span class="token function">initWebApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -943,7 +948,8 @@
    <span class="token punctuation">}</span>
 
    <span class="token keyword">return</span> wac<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>至此父子容器均启动完毕</p>
 <h3 id="onRefresh方法"><a href="#onRefresh方法" class="headerlink" title="onRefresh方法"></a>onRefresh方法</h3><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onRefresh</span><span class="token punctuation">(</span>ApplicationContext context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -967,7 +973,8 @@
    <span class="token comment" spellcheck="true">//给DispatcherSerlvet的ViewResolvers处理器</span>
    <span class="token function">initViewResolvers</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token function">initFlashMapManager</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="springMVC流程源码分析"><a href="#springMVC流程源码分析" class="headerlink" title="springMVC流程源码分析"></a>springMVC流程源码分析</h2><p>在启动过程中我们的前端控制器DispatcherServlet已经实例化完毕，然后客户端发送一个请求到服务端我们会出现什么情况呢？</p>
 <p>一般而言一个servlet请求会根据请求类型走doGet，doPost等方法，</p>
 <p>我们发现DispatcherServlet的doPost方法还是doGet方法都会调processRequest然后processRequest会调用doService。所以所有的请求解析的步骤都在doService里面进行，我们看一下doService做了什么</p>
@@ -1023,7 +1030,8 @@
          <span class="token punctuation">}</span>
       <span class="token punctuation">}</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="doDispatch方法"><a href="#doDispatch方法" class="headerlink" title="doDispatch方法"></a>doDispatch方法</h3><p>这个方法是找到对应Controller去调用</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">doDispatch</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">,</span> HttpServletResponse response<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
    HttpServletRequest processedRequest <span class="token operator">=</span> request<span class="token punctuation">;</span>
@@ -1145,7 +1153,8 @@
          <span class="token punctuation">}</span>
       <span class="token punctuation">}</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>     </code></pre>
+<span class="token punctuation">}</span>     
+</code></pre>
 <h3 id="getHandler方法"><a href="#getHandler方法" class="headerlink" title="getHandler方法"></a>getHandler方法</h3><p>从请求中推断出处理器执行链对象是什么</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> HandlerExecutionChain <span class="token function">getHandler</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
    <span class="token comment" spellcheck="true">/**
@@ -1180,7 +1189,8 @@
     * 那么就认为该次请求无法匹配
     */</span>
    <span class="token keyword">return</span> null<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>AbstractHandlerMapping.getHandler方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">final</span> HandlerExecutionChain <span class="token function">getHandler</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
 
@@ -1216,7 +1226,8 @@
       executionChain <span class="token operator">=</span> <span class="token function">getCorsHandlerExecutionChain</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> executionChain<span class="token punctuation">,</span> config<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
    <span class="token keyword">return</span> executionChain<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>getHandlerInternal方法</p>
 <p>从请求中拿到路径名称，从映射注册表中匹配到Handler，找到返回</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> HandlerMethod <span class="token function">getHandlerInternal</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
@@ -1245,7 +1256,8 @@
       <span class="token comment" spellcheck="true">//释放锁对象</span>
       <span class="token keyword">this</span><span class="token punctuation">.</span>mappingRegistry<span class="token punctuation">.</span><span class="token function">releaseReadLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>getHandlerExecutionChain方法</p>
 <p>构建处理器执行链</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> HandlerExecutionChain <span class="token function">getHandlerExecutionChain</span><span class="token punctuation">(</span>Object handler<span class="token punctuation">,</span> HttpServletRequest request<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1272,14 +1284,16 @@
    <span class="token punctuation">}</span>
    <span class="token comment" spellcheck="true">//返回我们的拦截器链执行器对象</span>
    <span class="token keyword">return</span> chain<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="handle方法"><a href="#handle方法" class="headerlink" title="handle方法"></a>handle方法</h3><p>通过找到的适配器调用处理器执行链中Hadler（Controller）方法，我这里用的是注解@Controller所以它调用的时候会选择RequestMappingHandlerAdapter适配器。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> ModelAndView <span class="token function">handle</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">,</span> HttpServletResponse response<span class="token punctuation">,</span> Object handler<span class="token punctuation">)</span>
       <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
 
    <span class="token punctuation">(</span><span class="token punctuation">(</span>HttpRequestHandler<span class="token punctuation">)</span> handler<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">handleRequest</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token keyword">return</span> null<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>我们一直跟进去发现到了AbstractHandlerMethodAdapter.handleInternal方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">protected</span> ModelAndView <span class="token function">handleInternal</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">,</span>
@@ -1331,7 +1345,8 @@
    <span class="token punctuation">}</span>
 
    <span class="token keyword">return</span> mav<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="processDispatchResult方法"><a href="#processDispatchResult方法" class="headerlink" title="processDispatchResult方法"></a>processDispatchResult方法</h3><p>找到视图解析器并解析视图并渲染视图</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">processDispatchResult</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">,</span> HttpServletResponse response<span class="token punctuation">,</span>
       <span class="token annotation punctuation">@Nullable</span> HandlerExecutionChain mappedHandler<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> ModelAndView mv<span class="token punctuation">,</span>
@@ -1375,7 +1390,8 @@
    <span class="token keyword">if</span> <span class="token punctuation">(</span>mappedHandler <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
       mappedHandler<span class="token punctuation">.</span><span class="token function">triggerAfterCompletion</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>render方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">render</span><span class="token punctuation">(</span>ModelAndView mv<span class="token punctuation">,</span> HttpServletRequest request<span class="token punctuation">,</span> HttpServletResponse response<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
    <span class="token comment" spellcheck="true">//获取我们国际化语言解析器对象</span>
@@ -1421,7 +1437,8 @@
       <span class="token punctuation">}</span>
       <span class="token keyword">throw</span> ex<span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>resolveViewName</p>
 <p>找视图解析器</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> View <span class="token function">resolveViewName</span><span class="token punctuation">(</span>String viewName<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Object<span class="token operator">></span> model<span class="token punctuation">,</span>
@@ -1439,7 +1456,8 @@
       <span class="token punctuation">}</span>
    <span class="token punctuation">}</span>
    <span class="token keyword">return</span> null<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

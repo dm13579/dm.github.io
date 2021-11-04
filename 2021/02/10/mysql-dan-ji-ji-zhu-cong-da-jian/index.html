@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -526,25 +526,31 @@ rpm -qa | grep mariadb
 ## 卸载
 sudo rpm -e mariadb-libs-5.5.64-1.el7.x86_64 --nodeps
 ## 再次查看
-rpm -qa | grep mariadb</code></pre>
+rpm -qa | grep mariadb
+</code></pre>
 <h3 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h3><pre class=" language-shell"><code class="language-shell">## 下载
 wget https://cdn.mysql.com/archives/mysql-8.0/mysql-8.0.20-linux-glibc2.12-x86_64.tar.xz
 ## 解压
 tar -xvf mysql-8.0.20-linux-glibc2.12-x86_64.tar.xz  -C /
 ## 软链接
-ln -s /mysql-8.0.20-linux-glibc2.12-x86_64/ /mysql</code></pre>
+ln -s /mysql-8.0.20-linux-glibc2.12-x86_64/ /mysql
+</code></pre>
 <h3 id="新建一个存放数据的文件夹data"><a href="#新建一个存放数据的文件夹data" class="headerlink" title="新建一个存放数据的文件夹data"></a>新建一个存放数据的文件夹data</h3><pre class=" language-shell"><code class="language-shell">cd /mysql
 ## 创建data目录
-mkdir data</code></pre>
+mkdir data
+</code></pre>
 <h3 id="创建mysql用户组和-mysql-用户"><a href="#创建mysql用户组和-mysql-用户" class="headerlink" title="创建mysql用户组和 mysql 用户"></a>创建mysql用户组和 mysql 用户</h3><pre class=" language-sh"><code class="language-sh">groupadd mysql
 useradd -r -g mysql mysql
-chown -R mysql .</code></pre>
+chown -R mysql .
+</code></pre>
 <h3 id="初始化数据库"><a href="#初始化数据库" class="headerlink" title="初始化数据库"></a>初始化数据库</h3><pre class=" language-shell"><code class="language-shell">mkdir mysql_install_db
 chmod 777 ./mysql_install_db
-bin/mysqld --initialize --user=mysql --basedir=/mysql --datadir=/mysql/data</code></pre>
+bin/mysqld --initialize --user=mysql --basedir=/mysql --datadir=/mysql/data
+</code></pre>
 <p>执行完后记住初始密码</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210208133730.png"></p>
-<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><pre class=" language-shell"><code class="language-shell">vim  /etc/my.cnf</code></pre>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><pre class=" language-shell"><code class="language-shell">vim  /etc/my.cnf
+</code></pre>
 <p>my.cnf</p>
 <pre class=" language-shell"><code class="language-shell">[mysqld]
    # 设置连接端口
@@ -565,26 +571,32 @@ bin/mysqld --initialize --user=mysql --basedir=/mysql --datadir=/mysql/data</cod
    sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 [client]
    socket = /mysql/mysql.sock
-   default-character-set=utf8</code></pre>
+   default-character-set=utf8
+</code></pre>
 <h3 id="建立系统服务"><a href="#建立系统服务" class="headerlink" title="建立系统服务"></a>建立系统服务</h3><pre class=" language-sh"><code class="language-sh">cp /mysql/support-files/mysql.server /etc/init.d/mysqld
 chmod +x /etc/init.d/mysqld
 chkconfig --add mysqld
 ## 检查系统服务是否有mysqld服务
-chkconfig  --list mysqld</code></pre>
-<h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><pre class=" language-shell"><code class="language-shell">vim /etc/profile</code></pre>
+chkconfig  --list mysqld
+</code></pre>
+<h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><pre class=" language-shell"><code class="language-shell">vim /etc/profile
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210208134732.png"></p>
 <pre class=" language-shell"><code class="language-shell">## 刷新环境变量生效
-source /etc/profile</code></pre>
+source /etc/profile
+</code></pre>
 <h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><pre class=" language-shell"><code class="language-shell">service mysql start
 ## 用之前的初始密码登录
-mysql -uroot -p</code></pre>
+mysql -uroot -p
+</code></pre>
 <p>连接mysql后一些命令</p>
 <pre class=" language-sql"><code class="language-sql"><span class="token comment" spellcheck="true">/* 修改密码 */</span>
 <span class="token keyword">ALTER</span> <span class="token keyword">USER</span> <span class="token string">'root'</span>@'localhost<span class="token string">' IDENTIFIED BY '</span><span class="token number">123456</span>'<span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">/* 远程登录 */</span>
 <span class="token keyword">use</span> mysql<span class="token punctuation">;</span>
 <span class="token keyword">update</span> <span class="token keyword">user</span> <span class="token keyword">set</span> host<span class="token operator">=</span><span class="token string">'%'</span> <span class="token keyword">where</span> <span class="token keyword">user</span><span class="token operator">=</span><span class="token string">'root'</span> <span class="token keyword">limit</span> <span class="token number">1</span><span class="token punctuation">;</span>
-flush <span class="token keyword">privileges</span><span class="token punctuation">;</span></code></pre>
+flush <span class="token keyword">privileges</span><span class="token punctuation">;</span>
+</code></pre>
 <h2 id="MySQL主从搭建"><a href="#MySQL主从搭建" class="headerlink" title="MySQL主从搭建"></a>MySQL主从搭建</h2><p>主从搭建主要是改写配置</p>
 <p>首先先于上面的方式搭建2台Mysql服务</p>
 <p>192.168.186.131–主机器</p>
@@ -596,13 +608,15 @@ server-id=42
 #打开Binlog日志记录，并指定文件名
 log_bin=master-bin
 #Binlog日志文件
-log_bin-index=master-bin.index</code></pre>
+log_bin-index=master-bin.index
+</code></pre>
 <p>重新启动，连接客户端，给root用户分配一个replication slave的权限</p>
 <pre class=" language-shell"><code class="language-shell">mysql -u root -p
 GRANT REPLICATION SLAVE ON *.* TO 'root'@'%';
 flush privileges;
 #查看主节点同步状态：
-show master status;</code></pre>
+show master status;
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210208142049.png"></p>
 <p>结果中的File和Position记录的是当前日志的binlog文件以及文件中的索引。<br>而后面的Binlog_Do_DB和Binlog_Ignore_DB这两个字段是表示需要记录binlog文件的库以及不需要记录binlog文件的库。my.cnf配置指定</p>
 <h3 id="修改从服务配置"><a href="#修改从服务配置" class="headerlink" title="修改从服务配置"></a>修改从服务配置</h3><p>/etc/my.cnf的[mysqld]下面增加以下配置</p>
@@ -614,7 +628,8 @@ relay-log=slave-relay-bin
 #打开从服务二进制日志
 log-bin=mysql-bin
 #使得更新的数据写进二进制日志中
-log-slave-updates=1</code></pre>
+log-slave-updates=1
+</code></pre>
 <p>重新启动，连接客户端，执行分配主节点命令</p>
 <p>MASTER_LOG_FILE和MASTER_LOG_POS必须与主服务中查到的保持一致</p>
 <pre class=" language-sql"><code class="language-sql">CHANGE MASTER <span class="token keyword">TO</span>
@@ -624,12 +639,14 @@ MASTER_USER<span class="token operator">=</span><span class="token string">'root
 MASTER_PASSWORD<span class="token operator">=</span><span class="token string">'123456'</span><span class="token punctuation">,</span>
 MASTER_LOG_FILE<span class="token operator">=</span><span class="token string">'master-bin.000001'</span><span class="token punctuation">,</span>
 MASTER_LOG_POS<span class="token operator">=</span><span class="token number">535</span><span class="token punctuation">,</span>
-GET_MASTER_PUBLIC_KEY<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span></code></pre>
+GET_MASTER_PUBLIC_KEY<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
+</code></pre>
 <p>还是在客户端执行</p>
 <pre class=" language-sql"><code class="language-sql"><span class="token comment" spellcheck="true">#开启slave</span>
 <span class="token keyword">start</span> slave<span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">#查看主从同步状态</span>
-<span class="token keyword">show</span> slave <span class="token keyword">status</span> \G<span class="token punctuation">;</span></code></pre>
+<span class="token keyword">show</span> slave <span class="token keyword">status</span> \G<span class="token punctuation">;</span>
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210208143301.png"></p>
 <h3 id="测试主从搭建是否成功"><a href="#测试主从搭建是否成功" class="headerlink" title="测试主从搭建是否成功"></a>测试主从搭建是否成功</h3><p>主节点创建一个数据库并插入一条数据</p>
 <pre class=" language-sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">database</span> testMasterSlave<span class="token punctuation">;</span>
@@ -642,7 +659,8 @@ GET_MASTER_PUBLIC_KEY<span class="token operator">=</span><span class="token num
   <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span><span class="token punctuation">`</span>id<span class="token punctuation">`</span><span class="token punctuation">)</span>
 <span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8<span class="token punctuation">;</span>
 
-<span class="token keyword">insert</span> <span class="token keyword">into</span> t_user<span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">'aa'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> t_user<span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token keyword">values</span><span class="token punctuation">(</span><span class="token string">'aa'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210208143958.png"></p>
 <p>成功创建！！！！</p>
 <h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>这时候主从数据时全部同步，如果我们只想要一部分数据库同步该怎么配呢</p>
@@ -654,7 +672,8 @@ expire-logs-days = 7
 #不备份的数据库
 binlog-ignore-db=information_schema
 binlog-ignore-db=performation_schema
-binlog-ignore-db=sys</code></pre>
+binlog-ignore-db=sys
+</code></pre>
 <p>修改从服务/etc/my.cnf</p>
 <pre class=" language-shell"><code class="language-shell">#如果salve库名称与master库名相同，使用本配置
 replicate-do-db = masterdemo
@@ -662,7 +681,8 @@ replicate-do-db = masterdemo
 replicate-rewrite-db = masterdemo -> masterdemo01
 #如果不是要全部同步[默认全部同步]，则指定需要同步的表
 replicate-wild-do-table=masterdemo01.t_dict
-replicate-wild-do-table=masterdemo01.t_num</code></pre>
+replicate-wild-do-table=masterdemo01.t_num
+</code></pre>
 <p>配置完成了之后，在show master status指令中，就可以看到Binlog_Do_DB和Binlog_Ignore_DB两个参数的作用了</p>
 <h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><p>数据只能从主服务同步到从服务，不能从从服务同步到主服务。为了保证数据一致，通常会需要保证数据只在主服务上写，而从服务只进行数据读取。mysql主从本身是无法提供读写分离的服务的，需要由业务自己来实现</p>
 <script>

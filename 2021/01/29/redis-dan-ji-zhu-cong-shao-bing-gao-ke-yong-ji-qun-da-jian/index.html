@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -533,16 +533,19 @@ wget http://download.redis.io/releases/redis-5.0.3.tar.gz
 ## 解压
 tar -zxvf elasticsearch-7.10.2-linux-x86_64.tar.gz -C /
 ## 软链接
-ln -s /elasticsearch-7.10.2/ es/</code></pre>
+ln -s /elasticsearch-7.10.2/ es/
+</code></pre>
 <h3 id="gcc编译"><a href="#gcc编译" class="headerlink" title="gcc编译"></a>gcc编译</h3><pre class=" language-shell"><code class="language-shell">## 安装gcc
 yum install gcc
 ## 进入到解压好的redis目录下，进行编译与安装
 cd /redis
-make</code></pre>
+make
+</code></pre>
 <h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><pre class=" language-shell"><code class="language-shell">## 创建持久化目录
 mkdir /data/redis
 ## 修改配置文件
-vim redis.conf</code></pre>
+vim redis.conf
+</code></pre>
 <p>配置文件</p>
 <pre class=" language-shell"><code class="language-shell">#后台启动
 daemonize yes 
@@ -551,17 +554,20 @@ protected-mode no
 # 需要注释掉bind（bind绑定的是自己机器网卡的ip，如果有多块网卡可以配多个ip，代表允许客户端通过机器的哪些网卡ip去访问，内网一般可以不配置bind，注释掉即可）
 #bind 127.0.0.1
 #修改持久化文件目录
-dir /data/redis/</code></pre>
+dir /data/redis/
+</code></pre>
 <h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><pre class=" language-shell"><code class="language-shell">## 启动
 src/redis-server redis.conf
 ## 验证服务
 ps -ef | grep redis
 ## 进入客户端
-src/redis-cli</code></pre>
+src/redis-cli
+</code></pre>
 <h3 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h3><pre class=" language-shell"><code class="language-shell">## 退出客户端
 quit
 ## 退出redis服务
-src/redis-cli shutdown</code></pre>
+src/redis-cli shutdown
+</code></pre>
 <h2 id="Redis-主从架构搭建"><a href="#Redis-主从架构搭建" class="headerlink" title="Redis 主从架构搭建"></a>Redis 主从架构搭建</h2><p>这里准备2台机器</p>
 <p>主节点：192.168.186.131:6379</p>
 <p>从节点：192.168.186.132:6379</p>
@@ -570,7 +576,8 @@ src/redis-cli shutdown</code></pre>
 <pre class=" language-shell"><code class="language-shell">## 配置主从复制
 # 从主节点的redis实例复制数据，主节点ip:端口
 replicaof 192.168.186.131:6379  
-replica-read-only yes  # 配置从节点只读</code></pre>
+replica-read-only yes  # 配置从节点只读
+</code></pre>
 <p>主节点启动，从节点启动</p>
 <p>验证</p>
 <p>主节点写入一个key value;从节点能够同步数据就可以了</p>
@@ -584,27 +591,34 @@ replica-read-only yes  # 配置从节点只读</code></pre>
 <p>redis主从，上诉搭建方式</p>
 <p>snetinel节点：</p>
 <p>192.168.186.131:26379；192.168.186.132:26379</p>
-<h3 id="修改配置-1"><a href="#修改配置-1" class="headerlink" title="修改配置"></a>修改配置</h3><pre class=" language-shell"><code class="language-shell">vim sentinel.conf</code></pre>
+<h3 id="修改配置-1"><a href="#修改配置-1" class="headerlink" title="修改配置"></a>修改配置</h3><pre class=" language-shell"><code class="language-shell">vim sentinel.conf
+</code></pre>
 <p>配置文件</p>
 <pre class=" language-shell"><code class="language-shell">daemonize yes
 ## mymaster客户端连接时才有用，可随意修改，ip:port 是主节点ip:port,最后一个数字2表示2台sentinel认为主节点不可访问才是不可返回
-sentinel monitor mymaster 192.168.0.60 6379 2</code></pre>
-<h3 id="启动sentinel"><a href="#启动sentinel" class="headerlink" title="启动sentinel"></a>启动sentinel</h3><pre class=" language-shell"><code class="language-shell">src/redis-sentinel sentinel.conf</code></pre>
+sentinel monitor mymaster 192.168.0.60 6379 2
+</code></pre>
+<h3 id="启动sentinel"><a href="#启动sentinel" class="headerlink" title="启动sentinel"></a>启动sentinel</h3><pre class=" language-shell"><code class="language-shell">src/redis-sentinel sentinel.conf
+</code></pre>
 <h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><pre class=" language-shell"><code class="language-shell">src/redis-cli -p 26379
 
-info</code></pre>
+info
+</code></pre>
 <p>sentinel集群都启动完毕后，会将哨兵集群的元数据信息写入所有sentinel的配置文件里去</p>
 <pre class=" language-shell"><code class="language-shell">#代表redis主节点的从节点信息
 sentinel known-replica mymaster 192.168.186.132 6379 
 #代表感知到的其它哨兵节点
-sentinel known-sentinel mymaster 192.168.186.131 26379 84bbfc7608019b020884e1cf045460916942e0f9</code></pre>
+sentinel known-sentinel mymaster 192.168.186.131 26379 84bbfc7608019b020884e1cf045460916942e0f9
+</code></pre>
 <p>当redis主节点如果挂了，哨兵集群会重新选举出新的redis主节点，同时会修改所有sentinel节点配置文件的集群元数据信息</p>
 <pre class=" language-shell"><code class="language-shell">#代表redis主节点的从节点信息
 sentinel known-replica mymaster 192.168.186.131 6379 
 #代表感知到的其它哨兵节点
-sentinel known-sentinel mymaster 192.168.186.131 26379 84bbfc7608019b020884e1cf045460916942e0f9</code></pre>
+sentinel known-sentinel mymaster 192.168.186.131 26379 84bbfc7608019b020884e1cf045460916942e0f9
+</code></pre>
 <p>同时还会修改sentinel文件里之前配置的mymaster对应的主节点</p>
-<pre class=" language-shell"><code class="language-shell">sentinel monitor mymaster 192.168.186.132 6379 2</code></pre>
+<pre class=" language-shell"><code class="language-shell">sentinel monitor mymaster 192.168.186.132 6379 2
+</code></pre>
 <h2 id="Redis-集群架构搭建"><a href="#Redis-集群架构搭建" class="headerlink" title="Redis 集群架构搭建"></a>Redis 集群架构搭建</h2><p>redis的集群是由redis分配主从和槽位（当然也可以命令手动指定主从），这里我们只需要正常启动6个配置好的redis实例就可以了</p>
 <h3 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h3><p>三台机器，ip分别为192.168.186.131；192.168.186.132；192.168.186.133</p>
 <p>每台机器搭建2个redis 服务，端口6001,6002,6003,6004,6005,6006</p>
@@ -614,7 +628,8 @@ cd /redis/redis-cluster
 # 然后在别创建2个文件夾放不同端口文件
 mkdir 6001 6004
 # 把之前的redis.conf配置文件copy到6001
-cp /redis/redis.conf /redis/redis-cluster/6001</code></pre>
+cp /redis/redis.conf /redis/redis-cluster/6001
+</code></pre>
 <h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><pre class=" language-shell"><code class="language-shell">## 后台启动
 daemonize yes
 ## 端口（分别对每个机器的端口号进行设置）
@@ -631,25 +646,30 @@ cluster-node-timeout 15000
 ## 需要注释掉bind（bind绑定的是自己机器网卡的ip，如果有多块网卡可以配多个ip，代表允许客户端通过机器的哪些网卡ip去访问，内网一般可以不配置bind，注释掉即可）
 # bind 127.0.0.1
 ## 关闭保护模式
-protected-mode  no</code></pre>
+protected-mode  no
+</code></pre>
 <p>把修改后的配置文件,copy到6004,修改有端口号的配置项</p>
 <p>批量替换命令</p>
-<pre class=" language-shell"><code class="language-shell">:%s/源字符串/目的字符串/g </code></pre>
+<pre class=" language-shell"><code class="language-shell">:%s/源字符串/目的字符串/g 
+</code></pre>
 <p> 另外两台机器也需要做上面几步操作，第二台机器用6002和6005，第三台机器用6003和6006               </p>
 <h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>启动6个redis实例，然后检查是否启动成功，这时候集群还未创建</p>
 <pre class=" language-shell"><code class="language-shell">## 启动服务
 /redis/src/redis-server /redis/redis-cluster/600X/redis.conf
 ## 检查6个redis实例是否都启动
-ps -ef | grep redis</code></pre>
+ps -ef | grep redis
+</code></pre>
 <h3 id="创建集群"><a href="#创建集群" class="headerlink" title="创建集群"></a>创建集群</h3><p>执行这条命令需要确认三台机器之间的redis实例要能相互访问，可以先简单把所有机器防火墙关掉，如果不关闭防火墙则需要打开redis服务端口和集群节点gossip通信端口16379(默认是在redis端口号上加1W)   </p>
 <p>防火墙</p>
 <pre class=" language-shell"><code class="language-shell">## 临时关闭防火墙
 systemctl stop firewalld 
 ## 禁止开机启动
-systemctl disable firewalld </code></pre>
+systemctl disable firewalld 
+</code></pre>
 <p>集群创建</p>
 <pre class=" language-shell"><code class="language-shell">## --cluster-replicas 1表示每个主节点需要1个从节点
-/redis/src/redis-cli --cluster create --cluster-replicas 1 192.168.186.131:6001 192.168.186.132:6002 192.168.186.133:6003 192.168.186.131:6004 192.168.186.132:6005 192.168.186.133:6006</code></pre>
+/redis/src/redis-cli --cluster create --cluster-replicas 1 192.168.186.131:6001 192.168.186.132:6002 192.168.186.133:6003 192.168.186.131:6004 192.168.186.132:6005 192.168.186.133:6006
+</code></pre>
 <p><img src="!%5B%5D(https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210126141320.png"></p>
 <h3 id="集群检查"><a href="#集群检查" class="headerlink" title="集群检查"></a>集群检查</h3><p>连接任意一个redis客户端</p>
 <pre class=" language-shell"><code class="language-shell">##  -a访问服务端密码,-c表示集群模式,-h指定ip地址,-p端口号
@@ -659,16 +679,19 @@ systemctl disable firewalld </code></pre>
 cluster info
 
 ## 查看节点列表
-cluster nodes</code></pre>
+cluster nodes
+</code></pre>
 <p><img src="!%5B%5D(https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/image-20210126142004221.png" alt="image-20210126142004221"></p>
 <p>从cluster nodes可以看出集群关系</p>
 <p>1（主）-6（从）    槽位：0-5460</p>
 <p>2（主）-4（从）    槽位：5461-10922</p>
 <p>3（主）-5（从）    槽位：10923-16383</p>
 <p>关闭集群需要逐个关闭，<strong>集群一旦构建好后，停机后只需每个节点重新启动便可，不需要在执行集群创建命令</strong></p>
-<pre class=" language-shell"><code class="language-shell">/redis/src/redis-cli -c -h 192.168.186.132 -p 6002 shutdown</code></pre>
+<pre class=" language-shell"><code class="language-shell">/redis/src/redis-cli -c -h 192.168.186.132 -p 6002 shutdown
+</code></pre>
 <h2 id="Redis集群水平扩缩容"><a href="#Redis集群水平扩缩容" class="headerlink" title="Redis集群水平扩缩容"></a>Redis集群水平扩缩容</h2><p>下面看下集群命令</p>
-<pre class=" language-shell"><code class="language-shell">src/redis-cli --cluster help</code></pre>
+<pre class=" language-shell"><code class="language-shell">src/redis-cli --cluster help
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210129135650.png"></p>
 <ul>
 <li>create：创建一个集群环境host1:port1 … hostN:portN</li>
@@ -684,35 +707,43 @@ cluster nodes</code></pre>
 <p>2个新节点启动并没有加入到集群，cluster nodes 发现只有6个节点</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210129135920.png"></p>
 <p><strong>现在开始加入主节点</strong></p>
-<pre class=" language-shell"><code class="language-shell">src/redis-cli --cluster add-node 192.168.186.132:6007 192.168.186.132:6001</code></pre>
+<pre class=" language-shell"><code class="language-shell">src/redis-cli --cluster add-node 192.168.186.132:6007 192.168.186.132:6001
+</code></pre>
 <p>现在看下集群状态，多了一个master(刚加入的节点都直接是master)</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210129140758.png"></p>
 <p>这时候加入的master不可以使用因为它没有槽位，需要rehash分配槽位</p>
 <p><strong>分配槽位</strong></p>
-<pre class=" language-shell"><code class="language-shell">src/redis-cli --cluster reshard 192.168.186.132:6002</code></pre>
+<pre class=" language-shell"><code class="language-shell">src/redis-cli --cluster reshard 192.168.186.132:6002
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210129141329.png"></p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/image-20210129141404905.png" alt="image-20210129141404905"></p>
 <p>这时候再看一下集群信息</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210129141459.png"></p>
 <p><strong>加入从节点</strong></p>
-<pre class=" language-shell"><code class="language-shell">src/redis-cli --cluster add-node 192.168.186.132:6008 192.168.186.132:6002</code></pre>
+<pre class=" language-shell"><code class="language-shell">src/redis-cli --cluster add-node 192.168.186.132:6008 192.168.186.132:6002
+</code></pre>
 <p>刚加入在集群里面是master,现在我们要进入6008的客户端</p>
-<pre class=" language-shell"><code class="language-shell">src/redis-cli -c -h 192.168.186.132 -p 6008</code></pre>
+<pre class=" language-shell"><code class="language-shell">src/redis-cli -c -h 192.168.186.132 -p 6008
+</code></pre>
 <pre class=" language-shell"><code class="language-shell">## 分配主节点 后面这字符串就是6007的唯一标识
-cluster replicate 7e4da930cbbcccbb8656dbb5e1f5bead97f9f6ac</code></pre>
+cluster replicate 7e4da930cbbcccbb8656dbb5e1f5bead97f9f6ac
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210129143230.png"></p>
 <p>扩容成功</p>
 <h3 id="缩容"><a href="#缩容" class="headerlink" title="缩容"></a>缩容</h3><p>现在我们删除6007，6008这一个小集群</p>
 <p><strong>删除6008从节点</strong></p>
 <pre class=" language-shell"><code class="language-shell">## 后面这节点id是6008的id
-src/redis-cli --cluster del-node 192.168.186.132:6008 87d4ff53c193c24ff7b6c6cdd33478531dd7fe1e</code></pre>
+src/redis-cli --cluster del-node 192.168.186.132:6008 87d4ff53c193c24ff7b6c6cdd33478531dd7fe1e
+</code></pre>
 <p><strong>删除6007主节点</strong></p>
 <p>删除主节点之前需要先把hash槽释放掉</p>
-<pre class=" language-shell"><code class="language-shell"> src/redis-cli --cluster reshard 192.168.186.132:6007</code></pre>
+<pre class=" language-shell"><code class="language-shell"> src/redis-cli --cluster reshard 192.168.186.132:6007
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210129144535.png"></p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210129144643.png"></p>
 <p>删除节点</p>
-<pre class=" language-shell"><code class="language-shell">src/redis-cli --cluster del-node 192.168.186.132:6007 7e4da930cbbcccbb8656dbb5e1f5bead97f9f6ac</code></pre>
+<pre class=" language-shell"><code class="language-shell">src/redis-cli --cluster del-node 192.168.186.132:6007 7e4da930cbbcccbb8656dbb5e1f5bead97f9f6ac
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210129144908.png"></p>
 <p>缩容成功</p>
 <script>
@@ -1108,16 +1139,16 @@ acks=0： 表示producer不需要等待任何broker确认收到消息的回复�
                         <span class="chip bg-color">Java</span>
                     </a>
                     
-                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                        <span class="chip bg-color">消息队列</span>
-                    </a>
-                    
                     <a href="/tags/Kafka/">
                         <span class="chip bg-color">Kafka</span>
                     </a>
                     
                     <a href="/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">
                         <span class="chip bg-color">生产实践</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                        <span class="chip bg-color">消息队列</span>
                     </a>
                     
                 </div>

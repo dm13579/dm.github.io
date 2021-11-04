@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -526,7 +526,8 @@
     &lt;groupId>mysql&lt;/groupId>
     &lt;artifactId>mysql-connector-java&lt;/artifactId>
     &lt;version>5.1.22&lt;/version>
-&lt;/dependency></code></pre>
+&lt;/dependency>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testjdbc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 连接</span>
     Connection connection <span class="token operator">=</span> null<span class="token punctuation">;</span>
@@ -567,7 +568,8 @@
             preparedStatement<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>从这可以看出整个JDBC连接数据库和数据集获取都是有一定的弊端，比如说有以下几点弊端</p>
 <ol>
 <li>数据库连接每连接一个就要走连接-释放过程，这是非常耗性能的。这里可以利用<strong>池化思想</strong>，建立一个数据库连接池，创建的连接可以放进数据库连接池中，释放的时候放回到连接池，避免重新创建</li>
@@ -586,7 +588,8 @@
 <pre class=" language-properties"><code class="language-properties"><span class="token attr-name">mysql.driverClass</span><span class="token punctuation">=</span><span class="token attr-value">com.mysql.jdbc.Driver</span>
 <span class="token attr-name">mysql.jdbcUrl</span><span class="token punctuation">=</span><span class="token attr-value">jdbc:mysql://xx.xx.xx.xx:3306/test?characterEncoding=utf8</span>
 <span class="token attr-name">mysql.user</span><span class="token punctuation">=</span> <span class="token attr-value">root</span>
-<span class="token attr-name">mysql.password</span><span class="token punctuation">=</span> <span class="token attr-value">xxxxxx</span></code></pre>
+<span class="token attr-name">mysql.password</span><span class="token punctuation">=</span> <span class="token attr-value">xxxxxx</span>
+</code></pre>
 <p>MyBatis配置文件mybatis-config.xml</p>
 <pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
 <span class="token doctype">&lt;!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
@@ -600,7 +603,7 @@
         <span class="token comment" spellcheck="true">&lt;!--开启二级缓存--></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>setting</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>cacheEnabled<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>settings</span><span class="token punctuation">></span></span>
-
+    
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>environments</span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>development<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>environment</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>development<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>transactionManager</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>JDBC<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
@@ -618,7 +621,8 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mappers</span><span class="token punctuation">></span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>package</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.dm.mapper<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mappers</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configuration</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configuration</span><span class="token punctuation">></span></span>
+</code></pre>
 <p>实体类</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Data</span>
 <span class="token annotation punctuation">@Builder</span>
@@ -630,14 +634,16 @@
 
     <span class="token keyword">private</span> Integer age<span class="token punctuation">;</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>Mapper接口</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserMapper</span> <span class="token punctuation">{</span>
 
     User <span class="token function">selectById</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Param</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">)</span> Integer id<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     List<span class="token operator">&lt;</span>User<span class="token operator">></span> <span class="token function">selectAllUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>Mapper xml</p>
 <pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
 <span class="token doctype">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -645,7 +651,7 @@
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mapper</span> <span class="token attr-name">namespace</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.dm.mapper.UserMapper<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
     <span class="token comment" spellcheck="true">&lt;!-- 二级缓存作用域--></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>cache</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>cache</span><span class="token punctuation">></span></span>
-
+  
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>resultMap</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>result<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.dm.entity.User<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>id<span class="token punctuation">"</span></span> <span class="token attr-name">jdbcType</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>INTEGER<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>id<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>result</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>user_name<span class="token punctuation">"</span></span> <span class="token attr-name">jdbcType</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>VARCHAR<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
@@ -665,7 +671,8 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>selectAllUser<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.dm.entity.User<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
         select * from user
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mapper</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mapper</span><span class="token punctuation">></span></span>
+</code></pre>
 <p>测试代码</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
     String resource <span class="token operator">=</span> <span class="token string">"mybatis-config.xml"</span><span class="token punctuation">;</span>
@@ -706,7 +713,8 @@
         <span class="token punctuation">}</span>
 
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><h3 id="初始化Configuration"><a href="#初始化Configuration" class="headerlink" title="初始化Configuration"></a>初始化Configuration</h3><p>new SqlSessionFactoryBuilder().build(read)</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> SqlSessionFactory <span class="token function">build</span><span class="token punctuation">(</span>Reader reader<span class="token punctuation">,</span> String environment<span class="token punctuation">,</span> Properties properties<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">try</span> <span class="token punctuation">{</span>
@@ -722,7 +730,8 @@
       <span class="token comment" spellcheck="true">// Intentionally ignore. Prefer previous error.</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token function">XMLConfigBuilder</span><span class="token punctuation">(</span>XPathParser parser<span class="token punctuation">,</span> String environment<span class="token punctuation">,</span> Properties props<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment" spellcheck="true">/**
    * 调用父类的BaseBuilder的构造方法
@@ -739,7 +748,8 @@
   <span class="token keyword">this</span><span class="token punctuation">.</span>parsed <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
   <span class="token keyword">this</span><span class="token punctuation">.</span>environment <span class="token operator">=</span> environment<span class="token punctuation">;</span>
   <span class="token keyword">this</span><span class="token punctuation">.</span>parser <span class="token operator">=</span> parser<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="解析mybatis-config-xml文件"><a href="#解析mybatis-config-xml文件" class="headerlink" title="解析mybatis-config.xml文件"></a>解析mybatis-config.xml文件</h3><p>parser.parse()</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Configuration <span class="token function">parse</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment" spellcheck="true">// 若已经解析过了 就抛出异常</span>
@@ -751,7 +761,8 @@
   <span class="token comment" spellcheck="true">// 解析我们的mybatis-config.xml的configuration节点</span>
   <span class="token function">parseConfiguration</span><span class="token punctuation">(</span>parser<span class="token punctuation">.</span><span class="token function">evalNode</span><span class="token punctuation">(</span><span class="token string">"/configuration"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> configuration<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>parseConfiguration</p>
 <p>解析我们的mybatis-config.xml的configuration节点</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">parseConfiguration</span><span class="token punctuation">(</span>XNode root<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -891,7 +902,8 @@
     <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">BuilderException</span><span class="token punctuation">(</span><span class="token string">"Error parsing SQL Mapper Configuration. Cause: "</span> <span class="token operator">+</span> e<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span></code></pre>
+  <span class="token punctuation">}</span>
+</code></pre>
 <h3 id="构建二级缓存"><a href="#构建二级缓存" class="headerlink" title="构建二级缓存"></a>构建二级缓存</h3><p>cacheElement</p>
 <p>解析二级缓存</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">cacheElement</span><span class="token punctuation">(</span>XNode context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -914,7 +926,8 @@
     <span class="token comment" spellcheck="true">//把缓存节点加入到Configuration中</span>
     builderAssistant<span class="token punctuation">.</span><span class="token function">useNewCache</span><span class="token punctuation">(</span>typeClass<span class="token punctuation">,</span> evictionClass<span class="token punctuation">,</span> flushInterval<span class="token punctuation">,</span> size<span class="token punctuation">,</span> readWrite<span class="token punctuation">,</span> blocking<span class="token punctuation">,</span> props<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>useNewCache</p>
 <p>构建二级缓存</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Cache <span class="token function">useNewCache</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">Cache</span><span class="token operator">></span> typeClass<span class="token punctuation">,</span>
@@ -960,7 +973,8 @@
       cache <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LoggingCache</span><span class="token punctuation">(</span>cache<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> cache<span class="token punctuation">;</span>
-  <span class="token punctuation">}</span></code></pre>
+  <span class="token punctuation">}</span>
+</code></pre>
 <h3 id="解析-Mapper-xml文件"><a href="#解析-Mapper-xml文件" class="headerlink" title="解析**Mapper.xml文件"></a>解析**Mapper.xml文件</h3><p>如果是批量扫描也就是mapper使用package模式会调用addMapper方法，往里面跟到MapperAnnotationBuilder.parse()下的loadXmlResource也是用下面的方法进行的xml解析</p>
 <p>如果是用得注解形式SQL在parseStatement解析成MappedStatement</p>
 <p>mapperElement</p>
@@ -969,7 +983,7 @@
   <span class="token keyword">if</span> <span class="token punctuation">(</span>parent <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 获取我们mappers节点下的一个一个的mapper节点</span>
     <span class="token keyword">for</span> <span class="token punctuation">(</span>XNode child <span class="token operator">:</span> parent<span class="token punctuation">.</span><span class="token function">getChildren</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
+  
       <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token string">"package"</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>child<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         String mapperPackage <span class="token operator">=</span> child<span class="token punctuation">.</span><span class="token function">getStringAttribute</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         configuration<span class="token punctuation">.</span><span class="token function">addMappers</span><span class="token punctuation">(</span>mapperPackage<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -998,7 +1012,8 @@
       <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>这段代码核心点其实就是构建一个XMLMapperBuilder调用parse方法解析SQL</p>
 <p>XMLMapperBuilder.parse</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">parse</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1016,12 +1031,13 @@
   <span class="token function">parsePendingResultMaps</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token function">parsePendingCacheRefs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token function">parsePendingStatements</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>configurationElement</p>
 <p>解析**Mapper.xml文件mapper节点</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">configurationElement</span><span class="token punctuation">(</span>XNode context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">try</span> <span class="token punctuation">{</span>
-
+      
     <span class="token comment" spellcheck="true">/**
      * 解析我们的namespace属性
      * &lt;mapper namespace="com.dm.mapper.UserMapper">
@@ -1030,12 +1046,12 @@
     <span class="token keyword">if</span> <span class="token punctuation">(</span>namespace <span class="token operator">==</span> null <span class="token operator">||</span> namespace<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">BuilderException</span><span class="token punctuation">(</span><span class="token string">"Mapper's namespace cannot be empty"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-
+      
     <span class="token comment" spellcheck="true">/**
      * 保存我们当前的namespace  并且判断接口完全类名==namespace
      */</span>
     builderAssistant<span class="token punctuation">.</span><span class="token function">setCurrentNamespace</span><span class="token punctuation">(</span>namespace<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+      
     <span class="token comment" spellcheck="true">/**
      * 解析我们的缓存引用
      * 说明我当前的缓存引用和DeptMapper的缓存引用一致
@@ -1044,7 +1060,7 @@
           异常下（引用缓存未使用缓存）：org.apache.ibatis.session.Configuration#incompleteCacheRefs
      */</span>
     <span class="token function">cacheRefElement</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">evalNode</span><span class="token punctuation">(</span><span class="token string">"cache-ref"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+      
     <span class="token comment" spellcheck="true">/**
      * 解析我们的cache节点
      * &lt;cache type="org.mybatis.caches.ehcache.EhcacheCache">&lt;/cache>
@@ -1052,19 +1068,19 @@
                org.apache.ibatis.builder.MapperBuilderAssistant#currentCache
      */</span>
     <span class="token function">cacheElement</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">evalNode</span><span class="token punctuation">(</span><span class="token string">"cache"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+      
     <span class="token comment" spellcheck="true">/**
      * 解析paramterMap节点
      */</span>
     <span class="token function">parameterMapElement</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">evalNodes</span><span class="token punctuation">(</span><span class="token string">"/mapper/parameterMap"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+      
     <span class="token comment" spellcheck="true">/**
      * 解析我们的resultMap节点
      * 解析到：org.apache.ibatis.session.Configuration#resultMaps
      *    异常 org.apache.ibatis.session.Configuration#incompleteResultMap
      */</span>
     <span class="token function">resultMapElements</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">evalNodes</span><span class="token punctuation">(</span><span class="token string">"/mapper/resultMap"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+      
     <span class="token comment" spellcheck="true">/**
      * 解析我们通过sql节点
      *  解析到org.apache.ibatis.builder.xml.XMLMapperBuilder#sqlFragments
@@ -1072,7 +1088,7 @@
      *   因为他们是同一引用，在构建XMLMapperBuilder 时把Configuration.getSqlFragments传进去了
      */</span>
     <span class="token function">sqlElement</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">evalNodes</span><span class="token punctuation">(</span><span class="token string">"/mapper/sql"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+      
     <span class="token comment" spellcheck="true">/**
      * 解析我们的select | insert |update |delete节点
      * 解析到org.apache.ibatis.session.Configuration#mappedStatements
@@ -1081,7 +1097,8 @@
   <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">BuilderException</span><span class="token punctuation">(</span><span class="token string">"Error parsing Mapper XML. The XML location is '"</span> <span class="token operator">+</span> resource <span class="token operator">+</span> <span class="token string">"'. Cause: "</span> <span class="token operator">+</span> e<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="创建SqlSession"><a href="#创建SqlSession" class="headerlink" title="创建SqlSession"></a>创建SqlSession</h3><p>通过SqlSessionFactory.openSession()创建SqlSession对象</p>
 <p>openSessionFromDataSource</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> SqlSession <span class="token function">openSessionFromDataSource</span><span class="token punctuation">(</span>ExecutorType execType<span class="token punctuation">,</span> TransactionIsolationLevel level<span class="token punctuation">,</span> <span class="token keyword">boolean</span> autoCommit<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1112,7 +1129,8 @@
   <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
     ErrorContext<span class="token punctuation">.</span><span class="token function">instance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>newExecutor</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Executor <span class="token function">newExecutor</span><span class="token punctuation">(</span>Transaction transaction<span class="token punctuation">,</span> ExecutorType executorType<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   executorType <span class="token operator">=</span> executorType <span class="token operator">==</span> null <span class="token operator">?</span> defaultExecutorType <span class="token operator">:</span> executorType<span class="token punctuation">;</span>
@@ -1136,7 +1154,8 @@
   <span class="token comment" spellcheck="true">//调用所有的拦截器对象plugin方法</span>
   executor <span class="token operator">=</span> <span class="token punctuation">(</span>Executor<span class="token punctuation">)</span> interceptorChain<span class="token punctuation">.</span><span class="token function">pluginAll</span><span class="token punctuation">(</span>executor<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> executor<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>从上诉代码可以发现Executor共有4种BatchExecutor，ReuseExecutor，SimpleExecutor，CachingExecutor</p>
 <p>如果开启了二级缓存Executor就是CachingExecutor包装了一个其他三种中的Executor，没有开启就是其他三种中的一种</p>
 <h3 id="Mapper执行流程"><a href="#Mapper执行流程" class="headerlink" title="Mapper执行流程"></a>Mapper执行流程</h3><p>Mapper在SqlSession.getMapper中获取到了Mapper代理对象MapperProxy，MapperProxy中保存了sqlSession, mapperInterface, methodCache参数，包含sqlSession，接口，和方法，到时候直接反射通过接口和方法就可以调到指定的SQL语句</p>
@@ -1148,7 +1167,7 @@
       <span class="token keyword">return</span> method<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token comment" spellcheck="true">// 是否接口的默认方法</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">isDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>   
-
+    
       <span class="token comment" spellcheck="true">// 调用我们的接口中的默认方法</span>
       <span class="token keyword">return</span> <span class="token function">invokeDefaultMethod</span><span class="token punctuation">(</span>proxy<span class="token punctuation">,</span> method<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
@@ -1159,7 +1178,8 @@
   <span class="token keyword">final</span> MapperMethod mapperMethod <span class="token operator">=</span> <span class="token function">cachedMapperMethod</span><span class="token punctuation">(</span>method<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment" spellcheck="true">// 调用</span>
   <span class="token keyword">return</span> mapperMethod<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>sqlSession<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Object <span class="token function">execute</span><span class="token punctuation">(</span>SqlSession sqlSession<span class="token punctuation">,</span> Object<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   Object result<span class="token punctuation">;</span>
   <span class="token comment" spellcheck="true">//判断我们执行sql命令的类型</span>
@@ -1221,7 +1241,8 @@
         <span class="token operator">+</span> <span class="token string">" attempted to return null from a method with a primitive return type ("</span> <span class="token operator">+</span> method<span class="token punctuation">.</span><span class="token function">getReturnType</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">")."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
   <span class="token keyword">return</span> result<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="具体查询流程"><a href="#具体查询流程" class="headerlink" title="具体查询流程"></a>具体查询流程</h3><p>这里我们查询的是selectById所以我们这里会执行sqlSession.selectOne()，在底层selectOne还是会调selectList方法只是取了第一个</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">public</span> <span class="token operator">&lt;</span>E<span class="token operator">></span> List<span class="token operator">&lt;</span>E<span class="token operator">></span> <span class="token function">selectList</span><span class="token punctuation">(</span>String statement<span class="token punctuation">,</span> Object parameter<span class="token punctuation">,</span> RowBounds rowBounds<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1242,7 +1263,8 @@
   <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
     ErrorContext<span class="token punctuation">.</span><span class="token function">instance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>上面的 executor.query这里具体要看是哪个executor，在newExecutor方法中有体现。开启了二级缓存是CachingExecutor没有开启是BaseExecutor，这里我们走的是CachingExecutor</p>
 <p>如果使用的是CachingExecutor就会直接在二级缓存拿，二级缓存没拿到就调用delegate拿到封装前的类，封装前的Executor有3种，但他们都没有实现query方法就会调基类的query，这里就会调用BaseExecutor.query</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
@@ -1322,7 +1344,8 @@
       <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> list<span class="token punctuation">;</span>
-  <span class="token punctuation">}</span></code></pre>
+  <span class="token punctuation">}</span>
+</code></pre>
 <p>在BaseExecutor中queryFromDatabase走了doQuery，这个方法由创建的具体Executor类实现有BatchExecutor，ReuseExecutor，SimpleExecutor三种，这里我们进入SimpleExecutor</p>
 <p>SimpleExecutor#doQuery</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token operator">&lt;</span>E<span class="token operator">></span> List<span class="token operator">&lt;</span>E<span class="token operator">></span> <span class="token function">doQuery</span><span class="token punctuation">(</span>MappedStatement ms<span class="token punctuation">,</span> Object parameter<span class="token punctuation">,</span> RowBounds rowBounds<span class="token punctuation">,</span> ResultHandler resultHandler<span class="token punctuation">,</span> BoundSql boundSql<span class="token punctuation">)</span> <span class="token keyword">throws</span> SQLException <span class="token punctuation">{</span>
@@ -1336,7 +1359,8 @@
   <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
     <span class="token function">closeStatement</span><span class="token punctuation">(</span>stmt<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>从这一部分代码可以看出插件代理调用顺序 <code>Executer-&gt;StatementHandler-&gt;ParameterHandler-&gt;ResultSetHandler</code></p>
 <script>
         document.querySelectorAll('.github-emoji')

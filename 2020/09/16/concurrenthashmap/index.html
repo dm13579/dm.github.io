@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -536,7 +536,8 @@
 <span class="token comment" spellcheck="true">// 最大Segement[]容量</span>
 <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> MAX_SEGMENTS <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">16</span><span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">// 锁重试次数</span>
-<span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> RETRIES_BEFORE_LOCK <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span></code></pre>
+<span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> RETRIES_BEFORE_LOCK <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+</code></pre>
 <p>看到参数介绍，想必对一个词很熟悉Segment,其实hashMap分段锁锁的就是Segment,Segment是不存HashMap的数据，在Segment下面就是HashMap的数据结构数组+链表。put操作就是先找到一个Segment,加个锁然后在找到对应的bucket位置然后把值往里面放如果有值就形成链表。这样做的目的就是减少锁竞争。只有落在同一个Segment上面的资源才会发生锁竞争，减小了锁竞争的几率。hashTable也是线程安全的，了解他的实现机制就知道HashTable put一个值直接全部锁住，这样锁竞争大大增加，性能很差。现在使用Hashtable的想必也比较少了吧。</p>
 <p>在看put方法前先喽一眼ConcurrentHashMap的构造方法</p>
 <h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token function">ConcurrentHashMap</span><span class="token punctuation">(</span><span class="token keyword">int</span> initialCapacity<span class="token punctuation">,</span>
@@ -554,10 +555,10 @@
         <span class="token operator">++</span>sshift<span class="token punctuation">;</span>
         ssize <span class="token operator">&lt;&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-
+    
     <span class="token keyword">this</span><span class="token punctuation">.</span>segmentShift <span class="token operator">=</span> <span class="token number">32</span> <span class="token operator">-</span> sshift<span class="token punctuation">;</span><span class="token comment" spellcheck="true">// 默认28</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>segmentMask <span class="token operator">=</span> ssize <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">// 默认15</span>
-
+    
     <span class="token comment" spellcheck="true">// 这里咔咔一顿计算主要就是算出cap的大小就是一个Segment下面的table长度。</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>initialCapacity <span class="token operator">></span> MAXIMUM_CAPACITY<span class="token punctuation">)</span>
         initialCapacity <span class="token operator">=</span> MAXIMUM_CAPACITY<span class="token punctuation">;</span>
@@ -576,7 +577,8 @@
     Segment<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span> ss <span class="token operator">=</span> <span class="token punctuation">(</span>Segment<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token keyword">new</span> <span class="token class-name">Segment</span><span class="token punctuation">[</span>ssize<span class="token punctuation">]</span><span class="token punctuation">;</span>
     UNSAFE<span class="token punctuation">.</span><span class="token function">putOrderedObject</span><span class="token punctuation">(</span>ss<span class="token punctuation">,</span> SBASE<span class="token punctuation">,</span> s0<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// ordered write of segments[0]</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>segments <span class="token operator">=</span> ss<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="put方法"><a href="#put方法" class="headerlink" title="put方法"></a>put方法</h3><p>下图发现Segment继承了ReentrantLock所以很明显它是通过ReentrantLock实现的锁</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20200914174529.png"></p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> V <span class="token function">put</span><span class="token punctuation">(</span>K key<span class="token punctuation">,</span> V value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -652,7 +654,8 @@
         <span class="token function">unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> oldValue<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>上面主要介绍了put方法，其中有几个疑问点，一是scanAndLockForPut方法细节，二是rehash扩容细节，三是put方法里面用了许多Unsafe里面的许多魔法类，后面对Unsafe有所理解在补充这一部分。</p>
 <h3 id="scanAndLockForPut-方法"><a href="#scanAndLockForPut-方法" class="headerlink" title="scanAndLockForPut 方法"></a>scanAndLockForPut 方法</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> HashEntry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> <span class="token function">scanAndLockForPut</span><span class="token punctuation">(</span>K key<span class="token punctuation">,</span> <span class="token keyword">int</span> hash<span class="token punctuation">,</span> V value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 这里取得对应Segment中的对应数组位置的第一个元素</span>
@@ -691,7 +694,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> node<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="rehash方法"><a href="#rehash方法" class="headerlink" title="rehash方法"></a>rehash方法</h3><p>这一块源码比较简单就是一些指针的移动，主要扩容逻辑就是遍历Segment的table,复制一个新的table是原table的2倍大小。然后遍历这个table的每一个节点，如果这个节点挂着一个链表就可以rehash这个链表下的每一个元素，假设链表新的落的位置为7,10,10,11,9,9,9。这时候倒着来看这条链表是9，一直往上看直到不同的元素就是9，9，9然后他会直接把这9,9,9直接挪到新的数组上去。然后遍历剩余的元素处理，</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">rehash</span><span class="token punctuation">(</span>HashEntry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> node<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 这里就是构建新数组，并重新计算扩容阈值threshold，和掩码sizeMask（计算元素在数组中的位置）</span>
@@ -748,7 +752,8 @@
     node<span class="token punctuation">.</span><span class="token function">setNext</span><span class="token punctuation">(</span>newTable<span class="token punctuation">[</span>nodeIndex<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     newTable<span class="token punctuation">[</span>nodeIndex<span class="token punctuation">]</span> <span class="token operator">=</span> node<span class="token punctuation">;</span>
     table <span class="token operator">=</span> newTable<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="ConcurrentHashMap-jdk1-8源码解析"><a href="#ConcurrentHashMap-jdk1-8源码解析" class="headerlink" title="ConcurrentHashMap jdk1.8源码解析"></a>ConcurrentHashMap jdk1.8源码解析</h2><p>在看ConcurrentHashMap源码之前还有几个区别于1.7参数需要介绍一下；（这里只介绍下面源码出现的参数）</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 大于0表示table最大存放元素的个数</span>
 <span class="token keyword">private</span> <span class="token keyword">transient</span> <span class="token keyword">volatile</span> <span class="token keyword">int</span> sizeCtl<span class="token punctuation">;</span>
@@ -757,7 +762,8 @@
 <span class="token comment" spellcheck="true">// 此元素后接红黑树</span>
 <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> TREEBIN <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">// 链表树化阈值</span>
-<span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> TREEIFY_THRESHOLD <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span></code></pre>
+<span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> TREEIFY_THRESHOLD <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>
+</code></pre>
 <p>还是第一步来看一下构造方法</p>
 <h3 id="构造方法-1"><a href="#构造方法-1" class="headerlink" title="构造方法"></a>构造方法</h3><p>1.8的构造方法相比于1.7还是比较简单的。里面只做了一件事就是计算sizeCtl，可看参数介绍</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token function">ConcurrentHashMap</span><span class="token punctuation">(</span><span class="token keyword">int</span> initialCapacity<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -770,7 +776,8 @@
                <span class="token comment" spellcheck="true">// 如有知道的，希望同僚告知。</span>
                <span class="token function">tableSizeFor</span><span class="token punctuation">(</span>initialCapacity <span class="token operator">+</span> <span class="token punctuation">(</span>initialCapacity <span class="token operator">>>></span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">this</span><span class="token punctuation">.</span>sizeCtl <span class="token operator">=</span> cap<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="put方法-1"><a href="#put方法-1" class="headerlink" title="put方法"></a>put方法</h3><p>1.8的put与1.7区别还是很大的，具体流程是，put一个值，先来个死循环，如果table是空的就执行initTable初始化table,不是空就看是否这一个bucket是空的，如果是直接CAS插入元素，如果不是就看当前hash表是不是在扩容是的化当前线程去帮助扩容，不是的话就开始链表插入，链表插入判断是不是红黑树，是的化插树，不是的话插入链表，插入链表要记录链表长度，链表长度要大于红黑树阈值，就树化。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">final</span> V <span class="token function">putVal</span><span class="token punctuation">(</span>K key<span class="token punctuation">,</span> V value<span class="token punctuation">,</span> <span class="token keyword">boolean</span> onlyIfAbsent<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>key <span class="token operator">==</span> null <span class="token operator">||</span> value <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -856,7 +863,8 @@
     <span class="token comment" spellcheck="true">// 检查是否需要扩容,下面会看到这个方法的详细</span>
     <span class="token function">addCount</span><span class="token punctuation">(</span>1L<span class="token punctuation">,</span> binCount<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> null<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="initTable方法"><a href="#initTable方法" class="headerlink" title="initTable方法"></a>initTable方法</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">final</span> Node<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">initTable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     Node<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span> tab<span class="token punctuation">;</span> <span class="token keyword">int</span> sc<span class="token punctuation">;</span>
     <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>tab <span class="token operator">=</span> table<span class="token punctuation">)</span> <span class="token operator">==</span> null <span class="token operator">||</span> tab<span class="token punctuation">.</span>length <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -885,7 +893,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> tab<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="transfer扩容方法"><a href="#transfer扩容方法" class="headerlink" title="transfer扩容方法"></a>transfer扩容方法</h3><p>在table中有3种节点类型</p>
 <ul>
 <li>TreeBin：节点下是红黑树</li>
@@ -914,7 +923,7 @@
         <span class="token comment" spellcheck="true">// 标识扩容进度</span>
         transferIndex <span class="token operator">=</span> n<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-
+    
     <span class="token keyword">int</span> nextn <span class="token operator">=</span> nextTab<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
     ForwardingNode<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> fwd <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ForwardingNode</span><span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span><span class="token punctuation">(</span>nextTab<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token comment" spellcheck="true">// true表示当前线程bucket迁移结束，开始往后推进</span>
@@ -1032,7 +1041,8 @@
             <span class="token punctuation">}</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="helpTransfer方法"><a href="#helpTransfer方法" class="headerlink" title="helpTransfer方法"></a>helpTransfer方法</h3><p>这里是ConcurrentHashMap的精华所在，它的作用就是帮助正在扩容的线程进行扩容，而不是在那傻傻在那等着扩容结束。</p>
 <p>// TODO</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">final</span> Node<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">helpTransfer</span><span class="token punctuation">(</span>Node<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span> tab<span class="token punctuation">,</span> Node<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> f<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1053,7 +1063,8 @@
         <span class="token keyword">return</span> nextTab<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> table<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

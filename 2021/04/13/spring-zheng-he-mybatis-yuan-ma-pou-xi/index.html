@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -554,7 +554,8 @@
     &lt;groupId>org.mybatis&lt;/groupId>
     &lt;artifactId>mybatis-spring&lt;/artifactId>
     &lt;version>2.0.3&lt;/version>
-&lt;/dependency></code></pre>
+&lt;/dependency>
+</code></pre>
 <p>配置类</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span>
 <span class="token annotation punctuation">@MapperScan</span><span class="token punctuation">(</span>basePackages <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"com.dm.mapper"</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
@@ -580,7 +581,8 @@
         dataSource<span class="token punctuation">.</span><span class="token function">setUrl</span><span class="token punctuation">(</span><span class="token string">"jdbc:mysql://xx.xx.xx.xx:3306/test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> dataSource<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>User实体类</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Data</span>
 <span class="token annotation punctuation">@Builder</span>
@@ -594,14 +596,16 @@
 
    <span class="token keyword">private</span> Integer age<span class="token punctuation">;</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>UserMapper.java</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserMapper</span> <span class="token punctuation">{</span>
 
    User <span class="token function">selectById</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Param</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">)</span> Integer id<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     List<span class="token operator">&lt;</span>User<span class="token operator">></span> <span class="token function">selectAllUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>UserMapper.xml</p>
 <pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
 <span class="token doctype">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -626,7 +630,8 @@
         select * from user
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span>
 
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mapper</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mapper</span><span class="token punctuation">></span></span>
+</code></pre>
 <p>测试类</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainStarter</span> <span class="token punctuation">{</span>
    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -635,7 +640,8 @@
       UserMapper bean <span class="token operator">=</span> <span class="token punctuation">(</span>UserMapper<span class="token punctuation">)</span> ioc<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"userMapper"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
       System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>bean<span class="token punctuation">.</span><span class="token function">selectById</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>我们发现这和我们普通spring bean加载有2个区别，配置类上加了@MapperScan，和注入了一个SqlSessionFactoryBean（其实注入的bean不叫sqlSessionFactoryBean而是sqlSessionFactory）</p>
 <h2 id="注入SqlSessionFactoryBean源码"><a href="#注入SqlSessionFactoryBean源码" class="headerlink" title="注入SqlSessionFactoryBean源码"></a>注入SqlSessionFactoryBean源码</h2><p>这里我们进入SqlSessionFactoryBean发现它实现了FactoryBean和InitializingBean</p>
 <h3 id="实现FactoryBean"><a href="#实现FactoryBean" class="headerlink" title="实现FactoryBean"></a>实现FactoryBean</h3><p>实现了FactoryBean说明它可能更改了类型，我们来到getObject()方法</p>
@@ -646,7 +652,8 @@
     <span class="token punctuation">}</span>
     <span class="token comment" spellcheck="true">// 返回我们的sqlSessionFactory对象</span>
     <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>sqlSessionFactory<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>从这也可以看出容器中容器中有sqlSessionFactory 这个bean</p>
 <h3 id="实现InitializingBean"><a href="#实现InitializingBean" class="headerlink" title="实现InitializingBean"></a>实现InitializingBean</h3><p>InitializingBean在bean初始化之后调用，调用afterPropertiesSet</p>
 <p>具体调用逻辑AnnotationConfigApplicationContext-&gt;refresh-&gt;finishBeanFactoryInitialization-&gt;preInstantiateSingletons-&gt;getBean-&gt;doGetBean-&gt;createBean-&gt;doCreateBean-&gt;initializeBean-&gt;invokeInitMethods</p>
@@ -658,7 +665,8 @@
   <span class="token function">state</span><span class="token punctuation">(</span><span class="token punctuation">(</span>configuration <span class="token operator">==</span> null <span class="token operator">&amp;&amp;</span> configLocation <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token operator">!</span><span class="token punctuation">(</span>configuration <span class="token operator">!=</span> null <span class="token operator">&amp;&amp;</span> configLocation <span class="token operator">!=</span> null<span class="token punctuation">)</span><span class="token punctuation">,</span>
       <span class="token string">"Property 'configuration' and 'configLocation' can not specified with together"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">this</span><span class="token punctuation">.</span>sqlSessionFactory <span class="token operator">=</span> <span class="token function">buildSqlSessionFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
  * 构建我们的sqlSessionFactory的实例
  */</span>
@@ -741,7 +749,7 @@
       LOGGER<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token string">"Registered type handler: '"</span> <span class="token operator">+</span> typeHandler <span class="token operator">+</span> <span class="token string">"'"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-
+    
   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>scriptingLanguageDrivers<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     Stream<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>scriptingLanguageDrivers<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>languageDriver <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">{</span>
       targetConfiguration<span class="token punctuation">.</span><span class="token function">getLanguageRegistry</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>languageDriver<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -808,7 +816,8 @@
 
   <span class="token comment" spellcheck="true">// 通过建造者模式构建我们的SqlSessionFactory对象 默认是DefaultSqlSessionFactory</span>
   <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>sqlSessionFactoryBuilder<span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span>targetConfiguration<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="MapperScan源码"><a href="#MapperScan源码" class="headerlink" title="@MapperScan源码"></a>@MapperScan源码</h2><p>首先我们SqlSessionFactoryBean通过上面的@Bean注入进容器了，那么现在只差把UserMapper注入到容器中就可以了，但是问题来了，众所周知Mapper.java是接口类，而接口类是不可以解析成BeanDefinition,既然不可以解析成BeanDefinition也就不存在注入到容器，至于接口不能被注入大家可以来到ClassPathScanningCandidateComponentProvider#isCandidateComponent</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">boolean</span> <span class="token function">isCandidateComponent</span><span class="token punctuation">(</span>AnnotatedBeanDefinition beanDefinition<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    AnnotationMetadata metadata <span class="token operator">=</span> beanDefinition<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -817,13 +826,15 @@
    <span class="token comment" spellcheck="true">// metadata.isAbstract() &amp;&amp; metadata.hasAnnotatedMethods(Lookup.class.getName() = 抽象类并且必须方法中有@LookUp</span>
    <span class="token keyword">return</span> <span class="token punctuation">(</span>metadata<span class="token punctuation">.</span><span class="token function">isIndependent</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>metadata<span class="token punctuation">.</span><span class="token function">isConcrete</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span>
          <span class="token punctuation">(</span>metadata<span class="token punctuation">.</span><span class="token function">isAbstract</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> metadata<span class="token punctuation">.</span><span class="token function">hasAnnotatedMethods</span><span class="token punctuation">(</span>Lookup<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>我们来看下spring-mybatis是如何解决这个问题的</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span>RetentionPolicy<span class="token punctuation">.</span>RUNTIME<span class="token punctuation">)</span>
 <span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span>ElementType<span class="token punctuation">.</span>TYPE<span class="token punctuation">)</span>
 <span class="token annotation punctuation">@Documented</span>
 <span class="token annotation punctuation">@Import</span><span class="token punctuation">(</span>MapperScannerRegistrar<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@Repeatable</span><span class="token punctuation">(</span>MapperScans<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span></code></pre>
+<span class="token annotation punctuation">@Repeatable</span><span class="token punctuation">(</span>MapperScans<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+</code></pre>
 <p>从注解上看有个熟悉的@Import，它实现了ImportBeanDefinitionRegistrar接口，这个接口大家都知道是用来注册Bean定义的</p>
 <p>我们来到实现了ImportBeanDefinitionRegistrar接口的registerBeanDefinitions</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
@@ -904,7 +915,8 @@
     <span class="token comment" spellcheck="true">// 为我们的容器中注册了MapperScannerConfigurer的接口</span>
     registry<span class="token punctuation">.</span><span class="token function">registerBeanDefinition</span><span class="token punctuation">(</span>beanName<span class="token punctuation">,</span> builder<span class="token punctuation">.</span><span class="token function">getBeanDefinition</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  <span class="token punctuation">}</span></code></pre>
+  <span class="token punctuation">}</span>
+</code></pre>
 <p>这里做的事情很简单-使用建造者模式构建MapperScannerConfigurer并注册到BeanDefinition，然后进入MapperScannerConfigurer类中发现它实现了BeanDefinitionRegistryPostProcessor，InitializingBean（这里并没有什么用）</p>
 <p>大家都知道BeanDefinitionRegistryPostProcessor#postProcessBeanDefinitionRegistry会在refresh-&gt;invokeBeanFactoryPostProcessors中会实例化刚刚注册的MapperScannerConfigurer bean定义并且会调用postProcessBeanDefinitionRegistry</p>
 <h3 id="MapperScannerConfigurer-postProcessBeanDefinitionRegistry"><a href="#MapperScannerConfigurer-postProcessBeanDefinitionRegistry" class="headerlink" title="MapperScannerConfigurer#postProcessBeanDefinitionRegistry"></a>MapperScannerConfigurer#postProcessBeanDefinitionRegistry</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">postProcessBeanDefinitionRegistry</span><span class="token punctuation">(</span>BeanDefinitionRegistry registry<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -939,7 +951,8 @@
 <span class="token annotation punctuation">@Override</span>
 <span class="token keyword">protected</span> <span class="token keyword">boolean</span> <span class="token function">isCandidateComponent</span><span class="token punctuation">(</span>AnnotatedBeanDefinition beanDefinition<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> beanDefinition<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isInterface</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> beanDefinition<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isIndependent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="ClassPathMapperScanner-doScan"><a href="#ClassPathMapperScanner-doScan" class="headerlink" title="ClassPathMapperScanner#doScan"></a>ClassPathMapperScanner#doScan</h3><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">public</span> Set<span class="token operator">&lt;</span>BeanDefinitionHolder<span class="token operator">></span> <span class="token function">doScan</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> basePackages<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 调用父类ClassPathBeanDefinitionScanner 来进行扫描</span>
@@ -950,13 +963,14 @@
         LOGGER<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token string">"No MyBatis mapper was found in '"</span> <span class="token operator">+</span> Arrays<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>basePackages<span class="token punctuation">)</span>
                     <span class="token operator">+</span> <span class="token string">"' package. Please check your configuration."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-
+        
         <span class="token comment" spellcheck="true">// 这里很重要</span>
         <span class="token function">processBeanDefinitions</span><span class="token punctuation">(</span>beanDefinitions<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
     <span class="token keyword">return</span> beanDefinitions<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="ClassPathMapperScanner-processBeanDefinitions-beanDefinitions"><a href="#ClassPathMapperScanner-processBeanDefinitions-beanDefinitions" class="headerlink" title="ClassPathMapperScanner#processBeanDefinitions(beanDefinitions);"></a>ClassPathMapperScanner#processBeanDefinitions(beanDefinitions);</h3><p>Mapper生成代理对象</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">processBeanDefinitions</span><span class="token punctuation">(</span>Set<span class="token operator">&lt;</span>BeanDefinitionHolder<span class="token operator">></span> beanDefinitions<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   GenericBeanDefinition definition<span class="token punctuation">;</span>
@@ -1021,7 +1035,8 @@
     <span class="token comment" spellcheck="true">// 设置bean定义的加载模型(是否为懒加载)</span>
     definition<span class="token punctuation">.</span><span class="token function">setLazyInit</span><span class="token punctuation">(</span>lazyInitialization<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>此时Mapper集成进Spring中了。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Spring整合Mybatis最重要的点就是怎么把代理Mapper注入到spring容器中。要解决注入问题首先解决2个问题。</p>
 <ol>

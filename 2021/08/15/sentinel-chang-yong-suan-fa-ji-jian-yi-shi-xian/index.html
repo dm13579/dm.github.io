@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -560,7 +560,8 @@
                 <span class="token string">"\nredis.call('expire',KEYS[1],ARGV[2])"</span> <span class="token operator">+</span>
                 <span class="token string">"\nend"</span> <span class="token operator">+</span>
                 <span class="token string">"\nreturn c;"</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span></code></pre>
+    <span class="token punctuation">}</span>
+</code></pre>
 <h2 id="滑动时间窗算法"><a href="#滑动时间窗算法" class="headerlink" title="滑动时间窗算法"></a>滑动时间窗算法</h2><p>滑动时间窗也是由计数器限流算法演进而来。它的出现就是为了解决计数器算法中的一些问题。</p>
 <p>滑动时间窗算法和技术器算法基本一致，但在起始点这里做了改变，起始点不再是固定的，而是滑动的。我们可以这么想象有一把尺子上面有刻度，然后我们统计的请求都会放到每一个刻度上面，这时候我们有一个仅仅只有1cm(1s)的短尺在这把长的尺子上面不断滑动，短尺覆盖的范围所有刻度的请求加起来就是这1s的请求数。这种统计方式和计数器限流算法一样会有精度问题，但会大大缩小，想要越精确就是使刻度越多，但性能会降低。因为每一个刻度都是存在内存中的，存的越多性能就越低。</p>
 <h3 id="Demo-1"><a href="#Demo-1" class="headerlink" title="Demo"></a>Demo</h3><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 服务访问次数，可以放在Redis中，实现分布式系统的访问计数</span>
@@ -597,7 +598,8 @@
         <span class="token comment" spellcheck="true">// 表示没个格子长度</span>
         Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="Sentinel源码"><a href="#Sentinel源码" class="headerlink" title="Sentinel源码"></a>Sentinel源码</h3><h4 id="构造时间窗格"><a href="#构造时间窗格" class="headerlink" title="构造时间窗格"></a>构造时间窗格</h4><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 时间窗格</span>
 <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">volatile</span> <span class="token keyword">int</span> SAMPLE_COUNT <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">// 时间间隔</span>
@@ -642,7 +644,8 @@
     WindowWrap<span class="token operator">&lt;</span>MetricBucket<span class="token operator">></span> wrap <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">currentWindow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token comment" spellcheck="true">// 对当前窗口的请求次数进行累加</span>
     wrap<span class="token punctuation">.</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addPass</span><span class="token punctuation">(</span>count<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="LeapArray-currentWindow"><a href="#LeapArray-currentWindow" class="headerlink" title="LeapArray#currentWindow"></a>LeapArray#currentWindow</h4><p>获取当前时间窗格（<strong>注：这里以秒级时间窗格数组做理解</strong>）</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> WindowWrap<span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token function">currentWindow</span><span class="token punctuation">(</span><span class="token keyword">long</span> timeMillis<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>timeMillis <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -746,7 +749,8 @@
             <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">WindowWrap</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">(</span>windowLengthInMs<span class="token punctuation">,</span> windowStart<span class="token punctuation">,</span> <span class="token function">newEmptyBucket</span><span class="token punctuation">(</span>timeMillis<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="指标计数"><a href="#指标计数" class="headerlink" title="指标计数"></a>指标计数</h4><p>ArrayMetric中有很多方法比如addPass，addRT在其中都会调用add(MetricEvent.xxx, n);方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 很多类似方法</span>
 <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addPass</span><span class="token punctuation">(</span><span class="token keyword">int</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -759,7 +763,7 @@
     counters<span class="token punctuation">[</span>event<span class="token punctuation">.</span><span class="token function">ordinal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-
+    
 <span class="token comment" spellcheck="true">// 各种指标</span>
 <span class="token keyword">public</span> <span class="token keyword">enum</span> MetricEvent <span class="token punctuation">{</span>
 
@@ -779,7 +783,8 @@
      * Passed in future quota (pre-occupied, since 1.5.0).
      */</span>
     OCCUPIED_PASS
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="漏桶算法"><a href="#漏桶算法" class="headerlink" title="漏桶算法"></a>漏桶算法</h2><p>漏桶算法顾名思义就是一个桶，桶下面有个洞，水滴从洞里面往下滴。在这里面桶就是我们可容纳请求数。而水便是我们的请求，洞就是我们每次可通过的请求数。从这里我们也可以看出漏桶算法就是保证请求匀速通过。它被应用于Sentinel<code>排队等待流控效果</code></p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210813161602.png"></p>
 <h3 id="Demo-2"><a href="#Demo-2" class="headerlink" title="Demo"></a>Demo</h3><pre class=" language-java"><code class="language-java"> <span class="token comment" spellcheck="true">/**
@@ -817,7 +822,8 @@
             <span class="token comment" spellcheck="true">// 水满，拒绝加水</span>
             <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span></code></pre>
+    <span class="token punctuation">}</span>
+</code></pre>
 <h3 id="Sentinel源码-1"><a href="#Sentinel源码-1" class="headerlink" title="Sentinel源码"></a>Sentinel源码</h3><p>排队等待核心逻辑</p>
 <p>RateLimiterController#canPass</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">canPass</span><span class="token punctuation">(</span>Node node<span class="token punctuation">,</span> <span class="token keyword">int</span> acquireCount<span class="token punctuation">,</span> <span class="token keyword">boolean</span> prioritized<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -881,7 +887,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="令牌桶算法"><a href="#令牌桶算法" class="headerlink" title="令牌桶算法"></a>令牌桶算法</h2><p>令牌通算法在Sentginel的Warm up流控效果中使用，简称预热模式。大致意思是在一定时间内达到当前Qps。</p>
 <p>令牌桶算法简介：</p>
 <p>首先会以一个固定速率(可通过控制速率来控制请求速度)往token bucket里面放令牌，而当我们请求过来的时候会先从bucket里面去取令牌，取到了令牌就可以请求，取不到就拒绝请求。</p>
@@ -916,7 +923,8 @@
 
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="Sentinel源码-2"><a href="#Sentinel源码-2" class="headerlink" title="Sentinel源码"></a>Sentinel源码</h3><p>Sentinel 会动态控制令牌放入速率。使请求通过速度更加平滑</p>
 <p>WarmUpController#canPass</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">canPass</span><span class="token punctuation">(</span>Node node<span class="token punctuation">,</span> <span class="token keyword">int</span> acquireCount<span class="token punctuation">,</span> <span class="token keyword">boolean</span> prioritized<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -943,7 +951,8 @@
     <span class="token punctuation">}</span>
 
     <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">syncToken</span><span class="token punctuation">(</span><span class="token keyword">long</span> passQps<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">long</span> currentTime <span class="token operator">=</span> TimeUtil<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     currentTime <span class="token operator">=</span> currentTime <span class="token operator">-</span> currentTime <span class="token operator">%</span> <span class="token number">1000</span><span class="token punctuation">;</span>
@@ -978,7 +987,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> Math<span class="token punctuation">.</span><span class="token function">min</span><span class="token punctuation">(</span>newValue<span class="token punctuation">,</span> maxToken<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

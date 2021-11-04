@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -563,19 +563,24 @@
 <p>ACL的设置有2种方式：</p>
 <ol>
 <li><p>创建节点的时候直接设置</p>
-<pre class=" language-shell"><code class="language-shell">create /test-node datatest digest:test:V28q/NynI4JI3Rk54h0r8O5kMug=:cdrwa</code></pre>
+<pre class=" language-shell"><code class="language-shell">create /test-node datatest digest:test:V28q/NynI4JI3Rk54h0r8O5kMug=:cdrwa
+</code></pre>
 </li>
 <li><p>单独设置</p>
-<pre class=" language-shell"><code class="language-shell">setAcl /test-node digest:test:V28q/NynI4JI3Rk54h0r8O5kMug=:cdrwa</code></pre>
+<pre class=" language-shell"><code class="language-shell">setAcl /test-node digest:test:V28q/NynI4JI3Rk54h0r8O5kMug=:cdrwa
+</code></pre>
 <p>授权过后不能直接访问需要授权才能访问</p>
 <p>授权</p>
-<pre class=" language-shell"><code class="language-shell">addauth digest test:test</code></pre>
+<pre class=" language-shell"><code class="language-shell">addauth digest test:test
+</code></pre>
 <p>上诉授权是密文，如果想要明文授权我们需要先获取权限在进行授权</p>
 <pre class=" language-shell"><code class="language-shell">addauth digest test:test
-create /test-node1 test auth:test:test:cdwra</code></pre>
+create /test-node1 test auth:test:test:cdwra
+</code></pre>
 <p>最后还有一种授权方式是对ip进行授权</p>
 <pre class=" language-shell"><code class="language-shell">create /test-node2 data ip:192.168.186.131:cdwra
-setAcl /test-node2 ip:192.168.186.131:cdwra</code></pre>
+setAcl /test-node2 ip:192.168.186.131:cdwra
+</code></pre>
 </li>
 </ol>
 <p>超级管理员模式</p>
@@ -617,7 +622,8 @@ setAcl /test-node2 ip:192.168.186.131:cdwra</code></pre>
 <li><h4 id="选票pk成功的条件"><a href="#选票pk成功的条件" class="headerlink" title="选票pk成功的条件"></a>选票pk成功的条件</h4><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// FastLeaderElection.totalOrderPredicate</span>
 <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>newEpoch <span class="token operator">></span> curEpoch<span class="token punctuation">)</span> <span class="token operator">||</span>
                 <span class="token punctuation">(</span><span class="token punctuation">(</span>newEpoch <span class="token operator">==</span> curEpoch<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
-                <span class="token punctuation">(</span><span class="token punctuation">(</span>newZxid <span class="token operator">></span> curZxid<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>newZxid <span class="token operator">==</span> curZxid<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>newId <span class="token operator">></span> curId<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+                <span class="token punctuation">(</span><span class="token punctuation">(</span>newZxid <span class="token operator">></span> curZxid<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>newZxid <span class="token operator">==</span> curZxid<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>newId <span class="token operator">></span> curId<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>从代码可以看出</p>
 <p>选举成功3个条件符合其一</p>
 <ol>
@@ -632,7 +638,8 @@ voteSet<span class="token punctuation">.</span><span class="token function">hasA
 <span class="token comment" spellcheck="true">// QuorumMaj.containsQuorum</span>
 <span class="token punctuation">(</span>ackSet<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> half<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">// QuorumMaj</span>
-half <span class="token operator">=</span> votingMembers<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span></code></pre>
+half <span class="token operator">=</span> votingMembers<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+</code></pre>
 <p>从这段代码可以看出选举成功就是对某一节点的选票超过半数即为选举成功</p>
 <h4 id="选举触发条件"><a href="#选举触发条件" class="headerlink" title="选举触发条件"></a>选举触发条件</h4><ul>
 <li><p>节点初始化启动时</p>
@@ -757,7 +764,8 @@ half <span class="token operator">=</span> votingMembers<span class="token punct
 <span class="token keyword">public</span> Lock <span class="token function">createLockNode</span><span class="token punctuation">(</span>String lockId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     String nodePath <span class="token operator">=</span> zkClient<span class="token punctuation">.</span><span class="token function">createEphemeralSequential</span><span class="token punctuation">(</span>rootPath <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> lockId<span class="token punctuation">,</span> <span class="token string">"w"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Lock</span><span class="token punctuation">(</span>lockId<span class="token punctuation">,</span> nodePath<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>当然这里的代码还是会有一些问题的，比如重试机制的处理，幽灵节点的处理，这里只是更好的理解分布式锁，建议直接使用Curator客户端。</p>
 <h3 id="Curator分布式锁使用及源码"><a href="#Curator分布式锁使用及源码" class="headerlink" title="Curator分布式锁使用及源码"></a>Curator分布式锁使用及源码</h3><p>基本使用</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 配置类</span>
@@ -768,7 +776,8 @@ half <span class="token operator">=</span> votingMembers<span class="token punct
         RetryPolicy retryPolicy <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExponentialBackoffRetry</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> CuratorFrameworkFactory<span class="token punctuation">.</span><span class="token function">newClient</span><span class="token punctuation">(</span>ZookeeperConstants<span class="token punctuation">.</span>SERVER<span class="token punctuation">,</span> retryPolicy<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Service</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MutexLock</span> <span class="token punctuation">{</span>
 
@@ -791,7 +800,8 @@ half <span class="token operator">=</span> votingMembers<span class="token punct
         <span class="token punctuation">}</span>
         <span class="token keyword">return</span> <span class="token string">"ok"</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>原理和之前使用的zkClient原理基本一致</p>
 <ol>
 <li>请求进来，没有根节点，创建容器节点作为根节点，</li>
@@ -842,7 +852,8 @@ half <span class="token operator">=</span> votingMembers<span class="token punct
     <span class="token punctuation">}</span>
 
     <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>attemptLock方法：</p>
 <pre class=" language-java"><code class="language-java">String <span class="token function">attemptLock</span><span class="token punctuation">(</span><span class="token keyword">long</span> time<span class="token punctuation">,</span> TimeUnit unit<span class="token punctuation">,</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lockNodeBytes<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception
 <span class="token punctuation">{</span>
@@ -887,7 +898,8 @@ half <span class="token operator">=</span> votingMembers<span class="token punct
     <span class="token punctuation">}</span>
 
     <span class="token keyword">return</span> null<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>加锁逻辑createsTheLock方法：</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> String <span class="token function">createsTheLock</span><span class="token punctuation">(</span>CuratorFramework client<span class="token punctuation">,</span> String path<span class="token punctuation">,</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lockNodeBytes<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception
 <span class="token punctuation">{</span>
@@ -902,7 +914,8 @@ half <span class="token operator">=</span> votingMembers<span class="token punct
         ourPath <span class="token operator">=</span> client<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">creatingParentContainersIfNeeded</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withProtection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withMode</span><span class="token punctuation">(</span>CreateMode<span class="token punctuation">.</span>EPHEMERAL_SEQUENTIAL<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forPath</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> ourPath<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>internalLockLoop：</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">boolean</span> <span class="token function">internalLockLoop</span><span class="token punctuation">(</span><span class="token keyword">long</span> startMillis<span class="token punctuation">,</span> Long millisToWait<span class="token punctuation">,</span> String ourPath<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception
 <span class="token punctuation">{</span>
@@ -915,7 +928,7 @@ half <span class="token operator">=</span> votingMembers<span class="token punct
         <span class="token punctuation">{</span>
             client<span class="token punctuation">.</span><span class="token function">getData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">usingWatcher</span><span class="token punctuation">(</span>revocableWatcher<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forPath</span><span class="token punctuation">(</span>ourPath<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
-
+        
         <span class="token comment" spellcheck="true">// 自旋直至获得锁，或者到达超时时间</span>
         <span class="token keyword">while</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span>client<span class="token punctuation">.</span><span class="token function">getState</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> CuratorFrameworkState<span class="token punctuation">.</span>STARTED<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>haveTheLock <span class="token punctuation">)</span>
         <span class="token punctuation">{</span>
@@ -955,7 +968,7 @@ half <span class="token operator">=</span> votingMembers<span class="token punct
                                 doDelete <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">// timed out - delete our node</span>
                                 <span class="token keyword">break</span><span class="token punctuation">;</span>
                             <span class="token punctuation">}</span>
-
+                        
                             <span class="token function">wait</span><span class="token punctuation">(</span>millisToWait<span class="token punctuation">)</span><span class="token punctuation">;</span>
                         <span class="token punctuation">}</span>
                         <span class="token comment" spellcheck="true">// 一直等待</span>
@@ -986,7 +999,8 @@ half <span class="token operator">=</span> votingMembers<span class="token punct
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> haveTheLock<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>getsTheLock方法：</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 判断节点是否是最小</span>
 <span class="token keyword">public</span> PredicateResults <span class="token function">getsTheLock</span><span class="token punctuation">(</span>CuratorFramework client<span class="token punctuation">,</span> List<span class="token operator">&lt;</span>String<span class="token operator">></span> children<span class="token punctuation">,</span> String sequenceNodeName<span class="token punctuation">,</span> <span class="token keyword">int</span> maxLeases<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception
@@ -1001,7 +1015,8 @@ half <span class="token operator">=</span> votingMembers<span class="token punct
     String          pathToWatch <span class="token operator">=</span> getsTheLock <span class="token operator">?</span> null <span class="token operator">:</span> children<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>ourIndex <span class="token operator">-</span> maxLeases<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token comment" spellcheck="true">// 基本信息封装</span>
     <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">PredicateResults</span><span class="token punctuation">(</span>pathToWatch<span class="token punctuation">,</span> getsTheLock<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="分布式注册中心"><a href="#分布式注册中心" class="headerlink" title="分布式注册中心"></a>分布式注册中心</h3><p>在这里，首先得了解注册中心是什么？单体应用升级到分布式应用，肯定会有成千上万个服务节点不同的客户端会调用这些服务节点，如果把这些服务节点配置到客户端的话会很复杂，这时候就需要一个中间件来帮助我们找到我们需要调用的服务，这就是服务发现。</p>
 <p>一般注册中心需要一下几个功能，服务注册，服务发现，服务订阅</p>
 <ul>

@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -458,12 +458,12 @@
                                 <span class="chip bg-color">Linux</span>
                             </a>
                         
-                            <a href="/tags/KafKa/">
-                                <span class="chip bg-color">KafKa</span>
-                            </a>
-                        
                             <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
                                 <span class="chip bg-color">消息队列</span>
+                            </a>
+                        
+                            <a href="/tags/KafKa/">
+                                <span class="chip bg-color">KafKa</span>
                             </a>
                         
                     </div>
@@ -544,8 +544,10 @@ wget https://mirror.bit.edu.cn/apache/kafka/2.4.1/kafka_2.11-2.4.1.tgz
 tar -zxvf kafka_2.11-2.4.1.tgz -C  /
 ## 软链接
 ln -s /kafka_2.11-2.4.1/ /kafka
-cd&nbsp;/kafka</code></pre>
-<h3 id="配置修改"><a href="#配置修改" class="headerlink" title="配置修改"></a>配置修改</h3><pre class=" language-shell"><code class="language-shell">vim config/server.properties</code></pre>
+cd&nbsp;/kafka
+</code></pre>
+<h3 id="配置修改"><a href="#配置修改" class="headerlink" title="配置修改"></a>配置修改</h3><pre class=" language-shell"><code class="language-shell">vim config/server.properties
+</code></pre>
 <p>这里需要说几个关键配置</p>
 <table>
 <thead>
@@ -609,17 +611,22 @@ listeners=PLAINTEXT://192.168.186.131:9092
 #kafka的消息存储文件
 log.dir=/usr/local/data/kafka‐logs
 #kafka连接zookeeper的地址
-zookeeper.connect=localhost:2181</code></pre>
+zookeeper.connect=localhost:2181
+</code></pre>
 <h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><pre class=" language-shell"><code class="language-shell">## -daemon 表示后台启动
-bin/kafka-server-start.sh -daemon config/server.properties</code></pre>
+bin/kafka-server-start.sh -daemon config/server.properties
+</code></pre>
 <p>后台启动日志会打印在logs目录的server.log</p>
 <h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>主题创建一个名字为“test”的Topic，partition=1，备份因子=1</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test</code></pre>
+<pre class=" language-shell"><code class="language-shell">bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+</code></pre>
 <p>发送消息</p>
 <pre class=" language-shell"><code class="language-shell">bin/kafka-console-producer.sh --broker-list 192.168.186.131:9092 --topic test
-## 命令中输入要发送的消息的内容</code></pre>
+## 命令中输入要发送的消息的内容
+</code></pre>
 <p>消费Topic为test的消息</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-console-consumer.sh --bootstrap-server 192.168.186.131:9092 --topic test</code></pre>
+<pre class=" language-shell"><code class="language-shell">bin/kafka-console-consumer.sh --bootstrap-server 192.168.186.131:9092 --topic test
+</code></pre>
 <h2 id="KafKa集群搭建"><a href="#KafKa集群搭建" class="headerlink" title="KafKa集群搭建"></a>KafKa集群搭建</h2><p>与单机搭建基本一致，主要改一下配置文件</p>
 <p>我们有3个配置文件server.properties，server-1.properties，server-2.properties</p>
 <p>server-1.properties:</p>
@@ -629,7 +636,8 @@ broker.id=1
 listeners=PLAINTEXT://192.168.186.131:9093
 log.dir=/data/kafka/kafka‐logs‐1
 #kafka连接zookeeper的地址，要把多个kafka实例组成集群，对应连接的zookeeper必须相同
-zookeeper.connect=localhost:2181</code></pre>
+zookeeper.connect=localhost:2181
+</code></pre>
 <p>server-2.properties:</p>
 <pre class=" language-shell"><code class="language-shell">#broker.id属性在kafka集群中必须要是唯一
 broker.id=2
@@ -637,18 +645,24 @@ broker.id=2
 listeners=PLAINTEXT://192.168.186.131:9094
 log.dir=/data/kafka/kafka‐logs‐2
 #kafka连接zookeeper的地址，要把多个kafka实例组成集群，对应连接的zookeeper必须相同
-zookeeper.connect=localhost:2181</code></pre>
+zookeeper.connect=localhost:2181
+</code></pre>
 <p>启动</p>
 <pre class=" language-shell"><code class="language-shell">bin/kafka‐server‐start.sh&nbsp;‐daemon&nbsp;config/server‐1.properties
-bin/kafka‐server‐start.sh&nbsp;‐daemon&nbsp;config/server‐2.properties</code></pre>
+bin/kafka‐server‐start.sh&nbsp;‐daemon&nbsp;config/server‐2.properties
+</code></pre>
 <h2 id="Kafka客户端常用命令"><a href="#Kafka客户端常用命令" class="headerlink" title="Kafka客户端常用命令"></a>Kafka客户端常用命令</h2><p>创建一个新的topic，副本数设置为3，分区数设置为2</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 2 --topic my-repl-topic</code></pre>
+<pre class=" language-shell"><code class="language-shell">bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 2 --topic my-repl-topic
+</code></pre>
 <p>查看topic分区情况</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic my-repl-topic</code></pre>
+<pre class=" language-shell"><code class="language-shell">bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic my-repl-topic
+</code></pre>
 <p>发消息</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-console-producer.sh --broker-list 192.168.186.131:9092,192.168.186.131:9093,192.168.186.131:9094 --topic my-repl-topic</code></pre>
+<pre class=" language-shell"><code class="language-shell">bin/kafka-console-producer.sh --broker-list 192.168.186.131:9092,192.168.186.131:9093,192.168.186.131:9094 --topic my-repl-topic
+</code></pre>
 <p>消费消息</p>
-<pre class=" language-shell"><code class="language-shell">bin/kafka-console-consumer.sh --bootstrap-server 192.168.186.131:9092,192.168.186.131:9093,192.168.186.131:9094 --from-beginning --topic my-repl-topic</code></pre>
+<pre class=" language-shell"><code class="language-shell">bin/kafka-console-consumer.sh --bootstrap-server 192.168.186.131:9092,192.168.186.131:9093,192.168.186.131:9094 --from-beginning --topic my-repl-topic
+</code></pre>
 <h2 id="Kafka控制台搭建"><a href="#Kafka控制台搭建" class="headerlink" title="Kafka控制台搭建"></a>Kafka控制台搭建</h2><p>Kafka官方是没有开发自己的控制台。yahoo构建了一个Kafka控制台管理后台（CMAK）。这个管理工具可以查看Kafka集群的当前运行状态包括broker的状态</p>
 <p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/yahoo/kafka-manager">https://github.com/yahoo/kafka-manager</a></p>
 <p>如果觉得编译过程太复杂，可以这里直接下载然后直接走安装后面的步骤</p>
@@ -659,39 +673,48 @@ bin/kafka‐server‐start.sh&nbsp;‐daemon&nbsp;config/server‐2.properties</
 <h3 id="下载管理工具CMAK"><a href="#下载管理工具CMAK" class="headerlink" title="下载管理工具CMAK"></a>下载管理工具CMAK</h3><pre class=" language-shell"><code class="language-shell">## 下载
 wget https://github.com/yahoo/kafka-manager/archive/3.0.0.5.zip
 ## 解压
-unzip CMAK-3.0.0.5.zip -d /</code></pre>
+unzip CMAK-3.0.0.5.zip -d /
+</code></pre>
 <h3 id="sbt编译"><a href="#sbt编译" class="headerlink" title="sbt编译"></a>sbt编译</h3><p>yum安装sbt：</p>
 <p>这个后台管理工具和Kafka一样是scala语言编写需要编译</p>
 <pre class=" language-shell"><code class="language-shell">curl https://bintray.com/sbt/rpm/rpm > bintray-sbt-rpm.repo
 mv bintray-sbt-rpm.repo /etc/yum.repos.d/
-yum install sbt</code></pre>
+yum install sbt
+</code></pre>
 <p>修改仓库地址：（sbt 默认下载库文件很慢）填上阿里云的镜像 </p>
-<pre class=" language-shell"><code class="language-shell"> vim ~/.sbt/repositories</code></pre>
+<pre class=" language-shell"><code class="language-shell"> vim ~/.sbt/repositories
+</code></pre>
 <p>文件内容：</p>
 <pre class=" language-shell"><code class="language-shell">[repositories]
   local
   aliyun-nexus: https://maven.aliyun.com/nexus/content/groups/public/
   jcenter: https://jcenter.bintray.com/
   typesafe-ivy-releases: https://repo.typesafe.com/typesafe/ivy-releases/, [organization]/[module]/[revision]/[type]s/[artifact](-[classifier]).[ext], bootOnly
-  maven-central</code></pre>
+  maven-central
+</code></pre>
 <p>验证sbt安装成功</p>
-<pre class=" language-shell"><code class="language-shell">sbt -version</code></pre>
+<pre class=" language-shell"><code class="language-shell">sbt -version
+</code></pre>
 <h3 id="编译CMAK（前身叫Kafka-manager）"><a href="#编译CMAK（前身叫Kafka-manager）" class="headerlink" title="编译CMAK（前身叫Kafka-manager）"></a>编译CMAK（前身叫Kafka-manager）</h3><pre class=" language-shell"><code class="language-shell">## 来到刚刚解压目录下执行
 ./sbt clean dist
 ## 编译如果还是不行报Download failed. Obtain the jar manually and place it at /root/.sbt/launchers/0.13.9/sbt-launch.jar
-## 可以修改解压目录下sbt编译文件下的http://repo.typesafe.com为https://repo.typesafe.com</code></pre>
+## 可以修改解压目录下sbt编译文件下的http://repo.typesafe.com为https://repo.typesafe.com
+</code></pre>
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre class=" language-shell"><code class="language-shell">## 重新解压编译后的代码
 unzip cmak-3.0.0.5.zip -d /
 ln -s /cmak-3.0.0.5/ /cmak
 cd /cmak
 ## 修改配置文件
-vim conf/application.conf</code></pre>
+vim conf/application.conf
+</code></pre>
 <p>修改kafka-manager.zkhosts列表为自己的zk节点</p>
 <pre class=" language-shell"><code class="language-shell">cmak.zkhosts="192.168.186.131:2181"  （3.0.0.5 - jdk11）
-cmak.zkhosts="192.168.186.131:2181" （1.3.3.7 - jdk8）</code></pre>
+cmak.zkhosts="192.168.186.131:2181" （1.3.3.7 - jdk8）
+</code></pre>
 <h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>后台启动，日志存储nohup.out，默认端口9000，-Dhttp.port=9999可修改端口</p>
 <pre class=" language-shell"><code class="language-shell">nohup bin/cmak -Dconfig.file=conf/application.conf &   （3.0.0.5 - jdk11）
-nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk8）</code></pre>
+nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk8）
+</code></pre>
 <p>打开：ip:9000</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210124030220.png"></p>
 <p>添加一个集群</p>
@@ -793,12 +816,12 @@ nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk
                                     <span class="chip bg-color">Linux</span>
                                 </a>
                             
-                                <a href="/tags/KafKa/">
-                                    <span class="chip bg-color">KafKa</span>
-                                </a>
-                            
                                 <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
                                     <span class="chip bg-color">消息队列</span>
+                                </a>
+                            
+                                <a href="/tags/KafKa/">
+                                    <span class="chip bg-color">KafKa</span>
                                 </a>
                             
                         </div>
@@ -1036,12 +1059,12 @@ nohup bin/kafka-manager -Dconfig.file=conf/application.conf &   （1.3.3.7 - jdk
                         <span class="chip bg-color">Java</span>
                     </a>
                     
-                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                        <span class="chip bg-color">消息队列</span>
-                    </a>
-                    
                     <a href="/tags/Kafka/">
                         <span class="chip bg-color">Kafka</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                        <span class="chip bg-color">消息队列</span>
                     </a>
                     
                 </div>
@@ -1093,12 +1116,12 @@ Br
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                        <span class="chip bg-color">消息队列</span>
-                    </a>
-                    
                     <a href="/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">
                         <span class="chip bg-color">生产实践</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                        <span class="chip bg-color">消息队列</span>
                     </a>
                     
                     <a href="/tags/RocketMQ/">

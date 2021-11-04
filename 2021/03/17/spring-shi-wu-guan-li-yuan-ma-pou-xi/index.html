@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -637,7 +637,8 @@
         <span class="token keyword">default</span><span class="token operator">:</span>
             <span class="token keyword">return</span> null<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>selectImports返回的是一个String[]表示我们要注册的Bean。所以这段代码表示我们的容器需要注册AutoProxyRegistrar，ProxyTransactionManagementConfiguration这2个组件</p>
 <p>注意：这里有个switch…case,ASPECTJ分支不要care，这里基本不会走，这里表示的我们不使用动态代理而是使用AspectJ,AspectJ需要新的编译器，基本不会有人把mode设为ASPECTJ</p>
 <h3 id="AutoProxyRegistrar类"><a href="#AutoProxyRegistrar类" class="headerlink" title="AutoProxyRegistrar类"></a>AutoProxyRegistrar类</h3><p>发现里面的registerBeanDefinitions方法，似乎找到了注册BeanDefinition的方法</p>
@@ -665,7 +666,8 @@
          <span class="token punctuation">}</span>
       <span class="token punctuation">}</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>这个方法其实主要就是调用了registerAutoProxyCreatorIfNecessary，从这继续往里面跟发现registerOrEscalateApcAsRequired方法</p>
 <p>这个方法有点熟悉，因为AOP中也是调用的这个方法进行的注册，跟进去看看。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">static</span> BeanDefinition <span class="token function">registerOrEscalateApcAsRequired</span><span class="token punctuation">(</span>
@@ -702,7 +704,8 @@
     <span class="token comment" spellcheck="true">// 注册Bean定义name是org.springframework.aop.config.internalAutoProxyCreator</span>
     registry<span class="token punctuation">.</span><span class="token function">registerBeanDefinition</span><span class="token punctuation">(</span>AUTO_PROXY_CREATOR_BEAN_NAME<span class="token punctuation">,</span> beanDefinition<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> beanDefinition<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>这里的代码解释了AOP注解事务注解同时注册到底听谁的，是同时注册还是某一个成功</p>
 <p>同时注册不可能，2个bean的beanName是一样的，所以不可能同时注册，必定hi覆盖，谁覆盖谁呢</p>
 <p>AOP优先级大于事务，2者都注册就注册AOP</p>
@@ -750,7 +753,8 @@
         <span class="token keyword">return</span> interceptor<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>走到这里我们大致就清楚应该怎么看事务的源码了，首先我们应该还是要和看AOP的方式去看事务源码，首先会解析切面（实例化之前的后置处理器执行）-&gt;创建代理（初始化之后的后置处理器执行，循环依赖创建早期对象）-&gt;调用（代理调用）</p>
 <p>这里我们看InfrastructureAdvisorAutoProxyCreator还是AnnotationAwareAspectJAutoProxyCreator都可以</p>
 <p>和AOP一样我们看AnnotationAwareAspectJAutoProxyCreator方法，AOP看过的都不在看了</p>
@@ -808,7 +812,8 @@
       <span class="token punctuation">}</span>
    <span class="token punctuation">}</span>
    <span class="token keyword">return</span> advisors<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="创建代理"><a href="#创建代理" class="headerlink" title="创建代理"></a>创建代理</h3><p>大部分跟AOP差不多主要差别就在匹配那部分代码，我们直接来到匹配的代码</p>
 <p>我们直接进到postProcessAfterInitialization-&gt;wrapIfNecessary-&gt;getAdvicesAndAdvisorsForBean-&gt;findEligibleAdvisors-&gt;findAdvisorsThatCanApply-&gt; AopUtils.findAdvisorsThatCanApply-&gt;canApply</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">boolean</span> <span class="token function">canApply</span><span class="token punctuation">(</span>Advisor advisor<span class="token punctuation">,</span> Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> targetClass<span class="token punctuation">,</span> <span class="token keyword">boolean</span> hasIntroductions<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -826,7 +831,8 @@
       <span class="token comment" spellcheck="true">// It doesn't have a pointcut so we assume it applies.</span>
       <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="canApply-pca-getPointcut-targetClass-hasIntroductions"><a href="#canApply-pca-getPointcut-targetClass-hasIntroductions" class="headerlink" title="canApply(pca.getPointcut(), targetClass, hasIntroductions)"></a>canApply(pca.getPointcut(), targetClass, hasIntroductions)</h4><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 这里的pointcut已经跟AOP不一样了，是BeanFactoryTransactionAttributeSourceAdvisor中的pointCut是TransactionAttributeSourcePointcut</span>
 <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">boolean</span> <span class="token function">canApply</span><span class="token punctuation">(</span>Pointcut pc<span class="token punctuation">,</span> Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> targetClass<span class="token punctuation">,</span> <span class="token keyword">boolean</span> hasIntroductions<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    Assert<span class="token punctuation">.</span><span class="token function">notNull</span><span class="token punctuation">(</span>pc<span class="token punctuation">,</span> <span class="token string">"Pointcut must not be null"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -837,7 +843,7 @@
    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>pc<span class="token punctuation">.</span><span class="token function">getClassFilter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">matches</span><span class="token punctuation">(</span>targetClass<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
    <span class="token punctuation">}</span>
-
+ 
    <span class="token comment" spellcheck="true">//如果pc.getMethodMatcher()返回TrueMethodMatcher则匹配所有方法</span>
    MethodMatcher methodMatcher <span class="token operator">=</span> pc<span class="token punctuation">.</span><span class="token function">getMethodMatcher</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token keyword">if</span> <span class="token punctuation">(</span>methodMatcher <span class="token operator">==</span> MethodMatcher<span class="token punctuation">.</span>TRUE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -880,7 +886,8 @@
    <span class="token punctuation">}</span>
 
    <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="TransactionAttributeSourcePointcut-matches"><a href="#TransactionAttributeSourcePointcut-matches" class="headerlink" title="TransactionAttributeSourcePointcut.matches"></a>TransactionAttributeSourcePointcut.matches</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">matches</span><span class="token punctuation">(</span>Method method<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> targetClass<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    <span class="token keyword">if</span> <span class="token punctuation">(</span>targetClass <span class="token operator">!=</span> null <span class="token operator">&amp;&amp;</span> TransactionalProxy<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">isAssignableFrom</span><span class="token punctuation">(</span>targetClass<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -890,7 +897,8 @@
    TransactionAttributeSource tas <span class="token operator">=</span> <span class="token function">getTransactionAttributeSource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token comment" spellcheck="true">// 通过getTransactionAttribute看是否有@Transactional注解</span>
    <span class="token keyword">return</span> <span class="token punctuation">(</span>tas <span class="token operator">==</span> null <span class="token operator">||</span> tas<span class="token punctuation">.</span><span class="token function">getTransactionAttribute</span><span class="token punctuation">(</span>method<span class="token punctuation">,</span> targetClass<span class="token punctuation">)</span> <span class="token operator">!=</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>AnnotationTransactionAttributeSource.getTransactionAttribute方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
     <span class="token annotation punctuation">@Nullable</span>
@@ -938,7 +946,8 @@
             <span class="token punctuation">}</span>
             <span class="token keyword">return</span> txAttr<span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span></code></pre>
+    <span class="token punctuation">}</span>
+</code></pre>
 <h4 id="computeTransactionAttribute方法"><a href="#computeTransactionAttribute方法" class="headerlink" title="computeTransactionAttribute方法"></a><strong>computeTransactionAttribute方法</strong></h4><pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> TransactionAttribute <span class="token function">computeTransactionAttribute</span><span class="token punctuation">(</span>Method method<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> targetClass<span class="token punctuation">)</span> <span class="token punctuation">{</span>
    <span class="token comment" spellcheck="true">//判断我们的事务方法上的修饰符是不是public的</span>
    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">allowPublicMethodsOnly</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>Modifier<span class="token punctuation">.</span><span class="token function">isPublic</span><span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">getModifiers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -975,7 +984,8 @@
    <span class="token punctuation">}</span>
 
    <span class="token keyword">return</span> null<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>从上面逻辑看大致是实现类方法-&gt;实现类-&gt;接口方法-&gt;接口类，其实不是这样的findTransactionAttribute这个方法里面会把接口类，接口方法也给查了，所以大致匹配逻辑是实现类方法-&gt;接口方法-&gt;实现类-&gt;接口类</p>
 <h3 id="代理调用"><a href="#代理调用" class="headerlink" title="代理调用"></a>代理调用</h3><p>这里我们依然是看Jdk动态代理</p>
 <p>来到JdkDynamicAopProxy.invoke-&gt;invocation.proceed-&gt;ReflectiveMethodInvocation.proceed-&gt;TransactionInterceptor.invoke(TransactionInterceptor是事务注解注入的配置类中的Advisor中的增强)-&gt;invokeWithinTransaction</p>
@@ -1069,7 +1079,8 @@
             <span class="token keyword">throw</span> ex2<span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="createTransactionIfNecessary方法（创建事务就在这）"><a href="#createTransactionIfNecessary方法（创建事务就在这）" class="headerlink" title="createTransactionIfNecessary方法（创建事务就在这）"></a>createTransactionIfNecessary方法（创建事务就在这）</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> TransactionInfo <span class="token function">createTransactionIfNecessary</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> PlatformTransactionManager tm<span class="token punctuation">,</span>
       <span class="token annotation punctuation">@Nullable</span> TransactionAttribute txAttr<span class="token punctuation">,</span> <span class="token keyword">final</span> String joinpointIdentification<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
@@ -1098,7 +1109,8 @@
    <span class="token punctuation">}</span>
    <span class="token comment" spellcheck="true">//把事务状态和事务属性等信息封装成一个TransactionInfo对象</span>
    <span class="token keyword">return</span> <span class="token function">prepareTransactionInfo</span><span class="token punctuation">(</span>tm<span class="token punctuation">,</span> txAttr<span class="token punctuation">,</span> joinpointIdentification<span class="token punctuation">,</span> status<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="DataSourceTransactionManager-getTransaction（事务传播行为就在这处理的）"><a href="#DataSourceTransactionManager-getTransaction（事务传播行为就在这处理的）" class="headerlink" title="DataSourceTransactionManager.getTransaction（事务传播行为就在这处理的）"></a>DataSourceTransactionManager.getTransaction（事务传播行为就在这处理的）</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">public</span> <span class="token keyword">final</span> TransactionStatus <span class="token function">getTransaction</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> TransactionDefinition definition<span class="token punctuation">)</span> <span class="token keyword">throws</span> TransactionException <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">//尝试获取一个事务对象</span>
@@ -1176,7 +1188,8 @@
         <span class="token keyword">boolean</span> newSynchronization <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">getTransactionSynchronization</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> SYNCHRONIZATION_ALWAYS<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> <span class="token function">prepareTransactionStatus</span><span class="token punctuation">(</span>definition<span class="token punctuation">,</span> null<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">,</span> newSynchronization<span class="token punctuation">,</span> debugEnabled<span class="token punctuation">,</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="handleExistingTransaction方法-处理嵌套事务"><a href="#handleExistingTransaction方法-处理嵌套事务" class="headerlink" title="handleExistingTransaction方法(处理嵌套事务)"></a>handleExistingTransaction方法(处理嵌套事务)</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> TransactionStatus <span class="token function">handleExistingTransaction</span><span class="token punctuation">(</span>
             TransactionDefinition definition<span class="token punctuation">,</span> Object transaction<span class="token punctuation">,</span> <span class="token keyword">boolean</span> debugEnabled<span class="token punctuation">)</span>
             <span class="token keyword">throws</span> TransactionException <span class="token punctuation">{</span>
@@ -1262,7 +1275,8 @@
         <span class="token comment" spellcheck="true">// 省略代码</span>
         <span class="token keyword">boolean</span> newSynchronization <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">getTransactionSynchronization</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> SYNCHRONIZATION_NEVER<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> <span class="token function">prepareTransactionStatus</span><span class="token punctuation">(</span>definition<span class="token punctuation">,</span> transaction<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">,</span> newSynchronization<span class="token punctuation">,</span> debugEnabled<span class="token punctuation">,</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span></code></pre>
+    <span class="token punctuation">}</span>
+</code></pre>
 <p>不管是在处理顶层事务还是嵌套事务，只要是开启事务就会调用doBegin方法，挂起事务就会执行suspend方法</p>
 <h4 id="doBegin方法"><a href="#doBegin方法" class="headerlink" title="doBegin方法"></a>doBegin方法</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
 <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">doBegin</span><span class="token punctuation">(</span>Object transaction<span class="token punctuation">,</span> TransactionDefinition definition<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1326,7 +1340,8 @@
         <span class="token punctuation">}</span>
         <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">CannotCreateTransactionException</span><span class="token punctuation">(</span><span class="token string">"Could not open JDBC Connection for transaction"</span><span class="token punctuation">,</span> ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="suspend方法"><a href="#suspend方法" class="headerlink" title="suspend方法"></a>suspend方法</h4><p>这里执行的是挂起事务，主要操作是将原有事务对象放到暂存资源持有器SuspendedResourcesHolder，原有事务对象值全部置为默认值，重新开启事务会放入新的事务对象，在当前事务commit或rollback的时候在吧这个事务对象重新放回事务同步管理器TransactionSynchronizationManager</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">final</span> SuspendedResourcesHolder <span class="token function">suspend</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> Object transaction<span class="token punctuation">)</span> <span class="token keyword">throws</span> TransactionException <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 嵌套事务 已经激活，在doBegin后激活</span>
@@ -1373,7 +1388,8 @@
         <span class="token comment" spellcheck="true">// Neither transaction nor synchronization active.</span>
         <span class="token keyword">return</span> null<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

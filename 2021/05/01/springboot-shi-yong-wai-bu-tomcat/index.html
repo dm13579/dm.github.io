@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -543,7 +543,8 @@
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-undertow<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210422164755.png"></p>
 <h2 id="使用jetty内置容器"><a href="#使用jetty内置容器" class="headerlink" title="使用jetty内置容器"></a>使用jetty内置容器</h2><h3 id="pom-1"><a href="#pom-1" class="headerlink" title="pom"></a>pom</h3><p>排除tomcat依赖，增加jetty依赖</p>
 <pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!--排除tomcat依赖--></span>
@@ -561,7 +562,8 @@
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-jetty<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210422165034.png"></p>
 <h2 id="如何使用外部容器"><a href="#如何使用外部容器" class="headerlink" title="如何使用外部容器"></a>如何使用外部容器</h2><ol>
 <li>更改打包方式，排除tomcat pom依赖，这时候也不要加一些UnderTow或Jetty的包</li>
@@ -581,14 +583,16 @@
             <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-tomcat<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusions</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+</code></pre>
 <h3 id="编写Tomcat启动类"><a href="#编写Tomcat启动类" class="headerlink" title="编写Tomcat启动类"></a>编写Tomcat启动类</h3><p>实现SpringBootServletInitializer重写configure方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TomcatStartSpringBoot</span> <span class="token keyword">extends</span> <span class="token class-name">SpringBootServletInitializer</span> <span class="token punctuation">{</span>
     <span class="token annotation punctuation">@Override</span>
     <span class="token keyword">protected</span> SpringApplicationBuilder <span class="token function">configure</span><span class="token punctuation">(</span>SpringApplicationBuilder builder<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> builder<span class="token punctuation">.</span><span class="token function">sources</span><span class="token punctuation">(</span>MyApplication<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="装载到tomcat容器"><a href="#装载到tomcat容器" class="headerlink" title="装载到tomcat容器"></a>装载到tomcat容器</h3><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210423110808.png"></p>
 <h2 id="使用外部容器原理"><a href="#使用外部容器原理" class="headerlink" title="使用外部容器原理"></a>使用外部容器原理</h2><ol>
 <li>Tomcat是使用SPI机制找到SpringServletContainerInitializer</li>
@@ -632,7 +636,8 @@
                           <span class="token operator">+</span> <span class="token string">"createRootApplicationContext() did not "</span>
                           <span class="token operator">+</span> <span class="token string">"return an application context"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>onStart方法中只有createRootApplicationContext比较重要</p>
 <h3 id="SpringBootServletInitializer-createRootApplicationContext"><a href="#SpringBootServletInitializer-createRootApplicationContext" class="headerlink" title="SpringBootServletInitializer#createRootApplicationContext"></a>SpringBootServletInitializer#createRootApplicationContext</h3><ol>
 <li>构建SpringApplicationBuilder对象，创建SpringApplication对象</li>
@@ -672,7 +677,8 @@
    <span class="token punctuation">}</span>
    <span class="token comment" spellcheck="true">// 运行SpringApplication run方法等价于SpringBoot启动类的SpringApplication.run(MyApplication.class);</span>
    <span class="token keyword">return</span> <span class="token function">run</span><span class="token punctuation">(</span>application<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>外部容器启动无非就是通过SPI和HandlesType找到我们自定义的启动类，通过重写SpringBootServletInitializer#config方法把SpringBoot启动类传到SpringApplication中，通过SpringApplication#run创建容器。</p>
 <script>
         document.querySelectorAll('.github-emoji')

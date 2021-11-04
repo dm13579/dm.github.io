@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -547,7 +547,8 @@
             <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.slf4j<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusions</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+</code></pre>
 <h3 id="服务提供者"><a href="#服务提供者" class="headerlink" title="服务提供者"></a>服务提供者</h3><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Service</span><span class="token punctuation">(</span>group <span class="token operator">=</span> <span class="token string">"default"</span><span class="token punctuation">,</span> version <span class="token operator">=</span> <span class="token string">"1.0"</span><span class="token punctuation">)</span>
 <span class="token annotation punctuation">@Slf4j</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DemoServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">DemoService</span> <span class="token punctuation">{</span>
@@ -558,7 +559,8 @@
         log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> msg<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="服务消费者"><a href="#服务消费者" class="headerlink" title="服务消费者"></a>服务消费者</h3><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@RestController</span>
 <span class="token annotation punctuation">@Slf4j</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DemoServiceController</span> <span class="token punctuation">{</span>
@@ -570,7 +572,8 @@
     <span class="token keyword">public</span> String <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> demoService<span class="token punctuation">.</span><span class="token function">called</span><span class="token punctuation">(</span><span class="token string">"默认服务"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><p>任何框架与SpringBoot集成都是通过starter包和autoconfigure进行集成，我们首先看到jar包依赖这边我们依赖了dubbo-spring-boot-starter。</p>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/image-20210506113525348.png"></p>
 <p>我们看到这2个autoconfigure下的spring.factories</p>
@@ -610,7 +613,8 @@
         <span class="token comment" spellcheck="true">// DubboConfigDefaultPropertyValueBeanPostProcessor</span>
         <span class="token function">registerCommonBeans</span><span class="token punctuation">(</span>registry<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>需要注意的是这里注册了<code>ReferenceAnnotationBeanPostProcessor</code>，这个Bean后置处理器和解析@Reference相关</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">registerBeans</span><span class="token punctuation">(</span>BeanDefinitionRegistry registry<span class="token punctuation">,</span> Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> annotatedClasses<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
@@ -627,7 +631,8 @@
     <span class="token comment" spellcheck="true">// 通过AnnotatedBeanDefinitionReader批量注册classesToRegister</span>
     AnnotatedBeanDefinitionReader reader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AnnotatedBeanDefinitionReader</span><span class="token punctuation">(</span>registry<span class="token punctuation">)</span><span class="token punctuation">;</span>
     reader<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>classesToRegister<span class="token punctuation">.</span><span class="token function">toArray</span><span class="token punctuation">(</span>EMPTY_CLASS_ARRAY<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="DubboConfigConfiguration"><a href="#DubboConfigConfiguration" class="headerlink" title="DubboConfigConfiguration"></a>DubboConfigConfiguration</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DubboConfigConfiguration</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 通过前缀（prefix）去spring的environment中匹配，并通过后置处理器将值绑定到类（type）中，生成beanDefinition</span>
     <span class="token annotation punctuation">@EnableConfigurationBeanBindings</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
@@ -645,7 +650,7 @@
     <span class="token punctuation">}</span><span class="token punctuation">)</span>
     <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Single</span> <span class="token punctuation">{</span>
        <span class="token punctuation">}</span>
-
+    
     <span class="token annotation punctuation">@EnableConfigurationBeanBindings</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
             <span class="token annotation punctuation">@EnableConfigurationBeanBinding</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"dubbo.applications"</span><span class="token punctuation">,</span> type <span class="token operator">=</span> ApplicationConfig<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> multiple <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
             <span class="token annotation punctuation">@EnableConfigurationBeanBinding</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"dubbo.modules"</span><span class="token punctuation">,</span> type <span class="token operator">=</span> ModuleConfig<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> multiple <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
@@ -660,7 +665,8 @@
     <span class="token punctuation">}</span><span class="token punctuation">)</span>
     <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Multiple</span> <span class="token punctuation">{</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>观察这个类中包含了Multiple和Single2个子类，而这2个子类上都有@EnableConfigurationBeanBindings注解。</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token punctuation">{</span>ElementType<span class="token punctuation">.</span>TYPE<span class="token punctuation">}</span><span class="token punctuation">)</span>
 <span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span>RetentionPolicy<span class="token punctuation">.</span>RUNTIME<span class="token punctuation">)</span>
@@ -668,7 +674,8 @@
 <span class="token annotation punctuation">@Import</span><span class="token punctuation">(</span>ConfigurationBeanBindingsRegister<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> @<span class="token keyword">interface</span> <span class="token class-name">EnableConfigurationBeanBindings</span> <span class="token punctuation">{</span>
     EnableConfigurationBeanBinding<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>注解上同样import了一个类ConfigurationBeanBindingsRegister，发现这个类实现了ImportBeanDefinitionRegistrar, EnvironmentAware2个类，知道spring的都知道ImportBeanDefinitionRegistrar表明了可以注册beanDefinition,EnvironmentAware表明可以设置环境。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ConfigurationBeanBindingsRegister</span> <span class="token keyword">implements</span> <span class="token class-name">ImportBeanDefinitionRegistrar</span><span class="token punctuation">,</span> EnvironmentAware <span class="token punctuation">{</span>
 
@@ -696,7 +703,8 @@
         Assert<span class="token punctuation">.</span><span class="token function">isInstanceOf</span><span class="token punctuation">(</span>ConfigurableEnvironment<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> environment<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">this</span><span class="token punctuation">.</span>environment <span class="token operator">=</span> <span class="token punctuation">(</span>ConfigurableEnvironment<span class="token punctuation">)</span> environment<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="ConfigurationBeanBindingRegistrar-registerConfigurationBeanDefinitions"><a href="#ConfigurationBeanBindingRegistrar-registerConfigurationBeanDefinitions" class="headerlink" title="ConfigurationBeanBindingRegistrar#registerConfigurationBeanDefinitions"></a>ConfigurationBeanBindingRegistrar#registerConfigurationBeanDefinitions</h3><ol>
 <li>DubboConfigConfiguration下的@EnableDubboConfigBinding注解</li>
 <li>通过@EnableDubboConfigBinding注解中的前缀匹配到配置文件中的配置项</li>
@@ -721,13 +729,13 @@
                                         BeanDefinitionRegistry registry<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 从配置文件中根据前缀拿对应的配置项</span>
     Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Object<span class="token operator">></span> configurationProperties <span class="token operator">=</span> PropertySourcesUtils<span class="token punctuation">.</span><span class="token function">getSubProperties</span><span class="token punctuation">(</span>environment<span class="token punctuation">.</span><span class="token function">getPropertySources</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> environment<span class="token punctuation">,</span> prefix<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+    
     <span class="token comment" spellcheck="true">// multiple控制是否会存在有多个bean，比如</span>
     <span class="token comment" spellcheck="true">/*dubbo.protocols.p1.id=dubbo1
     dubbo.protocols.p1.name=dubbo
     dubbo.protocols.p1.port=20881
     dubbo.protocols.p1.host=0.0.0.0
-
+        
     dubbo.protocols.p2.id=dubbo1
     dubbo.protocols.p2.name=dubbo
     dubbo.protocols.p2.port=20881
@@ -745,7 +753,8 @@
 
     <span class="token comment" spellcheck="true">// 注册一个ConfigurationBeanBindingPostProcessor的Bean后置处理器</span>
     <span class="token function">registerConfigurationBindingBeanPostProcessor</span><span class="token punctuation">(</span>registry<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="ConfigurationBeanBindingPostProcessor"><a href="#ConfigurationBeanBindingPostProcessor" class="headerlink" title="ConfigurationBeanBindingPostProcessor"></a>ConfigurationBeanBindingPostProcessor</h3><p>主要解决的是之前只是注册了beanDefinition，属性值并没有设到bean中，我们需要在bean实例化之前进行属性赋值，所以需要在bean的后置处理器中进行处理。</p>
 <p>我们发现ConfigurationBeanBindingPostProcessor实现了BeanPostProcessor，并且实现了postProcessBeforeInitialization接口，从这里可以看出实例化之前调用postProcessBeforeInitialization接口进行属性赋值。</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
@@ -760,7 +769,8 @@
     <span class="token punctuation">}</span>
 
     <span class="token keyword">return</span> bean<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="ServiceClassPostProcessor"><a href="#ServiceClassPostProcessor" class="headerlink" title="ServiceClassPostProcessor"></a>ServiceClassPostProcessor</h2><p>这个类主要干的事就是扫描包，注册beanDefinition，由于它实现了BeanDefinitionRegistryPostProcessor，是一个bean工厂的后置处理器（可以注册bean定义）</p>
 <p><strong>有个注意点，Dubbo扫描包注册成的beanDefinition不是一个是2个，一个是Spring的BeanDefinition还有一个是Dubbo的ServiceBean，为什么还需要一个Dubbo的ServiceBean，因为Dubbo如果仅仅只使用Spring的BeanDefinition会缺少很多@Service的注解信息，Dubbo会利用@Service上的信息进行填充产生一个新的bean-ServiceBean。而且用自己的bean可以做很多的处理</strong></p>
 <p>所以在扫描到⼀个@Service注解后，其实会得到两个Bean:</p>
@@ -786,7 +796,8 @@
             logger<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"packagesToScan is empty , ServiceBean registry will be ignored!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="ServiceAnnotationBeanPostProcessor-registerServiceBeans"><a href="#ServiceAnnotationBeanPostProcessor-registerServiceBeans" class="headerlink" title="ServiceAnnotationBeanPostProcessor#registerServiceBeans"></a>ServiceAnnotationBeanPostProcessor#registerServiceBeans</h3><ol>
 <li>扫描被标注了@DubboService和@Service注解的类</li>
 <li>注册bean</li>
@@ -828,7 +839,8 @@
             <span class="token punctuation">}</span>
         <span class="token punctuation">}</span> 
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="ServiceAnnotationBeanPostProcessor-registerServiceBean"><a href="#ServiceAnnotationBeanPostProcessor-registerServiceBean" class="headerlink" title="ServiceAnnotationBeanPostProcessor#registerServiceBean"></a>ServiceAnnotationBeanPostProcessor#registerServiceBean</h3><p>注册Bean</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">registerServiceBean</span><span class="token punctuation">(</span>BeanDefinitionHolder beanDefinitionHolder<span class="token punctuation">,</span> BeanDefinitionRegistry registry<span class="token punctuation">,</span>
                                  DubboClassPathBeanDefinitionScanner scanner<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -854,7 +866,8 @@
         <span class="token comment" spellcheck="true">// ServiceBean注册为beanDefinition</span>
         registry<span class="token punctuation">.</span><span class="token function">registerBeanDefinition</span><span class="token punctuation">(</span>beanName<span class="token punctuation">,</span> serviceBeanDefinition<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="buildServiceBeanDefinition"><a href="#buildServiceBeanDefinition" class="headerlink" title="buildServiceBeanDefinition"></a>buildServiceBeanDefinition</h4><p>生成一个ServiceBean对应的BeanDefinition</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> AbstractBeanDefinition <span class="token function">buildServiceBeanDefinition</span><span class="token punctuation">(</span>Annotation serviceAnnotation<span class="token punctuation">,</span>
                                                           AnnotationAttributes serviceAnnotationAttributes<span class="token punctuation">,</span>
@@ -886,11 +899,12 @@
         builder<span class="token punctuation">.</span><span class="token function">addPropertyValue</span><span class="token punctuation">(</span><span class="token string">"methods"</span><span class="token punctuation">,</span> methodConfigs<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token comment" spellcheck="true">// 下面也是一些参数的赋值，就删掉了。。。。。。</span>
-
+    
     <span class="token comment" spellcheck="true">// beanDefinition返回</span>
     <span class="token keyword">return</span> builder<span class="token punctuation">.</span><span class="token function">getBeanDefinition</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="generateServiceBeanName"><a href="#generateServiceBeanName" class="headerlink" title="generateServiceBeanName"></a>generateServiceBeanName</h4><p>生成ServiceBean的bean名称</p>
 <p>逻辑很简单就是把group，version等拼接</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> String <span class="token function">generateServiceBeanName</span><span class="token punctuation">(</span>AnnotationAttributes serviceAnnotationAttributes<span class="token punctuation">,</span> Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> interfaceClass<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -898,7 +912,8 @@
             <span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>serviceAnnotationAttributes<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"group"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
             <span class="token punctuation">.</span><span class="token function">version</span><span class="token punctuation">(</span>serviceAnnotationAttributes<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"version"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> builder<span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210507135239.png"></p>
 <h2 id="ReferenceAnnotationBeanPostProcessor"><a href="#ReferenceAnnotationBeanPostProcessor" class="headerlink" title="ReferenceAnnotationBeanPostProcessor"></a>ReferenceAnnotationBeanPostProcessor</h2><p>这个后置处理器主要是针对于@Reference生成ReferenceBean并进行依赖注入</p>
 <p>在@EnableDubboConfig下的DubboConfigConfigurationRegistrar类中registerCommonBeans方法注入了ReferenceAnnotationBeanPostProcessor后置处理器我们发现这个后置处理器实现了<code>InstantiationAwareBeanPostProcessor.postProcessPropertyValues</code>这个方法，而这个方法是在依赖注入的时候调用的。</p>
@@ -924,12 +939,14 @@
                 <span class="token operator">+</span> <span class="token string">" dependencies is failed"</span><span class="token punctuation">,</span> ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> pvs<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="buildAnnotatedMetadata"><a href="#buildAnnotatedMetadata" class="headerlink" title="buildAnnotatedMetadata"></a>buildAnnotatedMetadata</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> AbstractAnnotationBeanPostProcessor<span class="token punctuation">.</span>AnnotatedInjectionMetadata <span class="token function">buildAnnotatedMetadata</span><span class="token punctuation">(</span><span class="token keyword">final</span> Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> beanClass<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     Collection<span class="token operator">&lt;</span>AbstractAnnotationBeanPostProcessor<span class="token punctuation">.</span>AnnotatedFieldElement<span class="token operator">></span> fieldElements <span class="token operator">=</span> <span class="token function">findFieldAnnotationMetadata</span><span class="token punctuation">(</span>beanClass<span class="token punctuation">)</span><span class="token punctuation">;</span>
     Collection<span class="token operator">&lt;</span>AbstractAnnotationBeanPostProcessor<span class="token punctuation">.</span>AnnotatedMethodElement<span class="token operator">></span> methodElements <span class="token operator">=</span> <span class="token function">findAnnotatedMethodMetadata</span><span class="token punctuation">(</span>beanClass<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">AbstractAnnotationBeanPostProcessor<span class="token punctuation">.</span>AnnotatedInjectionMetadata</span><span class="token punctuation">(</span>beanClass<span class="token punctuation">,</span> fieldElements<span class="token punctuation">,</span> methodElements<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="doGetInjectedBean"><a href="#doGetInjectedBean" class="headerlink" title="doGetInjectedBean"></a>doGetInjectedBean</h3><p>注入调用栈</p>
 <p>metadata.inject-&gt;element.inject-&gt;AnnotatedFieldElement#inject-&gt;getInjectedObject-&gt;doGetInjectedBean</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
@@ -973,7 +990,8 @@
 
     <span class="token comment" spellcheck="true">// 获取一个代理对象</span>
     <span class="token keyword">return</span> referenceBean<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这里的总结分为三部分</p>
 <ul>
 <li><p>配置文件的解析与生成多个配置bean(ApplicationConfig， ModuleConfig，RegistryConfig.class，ProtocolConfig)</p>

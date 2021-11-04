@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -533,7 +533,8 @@ wget https://mirror-hk.koddos.net/apache/shardingsphere/4.1.0/apache-shardingsph
 ## 解压
 tar -zxvf apache-shardingsphere-4.1.0-sharding-proxy-bin.tar.gz -C /
 ## 软链接
-ln -s /apache-shardingsphere-4.1.0-sharding-proxy-bin/ /shardingproxy</code></pre>
+ln -s /apache-shardingsphere-4.1.0-sharding-proxy-bin/ /shardingproxy
+</code></pre>
 <p>将mysql jdbc驱动包放入/shardingproxy/lib下。ShardingProxy默认只附带了PostgreSQL的JDBC驱动包，而不包含MySQL的JDBC驱动包。</p>
 <p>然后，我们需要到conf目录下，修改server.yaml，将配置文件中的authentication和props两段配置的注释打开。</p>
 <p>修改conf目录下的config-sharding.yaml，这个配置文件就是shardingProxy关于分库分表部分的配置。整个配置和之前我们使用ShardingJDBC时的配置大致相同</p>

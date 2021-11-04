@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -535,7 +535,8 @@ com<span class="token punctuation">.</span>alibaba<span class="token punctuation
 <p>SentinelWebAutoConfiguration</p>
 <p>这里自动装配代码很简单，就是注入了一个Bean，并将这个bean绑定到web容器的拦截器中。所以我们在普通Web环境中解决Sentinel的方法是通过拦截器解决的（<strong>通过注解形式@SentinelResources方法是通过AOP解决的，SentinelResourceAspect这里暂不做解释</strong>）</p>
 <p>注意点：这里有个小问题，可能是我得sentinel版本问题。在设置拦截器路径匹配的时候他设置的路径规则是/*，而这便会导致某些路径不会被拦截器拦截，所以我们需要配置文件加上</p>
-<pre class=" language-yml"><code class="language-yml">spring.cloud.sentinel.filter.url-patterns=/**</code></pre>
+<pre class=" language-yml"><code class="language-yml">spring.cloud.sentinel.filter.url-patterns=/**
+</code></pre>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Autowired</span>
 <span class="token keyword">private</span> Optional<span class="token operator">&lt;</span>SentinelWebInterceptor<span class="token operator">></span> sentinelWebInterceptorOptional<span class="token punctuation">;</span>
 
@@ -562,7 +563,8 @@ com<span class="token punctuation">.</span>alibaba<span class="token punctuation
 <span class="token keyword">public</span> SentinelWebInterceptor <span class="token function">sentinelWebInterceptor</span><span class="token punctuation">(</span>
     SentinelWebMvcConfig sentinelWebMvcConfig<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SentinelWebInterceptor</span><span class="token punctuation">(</span>sentinelWebMvcConfig<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="SentinelWebInterceptor"><a href="#SentinelWebInterceptor" class="headerlink" title="SentinelWebInterceptor"></a>SentinelWebInterceptor</h2><p>我们知道拦截器通常是有一个preHandle方法，在SentinelWebInterceptor中这个方法在它的抽象父类中。</p>
 <p>这里就是获取资源并对资源进行限流保护核心代码其实就一句 <code>Entry entry = SphU.entry(resourceName, ResourceTypeConstants.COMMON_WEB, EntryType.IN);</code>申请一个entry 申请成功则成功失败既限流。</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
@@ -586,17 +588,18 @@ com<span class="token punctuation">.</span>alibaba<span class="token punctuation
         <span class="token function">handleBlockException</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="SphU-entry"><a href="#SphU-entry" class="headerlink" title="SphU#entry"></a>SphU#entry</h2><p>从这里一直往下跟会到<code>CtSph#entryWithPriority</code>这个方法，这便是一切的开始。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> Entry <span class="token function">entryWithPriority</span><span class="token punctuation">(</span>ResourceWrapper resourceWrapper<span class="token punctuation">,</span> <span class="token keyword">int</span> count<span class="token punctuation">,</span> <span class="token keyword">boolean</span> prioritized<span class="token punctuation">,</span> Object<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> args<span class="token punctuation">)</span>
     <span class="token keyword">throws</span> BlockException <span class="token punctuation">{</span>
        <span class="token comment" spellcheck="true">// =======省略代码=========</span>
-
+    
     <span class="token comment" spellcheck="true">// 构造一个Slot链条，使用责任链的方式进行调用</span>
     ProcessorSlot<span class="token operator">&lt;</span>Object<span class="token operator">></span> chain <span class="token operator">=</span> <span class="token function">lookProcessChain</span><span class="token punctuation">(</span>resourceWrapper<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">// =======省略代码=========</span>
-
+     
     Entry e <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CtEntry</span><span class="token punctuation">(</span>resourceWrapper<span class="token punctuation">,</span> chain<span class="token punctuation">,</span> context<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">try</span> <span class="token punctuation">{</span>
         chain<span class="token punctuation">.</span><span class="token function">entry</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> resourceWrapper<span class="token punctuation">,</span> null<span class="token punctuation">,</span> count<span class="token punctuation">,</span> prioritized<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -608,7 +611,8 @@ com<span class="token punctuation">.</span>alibaba<span class="token punctuation
         RecordLog<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"Sentinel unexpected exception"</span><span class="token punctuation">,</span> e1<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> e<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="lookProcessChain"><a href="#lookProcessChain" class="headerlink" title="lookProcessChain"></a>lookProcessChain</h3><p>这里主要是构建后续调用链</p>
 <p>NodeSelectorSlot-&gt;ClusterBuilderSlot-&gt;LogSlot-&gt;StatisticSlot-&gt;ParamFlowSlot-&gt;SystemSlot-&gt;AuthoritySlot-&gt;FlowSlot-&gt;DegradeSlot</p>
 <pre class=" language-java"><code class="language-java">ProcessorSlot<span class="token operator">&lt;</span>Object<span class="token operator">></span> <span class="token function">lookProcessChain</span><span class="token punctuation">(</span>ResourceWrapper resourceWrapper<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -636,7 +640,8 @@ com<span class="token punctuation">.</span>alibaba<span class="token punctuation
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> chain<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="chain-entry"><a href="#chain-entry" class="headerlink" title="chain.entry"></a>chain.entry</h3><p>通过上面构造的链条开始调用</p>
 <p>entry-执行逻辑，fireEntry-执行下一个Slot,transformEntry-调用entry</p>
 <p>大致逻辑就是entry-&gt;fireEntry-&gt;transformEntry-&gt;entry</p>
@@ -653,7 +658,8 @@ com<span class="token punctuation">.</span>alibaba<span class="token punctuation
         <span class="token function">removeEntryInRequest</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     ContextUtil<span class="token punctuation">.</span><span class="token function">exit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="限流逻辑"><a href="#限流逻辑" class="headerlink" title="限流逻辑"></a>限流逻辑</h2><p>限流逻辑就藏在每一个Slot中，代码逻辑不复杂，就不详细解释</p>
 <ul>
 <li><p>NodeSelectorSlot：为资源不同的线程创建node</p>

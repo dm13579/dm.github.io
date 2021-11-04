@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -553,9 +553,11 @@
 </tr>
 </tbody></table>
 <p>安装包解压（这里的安装包是zip格式的，所以使用unzip）</p>
-<pre class=" language-shell"><code class="language-shell">unzip rocketmq-all-4.7.1-bin-release.zip -d /</code></pre>
+<pre class=" language-shell"><code class="language-shell">unzip rocketmq-all-4.7.1-bin-release.zip -d /
+</code></pre>
 <p>增加软链接（纯粹为了方便，不影响安装）</p>
-<pre class=" language-shell"><code class="language-shell">ln -s rocketmq-all-4.7.1-bin-release/ rocketmq</code></pre>
+<pre class=" language-shell"><code class="language-shell">ln -s rocketmq-all-4.7.1-bin-release/ rocketmq
+</code></pre>
 <h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>这里先解释下配置文件各参数意义</p>
 <pre class=" language-shell"><code class="language-shell">#所属集群名字，名字一样的节点就在同一个集群内
 brokerClusterName=rocketmq-cluster
@@ -616,10 +618,12 @@ flushDiskType=ASYNC_FLUSH
 #发消息线程池数量
 #sendMessageThreadPoolNums=128
 #拉消息线程池数量
-#pullMessageThreadPoolNums=128</code></pre>
+#pullMessageThreadPoolNums=128
+</code></pre>
 <p>这里我们直接更改它原来的配置文件，由于我们要搭建的是<strong>2主2从异步刷盘集群</strong>。所以我们进入2m-2s-async目录，并对当前目录的配置参数进行修改。其实直接启动应该也是没有问题的</p>
 <pre class=" language-shell"><code class="language-shell">[root@localhost 2m-2s-async]# pwd
-/rocketmq/conf/2m-2s-async</code></pre>
+/rocketmq/conf/2m-2s-async
+</code></pre>
 <p>下面是配置参数：这里主要修改了以下几个参数brokerName（主从相同），brokerId（主0从1），listenPort同一主机不同，文件路径区分不同</p>
 <p>broker-a.properties</p>
 <pre class=" language-shell"><code class="language-shell">brokerClusterName=rocketmq-cluster
@@ -643,7 +647,8 @@ storeCheckpoint=/data/rocketmq/store-a-master/checkpoint
 abortFile=/data/rocketmq/store-a-master/abort
 maxMessageSize=65536
 brokerRole=ASYNC_MASTER
-flushDiskType=ASYNC_FLUSH</code></pre>
+flushDiskType=ASYNC_FLUSH
+</code></pre>
 <p>broker-b-s.properties</p>
 <pre class=" language-shell"><code class="language-shell">brokerClusterName=rocketmq-cluster
 brokerName=broker-b
@@ -666,7 +671,8 @@ storeCheckpoint=/data/rocketmq/store-b-slave/checkpoint
 abortFile=/data/rocketmq/store-b-slave/abort
 maxMessageSize=65536
 brokerRole=ASYNC_MASTER
-flushDiskType=ASYNC_FLUSH</code></pre>
+flushDiskType=ASYNC_FLUSH
+</code></pre>
 <p>broker-a-s.properties</p>
 <pre class=" language-shell"><code class="language-shell">brokerClusterName=rocketmq-cluster
 brokerName=broker-a
@@ -689,7 +695,8 @@ storeCheckpoint=/data/rocketmq/store-a-slave/checkpoint
 abortFile=/data/rocketmq/store-a-slave/abort
 maxMessageSize=65536
 brokerRole=ASYNC_MASTER
-flushDiskType=ASYNC_FLUSH</code></pre>
+flushDiskType=ASYNC_FLUSH
+</code></pre>
 <p>broker-b.properties</p>
 <pre class=" language-shell"><code class="language-shell">brokerClusterName=rocketmq-cluster
 brokerName=broker-b
@@ -712,31 +719,39 @@ storeCheckpoint=/data/rocketmq/store-b-master/checkpoint
 abortFile=/data/rocketmq/store-b-master/abort
 maxMessageSize=65536
 brokerRole=ASYNC_MASTER
-flushDiskType=ASYNC_FLUSH</code></pre>
+flushDiskType=ASYNC_FLUSH
+</code></pre>
 <h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>注意：启动前需要修改runbroker.sh和runserver.sh中的JVM参数，默认rocketmq给的nameserver4g，broker8g,不修改可能机器内存不够启动报错。机器内存足够的话尽量不改，默认配置是经过实验室测试较优配置。</p>
 <p>后台启动nameserver(2台机器全部启动)</p>
-<pre class=" language-shell"><code class="language-shell">nohup bin/mqnamesrv &</code></pre>
+<pre class=" language-shell"><code class="language-shell">nohup bin/mqnamesrv &
+</code></pre>
 <p>启动成功标识</p>
 <pre class=" language-shell"><code class="language-shell">### 启动成功标识
 cat nohup.out
 Java HotSpot(TM) 64-Bit Server VM warning: Using the DefNew young collector with the CMS collector is deprecated and will likely be removed in a future release
 Java HotSpot(TM) 64-Bit Server VM warning: UseCMSCompactAtFullCollection is deprecated and will likely be removed in a future release.
-The Name Server boot success. serializeType=JSON</code></pre>
+The Name Server boot success. serializeType=JSON
+</code></pre>
 <p>启动每台机器的broker</p>
-<pre class=" language-shell"><code class="language-shell">nohup bin/mqbroker -c conf/2m-2s-async/xxx.properties &</code></pre>
+<pre class=" language-shell"><code class="language-shell">nohup bin/mqbroker -c conf/2m-2s-async/xxx.properties &
+</code></pre>
 <h3 id="默认测试工具验证"><a href="#默认测试工具验证" class="headerlink" title="默认测试工具验证"></a>默认测试工具验证</h3><p>首先需要配置nameserver</p>
 <pre class=" language-shell"><code class="language-shell">vim tools.sh
 # 在export JAVA_HOME上面添加如下这段代码
-export NAMESRV_ADDR='192.168.186.131:9876;192.168.186.132:9876'</code></pre>
+export NAMESRV_ADDR='192.168.186.131:9876;192.168.186.132:9876'
+</code></pre>
 <p>生产者发送消息</p>
-<pre class=" language-shell"><code class="language-shell">bin/tools.sh org.apache.rocketmq.example.quickstart.Producer </code></pre>
+<pre class=" language-shell"><code class="language-shell">bin/tools.sh org.apache.rocketmq.example.quickstart.Producer 
+</code></pre>
 <p>消费消息</p>
-<pre class=" language-shell"><code class="language-shell">bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer</code></pre>
+<pre class=" language-shell"><code class="language-shell">bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
+</code></pre>
 <h2 id="管理控制台搭建"><a href="#管理控制台搭建" class="headerlink" title="管理控制台搭建"></a>管理控制台搭建</h2><p>RocketMQ和RabbitMQ不同,没有官方的管理控制台,但是Rocket的社区扩展项目中提供了一个控制台。</p>
 <p>地址：<a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq-externals">https://github.com/apache/rocketmq-externals</a></p>
 <h3 id="前期maven准备"><a href="#前期maven准备" class="headerlink" title="前期maven准备"></a>前期maven准备</h3><p>地址：<a target="_blank" rel="noopener" href="https://maven.apache.org/download.cgi">https://maven.apache.org/download.cgi</a></p>
 <pre><code>tar -zxvf apache-maven-3.6.3-bin.tar.gz -C /
-mv /apache-maven-3.6.3/ /usr/local/maven</code></pre>
+mv /apache-maven-3.6.3/ /usr/local/maven
+</code></pre>
 <pre class=" language-shell"><code class="language-shell">vim /etc/profile
 ### 增加代码
 export MAVEN_HOME=/usr/local/maven
@@ -744,11 +759,14 @@ export MAVEN_HOME=/usr/local/maven
 ### 刷新配置
 source /etc/profile
 ### 验证
-mvn -v</code></pre>
+mvn -v
+</code></pre>
 <h3 id="控制台安装"><a href="#控制台安装" class="headerlink" title="控制台安装"></a>控制台安装</h3><p>解压</p>
-<pre class=" language-shell"><code class="language-shell">unzip rocketmq-externals-master.zip -d /</code></pre>
+<pre class=" language-shell"><code class="language-shell">unzip rocketmq-externals-master.zip -d /
+</code></pre>
 <p>软链接</p>
-<pre class=" language-shell"><code class="language-shell">ln -s /rocketmq-externals-master/ rocketmq-console</code></pre>
+<pre class=" language-shell"><code class="language-shell">ln -s /rocketmq-externals-master/ rocketmq-console
+</code></pre>
 <p>搭建</p>
 <pre class=" language-shell"><code class="language-shell">### 指定nameserver地址；；修改当前application.properties配置参数
 rocketmq.config.namesrvAddr=192.168.186.131:9876;192.168.186.132:9876
@@ -757,7 +775,8 @@ cd /rocketmq-console/rocketmq-console
 mvn clean package -Dmaven.test.skip=true
 
 ### rocketmq-console-ng-1.0.1.jar----target目录下
-java -jar rocketmq-console-ng-1.0.1.jar</code></pre>
+java -jar rocketmq-console-ng-1.0.1.jar
+</code></pre>
 <p>在当前ip:8080上即可访问</p>
 <script>
         document.querySelectorAll('.github-emoji')

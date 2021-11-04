@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -531,11 +531,13 @@
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> theUnsafe<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>从上面代码**!VM.isSystemDomainLoader(var0.getClassLoader())**</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">boolean</span> <span class="token function">isSystemDomainLoader</span><span class="token punctuation">(</span>ClassLoader var0<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> var0 <span class="token operator">==</span> null<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>可以看出如果你调用Unsafe类必须保证Unsafe类是系统类加载器（系统类加载器ClassLoader==null,因为系统类加载器是由C加载的）去加载的。直接调用getUnsafe会报错。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     Unsafe unsafe <span class="token operator">=</span> Unsafe<span class="token punctuation">.</span><span class="token function">getUnsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -544,7 +546,8 @@
 <span class="token comment" spellcheck="true">// 调用结果</span>
 Exception in thread <span class="token string">"main"</span> java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>SecurityException<span class="token operator">:</span> Unsafe
     at sun<span class="token punctuation">.</span>misc<span class="token punctuation">.</span>Unsafe<span class="token punctuation">.</span><span class="token function">getUnsafe</span><span class="token punctuation">(</span>Unsafe<span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">90</span><span class="token punctuation">)</span>
-    at com<span class="token punctuation">.</span>dm<span class="token punctuation">.</span>jmm<span class="token punctuation">.</span>util<span class="token punctuation">.</span>test<span class="token punctuation">.</span><span class="token function">main</span><span class="token punctuation">(</span>test<span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">33</span><span class="token punctuation">)</span></code></pre>
+    at com<span class="token punctuation">.</span>dm<span class="token punctuation">.</span>jmm<span class="token punctuation">.</span>util<span class="token punctuation">.</span>test<span class="token punctuation">.</span><span class="token function">main</span><span class="token punctuation">(</span>test<span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">33</span><span class="token punctuation">)</span>
+</code></pre>
 <p>通过资料发现Unsafe的使用有2种方法</p>
 <ol>
 <li><p>通过Java命令行命令<code>-Xbootclasspath/a: ${path}</code>把调用Unsafe相关方法的类test所在jar包路径追加到默认的bootstrap路径中，使得test被引导类加载器加载，从而通过<code>Unsafe.getUnsafe</code>方法安全的获取Unsafe实例。</p>
@@ -559,7 +562,8 @@ Exception in thread <span class="token string">"main"</span> java<span class="to
         e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> null<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 </li>
 </ol>
 <h2 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h2><p>先简单介绍一下内存屏障吧。内存屏障（也称内存栅栏，内存栅障，屏障指令等，是一类同步屏障指令，是CPU或编译器在对内存随机访问的操作中的一个同步点，使得此点之前的所有读写操作都执行后才可以开始执行此点之后的操作），避免代码重排序。</p>
@@ -570,7 +574,8 @@ Exception in thread <span class="token string">"main"</span> java<span class="to
 <span class="token comment" spellcheck="true">//内存屏障，禁止store操作重排序。屏障前的store操作不能被重排序到屏障后，屏障后的store操作不能被重排序到屏障前</span>
 <span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">storeFence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">//内存屏障，禁止load、store操作重排序</span>
-<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">fullFence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">fullFence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>以之前举例证明重排序存在的代码为例，之前是通过添加volatile可以解决，现在通过手动添加内存屏障解决</p>
 <pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Slf4j</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">test</span> <span class="token punctuation">{</span>
@@ -586,10 +591,10 @@ Exception in thread <span class="token string">"main"</span> java<span class="to
                 <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
                     <span class="token function">shortWait</span><span class="token punctuation">(</span><span class="token number">10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
                     a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-
+                    
                     <span class="token comment" spellcheck="true">// 添加屏障代码，需引入上面通过反射拿取Unsafe类</span>
                     UnsafeInstance<span class="token punctuation">.</span><span class="token function">reflectGetUnsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">fullFence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+                    
                     x <span class="token operator">=</span> b<span class="token punctuation">;</span>
                 <span class="token punctuation">}</span>
             <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -597,10 +602,10 @@ Exception in thread <span class="token string">"main"</span> java<span class="to
             Thread t2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Runnable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
                 <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
                     b <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-
+                    
                      <span class="token comment" spellcheck="true">// 添加屏障代码，需引入上面通过反射拿取Unsafe类</span>
                     UnsafeInstance<span class="token punctuation">.</span><span class="token function">reflectGetUnsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">fullFence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+                    
                     y <span class="token operator">=</span> a<span class="token punctuation">;</span>
                 <span class="token punctuation">}</span>
             <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -660,7 +665,8 @@ Exception in thread <span class="token string">"main"</span> java<span class="to
 <span class="token comment" spellcheck="true">//获取给定地址的byte类型的值（当且仅当该内存地址为allocateMemory分配时，此方法结果为确定的）</span>
 <span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">byte</span> <span class="token function">getByte</span><span class="token punctuation">(</span><span class="token keyword">long</span> address<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">//为给定地址设置byte类型的值（当且仅当该内存地址为allocateMemory分配时，此方法结果才是确定的）</span>
-<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">putByte</span><span class="token punctuation">(</span><span class="token keyword">long</span> address<span class="token punctuation">,</span> <span class="token keyword">byte</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">putByte</span><span class="token punctuation">(</span><span class="token keyword">long</span> address<span class="token punctuation">,</span> <span class="token keyword">byte</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <h2 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h2><p>CAS全称CompareAndSwap，从名字就可以看出它是什么作用了，就是比较和交换。</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 下面几个方法作用一样</span>
 <span class="token comment" spellcheck="true">// 介绍一下参数值0--修改field的对象，offset--对象中某field的偏移量，expected--期望值，update--更新值</span>
@@ -668,7 +674,8 @@ Exception in thread <span class="token string">"main"</span> java<span class="to
 <span class="token comment" spellcheck="true">// 整个过程是原子的。</span>
 <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">boolean</span> <span class="token function">compareAndSwapObject</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> <span class="token keyword">long</span> offset<span class="token punctuation">,</span>  Object expected<span class="token punctuation">,</span> Object update<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">boolean</span> <span class="token function">compareAndSwapInt</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> <span class="token keyword">long</span> offset<span class="token punctuation">,</span> <span class="token keyword">int</span> expected<span class="token punctuation">,</span><span class="token keyword">int</span> update<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">boolean</span> <span class="token function">compareAndSwapLong</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> <span class="token keyword">long</span> offset<span class="token punctuation">,</span> <span class="token keyword">long</span> expected<span class="token punctuation">,</span> <span class="token keyword">long</span> update<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">boolean</span> <span class="token function">compareAndSwapLong</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> <span class="token keyword">long</span> offset<span class="token punctuation">,</span> <span class="token keyword">long</span> expected<span class="token punctuation">,</span> <span class="token keyword">long</span> update<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>CAS在整个juc中应用是最为广泛的，比如AQS,Atomic等等，可能就是因为他是原子的所以才会在并发包中得到这么广泛的应用吧。其实他整个操作都是基于offset进行操作的，offset可以使用unsafe的objectFieldOffset获取。通过offset就可以找到内存地址，我们在从内存地址中获取这个值，拿到值就跟期望值expected进行比较，如果一样就把更新值update赋值到这个地址上去。</p>
 <script>
         document.querySelectorAll('.github-emoji')

@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -531,7 +531,8 @@
 
 <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">onContextRefreshedEvent</span><span class="token punctuation">(</span>ContextRefreshedEvent event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     dubboBootstrap<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="DubboBootstrap-start"><a href="#DubboBootstrap-start" class="headerlink" title="DubboBootstrap#start"></a>DubboBootstrap#start</h2><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> DubboBootstrap <span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// CAS操作 保证只执行一次，避免并发</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>started<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -561,13 +562,14 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="DubboBootstrap-initialize"><a href="#DubboBootstrap-initialize" class="headerlink" title="DubboBootstrap#initialize"></a>DubboBootstrap#initialize</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// CAS 操作保证只会执行一次初始化操作</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>initialized<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-
+    
     <span class="token comment" spellcheck="true">// 初始化拓展配置</span>
     ApplicationModel<span class="token punctuation">.</span><span class="token function">initFrameworkExts</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token comment" spellcheck="true">// 启动配置中心</span>
@@ -586,7 +588,8 @@
     <span class="token function">initMetadataServiceExports</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token comment" spellcheck="true">// 初始化事件监听器</span>
     <span class="token function">initEventListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="initFrameworkExts"><a href="#initFrameworkExts" class="headerlink" title="initFrameworkExts"></a>initFrameworkExts</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">initFrameworkExts</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 通过SPI拿到FrameworkExt接口的实现类，这里可以取到ConfigManager，Environment，ServiceRepository三个实现类</span>
     Set<span class="token operator">&lt;</span>FrameworkExt<span class="token operator">></span> exts <span class="token operator">=</span> ExtensionLoader<span class="token punctuation">.</span><span class="token function">getExtensionLoader</span><span class="token punctuation">(</span>FrameworkExt<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getSupportedExtensionInstances</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -594,7 +597,8 @@
     <span class="token keyword">for</span> <span class="token punctuation">(</span>FrameworkExt ext <span class="token operator">:</span> exts<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         ext<span class="token punctuation">.</span><span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="startConfigCenter"><a href="#startConfigCenter" class="headerlink" title="startConfigCenter"></a>startConfigCenter</h4><p>启动配置中心</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">startConfigCenter</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 如果没有配置配置中心，使用注册中心作为配置中心</span>
@@ -628,7 +632,8 @@
     <span class="token punctuation">}</span>
     <span class="token comment" spellcheck="true">// 刷新所有的XxConfig中的属性，除开ServiceConfig</span>
     configManager<span class="token punctuation">.</span><span class="token function">refreshAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="prepareEnvironment"><a href="#prepareEnvironment" class="headerlink" title="prepareEnvironment"></a>prepareEnvironment</h4><p>远程从配置中心获取配置并根据是全局配置还是应用配置存入不同Map中，并且指定优先级，默认configCenterFirst 为 true</p>
 <ul>
 <li><strong>externalConfigurationMap  -&gt;  全局配置</strong></li>
@@ -663,7 +668,8 @@
         <span class="token keyword">return</span> dynamicConfiguration<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> null<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="DubboBootstrap-exportServices"><a href="#DubboBootstrap-exportServices" class="headerlink" title="DubboBootstrap#exportServices"></a>DubboBootstrap#exportServices</h3><p>服务导出</p>
 <p>这里我们直接进入export方法</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">synchronized</span> <span class="token keyword">void</span> <span class="token function">export</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -694,7 +700,8 @@
     <span class="token punctuation">}</span>
 
     <span class="token function">exported</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="checkAndUpdateSubConfigs"><a href="#checkAndUpdateSubConfigs" class="headerlink" title="checkAndUpdateSubConfigs"></a>checkAndUpdateSubConfigs</h4><p>检查和更新配置，是配置变得即全也新</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">checkAndUpdateSubConfigs</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// ServiceConfig中的某些属性如果是空的，那么就从ProviderConfig中获取,主要是protocols、configCenter、registryIds、protocolIds</span>
@@ -737,14 +744,15 @@
     <span class="token comment" spellcheck="true">// 1.处理local,本地调用</span>
     <span class="token comment" spellcheck="true">// 2.处理stud,本地存根</span>
     <span class="token comment" spellcheck="true">// ================================================</span>
-
+    
     <span class="token function">checkStubAndLocal</span><span class="token punctuation">(</span>interfaceClass<span class="token punctuation">)</span><span class="token punctuation">;</span>
     ConfigValidationUtils<span class="token punctuation">.</span><span class="token function">checkMock</span><span class="token punctuation">(</span>interfaceClass<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     ConfigValidationUtils<span class="token punctuation">.</span><span class="token function">validateServiceConfig</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+    
     <span class="token comment" spellcheck="true">// ConfigPostProcessor接口扩展点 ---初始化配置结束后调用postProcessServiceConfig，可在这修改配置</span>
     <span class="token function">postProcessConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="AbstractInterfaceConfig-refresh"><a href="#AbstractInterfaceConfig-refresh" class="headerlink" title="AbstractInterfaceConfig#refresh"></a>AbstractInterfaceConfig#refresh</h4><p>Dubbo中的配置类执行刷新方法都要来到这。XxConfig对象的属性需要从其他位置获取属性值,来进行属性的覆盖</p>
 <p>覆盖的优先级2种，默认第一种</p>
 <ol>
@@ -782,7 +790,8 @@
             <span class="token punctuation">}</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="doExport-gt-doExportUrls"><a href="#doExport-gt-doExportUrls" class="headerlink" title="doExport->doExportUrls"></a>doExport-&gt;doExportUrls</h4><p>获取url列表，并注册服务</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">doExportUrls</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     ServiceRepository repository <span class="token operator">=</span> ApplicationModel<span class="token punctuation">.</span><span class="token function">getServiceRepository</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -810,7 +819,8 @@
         serviceMetadata<span class="token punctuation">.</span><span class="token function">setServiceKey</span><span class="token punctuation">(</span>pathKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token function">doExportUrlsFor1Protocol</span><span class="token punctuation">(</span>protocolConfig<span class="token punctuation">,</span> registryURLs<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="loadRegistries"><a href="#loadRegistries" class="headerlink" title="loadRegistries"></a>loadRegistries</h4><p>获取注册中心URL列表</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> List<span class="token operator">&lt;</span>URL<span class="token operator">></span> <span class="token function">loadRegistries</span><span class="token punctuation">(</span>AbstractInterfaceConfig interfaceConfig<span class="token punctuation">,</span> <span class="token keyword">boolean</span> provider<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// check &amp;&amp; override if necessary</span>
@@ -859,7 +869,8 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span> registryList<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="doExportUrlsFor1Protocol"><a href="#doExportUrlsFor1Protocol" class="headerlink" title="doExportUrlsFor1Protocol"></a>doExportUrlsFor1Protocol</h4><p>这个方法代码太长，便于阅读只贴部分重要代码</p>
 <p>这个方法主要做的就是把服务解析为一个URL资源，然后注册到注册中心（注册中心是列表表示，每个注册中心都注册服务）。</p>
 <ol>
@@ -868,14 +879,16 @@
 <li><p>获取到访问该服务的host和port组装成URL服务资源</p>
 <pre class=" language-java"><code class="language-java">String host <span class="token operator">=</span> <span class="token function">findConfigedHosts</span><span class="token punctuation">(</span>protocolConfig<span class="token punctuation">,</span> registryURLs<span class="token punctuation">,</span> map<span class="token punctuation">)</span><span class="token punctuation">;</span>
 Integer port <span class="token operator">=</span> <span class="token function">findConfigedPorts</span><span class="token punctuation">(</span>protocolConfig<span class="token punctuation">,</span> name<span class="token punctuation">,</span> map<span class="token punctuation">)</span><span class="token punctuation">;</span>
-URL url <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">URL</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> host<span class="token punctuation">,</span> port<span class="token punctuation">,</span> <span class="token function">getContextPath</span><span class="token punctuation">(</span>protocolConfig<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>p <span class="token operator">-</span><span class="token operator">></span> p <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> path<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">orElse</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">,</span> map<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+URL url <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">URL</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> host<span class="token punctuation">,</span> port<span class="token punctuation">,</span> <span class="token function">getContextPath</span><span class="token punctuation">(</span>protocolConfig<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>p <span class="token operator">-</span><span class="token operator">></span> p <span class="token operator">+</span> <span class="token string">"/"</span> <span class="token operator">+</span> path<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">orElse</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">,</span> map<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 </li>
 <li><p>通过ConfiguratorFactory SPI扩展点，处理URL服务资源</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">if</span> <span class="token punctuation">(</span>ExtensionLoader<span class="token punctuation">.</span><span class="token function">getExtensionLoader</span><span class="token punctuation">(</span>ConfiguratorFactory<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token function">hasExtension</span><span class="token punctuation">(</span>url<span class="token punctuation">.</span><span class="token function">getProtocol</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     url <span class="token operator">=</span> ExtensionLoader<span class="token punctuation">.</span><span class="token function">getExtensionLoader</span><span class="token punctuation">(</span>ConfiguratorFactory<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
         <span class="token punctuation">.</span><span class="token function">getExtension</span><span class="token punctuation">(</span>url<span class="token punctuation">.</span><span class="token function">getProtocol</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getConfigurator</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">configure</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 </li>
 <li><p>向注册中心注册服务</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// z注册中心是列表，保证服务会向每一个注册中心注册</span>
@@ -907,7 +920,8 @@ URL url <span class="token operator">=</span> <span class="token keyword">new</s
     <span class="token comment" spellcheck="true">// 通过SPI获取到PROTOCOL为RegistryProtocol</span>
     Exporter<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> exporter <span class="token operator">=</span> PROTOCOL<span class="token punctuation">.</span><span class="token function">export</span><span class="token punctuation">(</span>wrapperInvoker<span class="token punctuation">)</span><span class="token punctuation">;</span>
     exporters<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>exporter<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 </li>
 </ol>
 <h4 id="RegistryProtocol-export"><a href="#RegistryProtocol-export" class="headerlink" title="RegistryProtocol#export"></a>RegistryProtocol#export</h4><p>之前都是做一些准备工作，到这才是真正的服务导出</p>
@@ -965,7 +979,8 @@ URL url <span class="token operator">=</span> <span class="token keyword">new</s
     <span class="token function">notifyExport</span><span class="token punctuation">(</span>exporter<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token comment" spellcheck="true">//Ensure that a new exporter instance is returned every time export</span>
     <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">DestroyableExporter</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span>exporter<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>RegistryProtocol#doLocalExport</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token operator">&lt;</span>T<span class="token operator">></span> ExporterChangeableWrapper<span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token function">doLocalExport</span><span class="token punctuation">(</span><span class="token keyword">final</span> Invoker<span class="token operator">&lt;</span>T<span class="token operator">></span> originInvoker<span class="token punctuation">,</span> URL providerUrl<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     String key <span class="token operator">=</span> <span class="token function">getCacheKey</span><span class="token punctuation">(</span>originInvoker<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -975,7 +990,8 @@ URL url <span class="token operator">=</span> <span class="token keyword">new</s
         <span class="token comment" spellcheck="true">// 通过invokerDelegate中URL参数SPI动态获取protocol协议类，这里的export主要做的事情就是开启Netty(协议Dubbo)或Tomcat(协议http)</span>
         <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">ExporterChangeableWrapper</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">(</span>Exporter<span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">)</span> protocol<span class="token punctuation">.</span><span class="token function">export</span><span class="token punctuation">(</span>invokerDelegate<span class="token punctuation">)</span><span class="token punctuation">,</span> originInvoker<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="监听器覆盖规则"><a href="#监听器覆盖规则" class="headerlink" title="监听器覆盖规则"></a>监听器覆盖规则</h2><p>不管是OverrideListener，providerConfigurationListener还是serviceConfigurationListener监听器都走了RegistryProtocol#doOverrideIfNecessary。这里就是规则覆写逻辑</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">synchronized</span> <span class="token keyword">void</span> <span class="token function">doOverrideIfNecessary</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">final</span> Invoker<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> invoker<span class="token punctuation">;</span>
@@ -1000,7 +1016,8 @@ URL url <span class="token operator">=</span> <span class="token keyword">new</s
         <span class="token comment" spellcheck="true">// 重新导出</span>
         RegistryProtocol<span class="token punctuation">.</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">reExport</span><span class="token punctuation">(</span>originInvoker<span class="token punctuation">,</span> newUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>服务导出流程</p>
 <ol>
 <li>确定配置（这里有优先级的确定），有系统变量、环境变量配置、配置中心应用配置、配置中心全局配置、自定义配置、dubbo.properties文件</li>

@@ -42,7 +42,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
@@ -559,7 +559,8 @@ dbfilename "dump.rdb"
 dir "/data/redis"
 
 ## &nbsp;60&nbsp;秒内有至少有&nbsp;10000&nbsp;个键被改动 执行一次bgsave
-save 60 10000</code></pre>
+save 60 10000
+</code></pre>
 <h4 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h4><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210127151428.png"></p>
 <h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h3><p>RDB模式从机制也可以看出丢数据的可能性极大。如果Redis停机就会导致没有写到快照文件的数据丢失。后面Redis增加了一种AOF持久化方案。它存储的是每一条指令而不是二进制文件；存储文件是appendonly.aof;</p>
 <h4 id="aof文件存储结构"><a href="#aof文件存储结构" class="headerlink" title="aof文件存储结构"></a>aof文件存储结构</h4><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210127151458.png"></p>
@@ -585,7 +586,8 @@ appendfsync no
 ## aof文件至少要达到64M才会自动重写，文件太小恢复速度本来就很快，重写的意义不大
 auto-aof-rewrite-min-size 64mb
 ## aof文件自上一次重写后文件大小增长了100%则再次触发重写
-auto-aof-rewrite-percentage 100 </code></pre>
+auto-aof-rewrite-percentage 100 
+</code></pre>
 <p>RDB,AOF对比</p>
 <table>
 <thead>
@@ -624,7 +626,8 @@ auto-aof-rewrite-percentage 100 </code></pre>
 <p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210127163459.png"></p>
 <h4 id="相关配置-2"><a href="#相关配置-2" class="headerlink" title="相关配置"></a>相关配置</h4><p>开启混合持久化必须先启动AOF</p>
 <pre class=" language-shell"><code class="language-shell">## 开启混合持久化
-aof-use-rdb-preamble yes   </code></pre>
+aof-use-rdb-preamble yes   
+</code></pre>
 <h3 id="Redis数据备份策略"><a href="#Redis数据备份策略" class="headerlink" title="Redis数据备份策略"></a>Redis数据备份策略</h3><ol>
 <li>写crontab定时调度脚本，每小时都copy一份rdb或aof的备份到一个目录中去，仅仅保留最近48小时的备份</li>
 <li>每天都保留一份当日的数据备份到一个目录中去，可以保留最近1个月的备份</li>
@@ -646,7 +649,8 @@ aof-use-rdb-preamble yes   </code></pre>
 <p>如果真要用keys 可以改成scan</p>
 <p>禁用命令(重定义命令)</p>
 <p>redis.conf</p>
-<pre class=" language-shell"><code class="language-shell">rename-command KEYS ""</code></pre>
+<pre class=" language-shell"><code class="language-shell">rename-command KEYS ""
+</code></pre>
 <h2 id="Redis主从复制"><a href="#Redis主从复制" class="headerlink" title="Redis主从复制"></a>Redis主从复制</h2><p>Redis主从架构一般只是用于备份数据，做的更多的就是通过程序实现读写分离（Redis自身不支持，需实现）；Redis的主从架构不支持高可用，也就是主节点宕机从节点不会顶上去，一般生产不会单纯的使用主从架构，要么哨兵或集群架构</p>
 <h3 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h3><ol>
 <li>当一个slave节点启动时会向master节点发送一个psync命令</li>
@@ -700,7 +704,8 @@ aof-use-rdb-preamble yes   </code></pre>
 <h3 id="Redis集群对批量操作命令的支持"><a href="#Redis集群对批量操作命令的支持" class="headerlink" title="Redis集群对批量操作命令的支持"></a>Redis集群对批量操作命令的支持</h3><p>原来的单机节点所有的key都落在一个节点上批量命令没有问题，但现在是集群我们对于批量命令一些key不知道落在哪个节点上，就会出现问题，所以对于类似mset，mget这样的多个key的原生批量操作命令，redis集群只支持所有key落在同一slot的情况</p>
 <p>如果有多个key一定要用mset命令在redis集群上操作，则可以在key的前面加上{XX}，这样参数数据分片hash计算的只会是大括号里的值，这样能确保不同的key能落到同一slot里去</p>
 <p>示例如下：</p>
-<pre class=" language-shell"><code class="language-shell">mset {user}:1:name dm {user}:1:age 18                 </code></pre>
+<pre class=" language-shell"><code class="language-shell">mset {user}:1:name dm {user}:1:age 18                 
+</code></pre>
 <p>假设name和age计算的hash slot值不一样，但是这条命令在集群下执行，redis只会用大括号里的 user1 做hash slot计算，所以算出来的slot值肯定相同，最后都能落在同一slot。</p>
 <h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><h4 id="Redis如何解决脑裂问题"><a href="#Redis如何解决脑裂问题" class="headerlink" title="Redis如何解决脑裂问题"></a>Redis如何解决脑裂问题</h4><p>在任何的主从架构不可避免的都会遇到脑裂问题。</p>
 <p>Redis没有解决脑裂问题的，所以一定程度上是有脑裂导致的丢失数据的情况。</p>
