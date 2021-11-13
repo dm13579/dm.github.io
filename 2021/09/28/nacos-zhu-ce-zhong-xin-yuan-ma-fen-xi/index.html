@@ -1,0 +1,1681 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+	<meta name="baidu-site-verification" content="lElrePz9Qe" />
+	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
+    <meta name="keywords" content="Nacos,微服务,分布式,源码">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', '');
+</script>
+
+
+    <title>Nacos服务注册源码分析 | 泉涸</title>
+    <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">泉涸</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags/" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories/" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-list" style="zoom: 0.6;"></i>
+      
+      <span>媒体</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/books/">
+          
+          <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>书单</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/movies/">
+          
+          <i class="fas fa-film" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>观影</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives/" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about/" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact/" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends/" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">泉涸</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-list"></i>
+			
+			媒体
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>
+
+                  <a href="/books/ " style="margin-left:75px">
+				  
+				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
+			      
+		          <span>书单</span>
+                  </a>
+                </li>
+              
+                <li>
+
+                  <a href="/movies/ " style="margin-left:75px">
+				  
+				   <i class="fa fas fa-film" style="position: absolute;left:50px" ></i>
+			      
+		          <span>观影</span>
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/41.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Nacos服务注册源码分析</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%BA%90%E7%A0%81/">
+                                <span class="chip bg-color">源码</span>
+                            </a>
+                        
+                            <a href="/tags/Nacos/">
+                                <span class="chip bg-color">Nacos</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+                                <span class="chip bg-color">微服务</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
+                                <span class="chip bg-color">分布式</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%BA%90%E7%A0%81/" class="post-category">
+                                源码
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-09-28
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-09-28
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.4k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    11 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="源码构建"><a href="#源码构建" class="headerlink" title="源码构建"></a>源码构建</h2><p>版本：1.4.1</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos">源码地址</a></p>
+<h3 id="git-下载"><a href="#git-下载" class="headerlink" title="git 下载"></a>git 下载</h3><pre class=" language-sh"><code class="language-sh">git clone -b 1.4.1 https://github.com/alibaba/nacos.git
+</code></pre>
+<h3 id="maven编译"><a href="#maven编译" class="headerlink" title="maven编译"></a>maven编译</h3><pre class=" language-sh"><code class="language-sh">mvn -Prelease-nacos -Dmaven.test.skip=true -Drat.skip=true clean install -U
+</code></pre>
+<h3 id="启动nacos"><a href="#启动nacos" class="headerlink" title="启动nacos"></a>启动nacos</h3><p>启动类 com.alibaba.nacos.Nacos</p>
+<p>修改启动参数</p>
+<pre class=" language-sh"><code class="language-sh">-Dnacos.standalone=true -Dnacos.home=[源码地址]
+</code></pre>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211017121719.png"></p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211017122345.png"></p>
+<h3 id="配置MySQL"><a href="#配置MySQL" class="headerlink" title="配置MySQL"></a>配置MySQL</h3><p>conf\application.properties</p>
+<pre><code>spring.datasource.platform=mysql
+
+### Count of DB:
+db.num=1
+
+### Connect URL of DB:
+db.url.0=jdbc:mysql://localhost:3306/nacos?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=UTC
+db.user.0=nacos
+db.password.0=nacos
+</code></pre>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211017122942.png"></p>
+<h2 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h2><p>首先我们要知道整个服务注册发现的流程，服务注册是在客户端这边实现的。还记得我们项目要想使用nacos首先要引入一个jar包<code>spring‐cloud‐starter‐alibaba‐nacos‐discovery</code>。我们来到这个jar包，</p>
+<img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/202111131636792096832.png" alt="202111131636792096832" style="zoom:50%;">
+
+<p>看到这，我们发现是个springboot项目，遵循着springboot自动装配规则，进入spring.factories看到</p>
+<img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/202111131636792195848.png" alt="202111131636792195848" style="zoom:50%;">
+
+<p>通过命名我们来到NacosServiceRegistryAutoConfiguration(Nacos服务注册自动装配类)这里就是nacos服务注册的代码入口。</p>
+<p>分析NacosServiceRegistryAutoConfiguration这里的代码发现核心在NacosAutoServiceRegistration，其余2个Bean注入之后都往这个Bean里面注入。</p>
+<img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/202111131636792877915.png" alt="202111131636792877915" style="zoom:50%;">
+
+<p>NacosServiceRegistryAutoConfiguration通过类图发信其父类实现了<code>ApplicationListener&lt;WebServerInitializedEvent&gt;</code>，通过spring我们知道实现了ApplicationListener必然会有一个onApplicationEvent在spring容器启动的时候调用</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onApplicationEvent</span><span class="token punctuation">(</span>WebServerInitializedEvent event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">bind</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@Deprecated</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">bind</span><span class="token punctuation">(</span>WebServerInitializedEvent event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  ApplicationContext context <span class="token operator">=</span> event<span class="token punctuation">.</span><span class="token function">getApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>context <span class="token keyword">instanceof</span> <span class="token class-name">ConfigurableWebServerApplicationContext</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token string">"management"</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>ConfigurableWebServerApplicationContext<span class="token punctuation">)</span> context<span class="token punctuation">)</span>
+                            <span class="token punctuation">.</span><span class="token function">getServerNamespace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>port<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> event<span class="token punctuation">.</span><span class="token function">getWebServer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getPort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>找到这我们终于发现了nacos服务注册真正的入口所在</p>
+<p>一直往里面跟bind()-&gt;start()-&gt;register()-&gt;serviceRegistry.register()-&gt;namingService.registerInstance()</p>
+<h3 id="开启心跳任务并注册实例"><a href="#开启心跳任务并注册实例" class="headerlink" title="开启心跳任务并注册实例"></a>开启心跳任务并注册实例</h3><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">registerInstance</span><span class="token punctuation">(</span>String serviceName<span class="token punctuation">,</span> String groupName<span class="token punctuation">,</span> Instance instance<span class="token punctuation">)</span> <span class="token keyword">throws</span> NacosException <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 判断是不是临时实例，进去看默认是true</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">isEphemeral</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment" spellcheck="true">// 构建一个心跳实例，将服务实例一些信息存进去</span>
+        BeatInfo beatInfo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BeatInfo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        beatInfo<span class="token punctuation">.</span><span class="token function">setServiceName</span><span class="token punctuation">(</span>NamingUtils<span class="token punctuation">.</span><span class="token function">getGroupedName</span><span class="token punctuation">(</span>serviceName<span class="token punctuation">,</span> groupName<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        beatInfo<span class="token punctuation">.</span><span class="token function">setIp</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getIp</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        beatInfo<span class="token punctuation">.</span><span class="token function">setPort</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getPort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        beatInfo<span class="token punctuation">.</span><span class="token function">setCluster</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getClusterName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        beatInfo<span class="token punctuation">.</span><span class="token function">setWeight</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getWeight</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        beatInfo<span class="token punctuation">.</span><span class="token function">setMetadata</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        beatInfo<span class="token punctuation">.</span><span class="token function">setScheduled</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token comment" spellcheck="true">// 获取心跳间隔，这里也就是一个定时任务的间隔，默认5s 可配置--preserved.heart.beat.interval</span>
+        <span class="token keyword">long</span> instanceInterval <span class="token operator">=</span> instance<span class="token punctuation">.</span><span class="token function">getInstanceHeartBeatInterval</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token comment" spellcheck="true">// 容错，如果配置是0 使用默认值</span>
+        beatInfo<span class="token punctuation">.</span><span class="token function">setPeriod</span><span class="token punctuation">(</span>instanceInterval <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">?</span> DEFAULT_HEART_BEAT_INTERVAL <span class="token operator">:</span> instanceInterval<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token comment" spellcheck="true">// 跟进去我们会发现会开启一个ScheduledThreadPoolExecutor执行周期性任务，任务是BeatTask，beatTask里面就存了刚刚封装的beanInfo实例。这一块的心跳代码我会放在后面的  服务心跳目录</span>
+        beatReactor<span class="token punctuation">.</span><span class="token function">addBeatInfo</span><span class="token punctuation">(</span>NamingUtils<span class="token punctuation">.</span><span class="token function">getGroupedName</span><span class="token punctuation">(</span>serviceName<span class="token punctuation">,</span> groupName<span class="token punctuation">)</span><span class="token punctuation">,</span> beatInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+        <span class="token comment" spellcheck="true">// 调用服务端服务注册接口</span>
+    serverProxy<span class="token punctuation">.</span><span class="token function">registerService</span><span class="token punctuation">(</span>NamingUtils<span class="token punctuation">.</span><span class="token function">getGroupedName</span><span class="token punctuation">(</span>serviceName<span class="token punctuation">,</span> groupName<span class="token punctuation">)</span><span class="token punctuation">,</span> groupName<span class="token punctuation">,</span> instance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="调用服务端接口注册服务"><a href="#调用服务端接口注册服务" class="headerlink" title="调用服务端接口注册服务"></a>调用服务端接口注册服务</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">registerService</span><span class="token punctuation">(</span>String serviceName<span class="token punctuation">,</span> String groupName<span class="token punctuation">,</span> Instance instance<span class="token punctuation">)</span> <span class="token keyword">throws</span> NacosException <span class="token punctuation">{</span>
+
+    NAMING_LOGGER<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"[REGISTER-SERVICE] {} registering service {} with instance: {}"</span><span class="token punctuation">,</span>
+        namespaceId<span class="token punctuation">,</span> serviceName<span class="token punctuation">,</span> instance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">// 将实例信息封装</span>
+    <span class="token keyword">final</span> Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> String<span class="token operator">></span> params <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token operator">&lt;</span>String<span class="token punctuation">,</span> String<span class="token operator">></span><span class="token punctuation">(</span><span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>CommonParams<span class="token punctuation">.</span>NAMESPACE_ID<span class="token punctuation">,</span> namespaceId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>CommonParams<span class="token punctuation">.</span>SERVICE_NAME<span class="token punctuation">,</span> serviceName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>CommonParams<span class="token punctuation">.</span>GROUP_NAME<span class="token punctuation">,</span> groupName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>CommonParams<span class="token punctuation">.</span>CLUSTER_NAME<span class="token punctuation">,</span> instance<span class="token punctuation">.</span><span class="token function">getClusterName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"ip"</span><span class="token punctuation">,</span> instance<span class="token punctuation">.</span><span class="token function">getIp</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"port"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getPort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"weight"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getWeight</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"enable"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">isEnabled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"healthy"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">isHealthy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"ephemeral"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">isEphemeral</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"metadata"</span><span class="token punctuation">,</span> JSON<span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 发起请求API  /nacos/v1/ns/instance -- post  去官网发现这个接口确实是服务注册的接口</span>
+    <span class="token function">reqAPI</span><span class="token punctuation">(</span>UtilAndComs<span class="token punctuation">.</span>NACOS_URL_INSTANCE<span class="token punctuation">,</span> params<span class="token punctuation">,</span> HttpMethod<span class="token punctuation">.</span>POST<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+</code></pre>
+<img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/202111131636794995832.png" alt="202111131636794995832" style="zoom:30%;">
+
+<p>现在nacos客户端发起一个http请求调用服务端，那么我们为了追求逻辑的连贯性，我们要去看nacos服务端是怎么处理请求的</p>
+<p>这里的代码入口很简单，既然服务端要接受请求直接搜请求即可。</p>
+<h3 id="Nacos-服务端处理服务注册请求"><a href="#Nacos-服务端处理服务注册请求" class="headerlink" title="Nacos 服务端处理服务注册请求"></a>Nacos 服务端处理服务注册请求</h3><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/202111131636795244559.png" alt="202111131636795244559" style="zoom:50%;">
+
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@CanDistro</span>
+<span class="token annotation punctuation">@PostMapping</span>
+<span class="token annotation punctuation">@Secured</span><span class="token punctuation">(</span>parser <span class="token operator">=</span> NamingResourceParser<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> action <span class="token operator">=</span> ActionTypes<span class="token punctuation">.</span>WRITE<span class="token punctuation">)</span>
+<span class="token keyword">public</span> String <span class="token function">register</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 获取发送请求带来的参数并解析</span>
+    <span class="token keyword">final</span> String namespaceId <span class="token operator">=</span> WebUtils
+            <span class="token punctuation">.</span><span class="token function">optional</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> CommonParams<span class="token punctuation">.</span>NAMESPACE_ID<span class="token punctuation">,</span> Constants<span class="token punctuation">.</span>DEFAULT_NAMESPACE_ID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> String serviceName <span class="token operator">=</span> WebUtils<span class="token punctuation">.</span><span class="token function">required</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> CommonParams<span class="token punctuation">.</span>SERVICE_NAME<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    NamingUtils<span class="token punctuation">.</span><span class="token function">checkServiceNameFormat</span><span class="token punctuation">(</span>serviceName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   
+    <span class="token keyword">final</span> Instance instance <span class="token operator">=</span> <span class="token function">parseInstance</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 开始注册</span>
+    serviceManager<span class="token punctuation">.</span><span class="token function">registerInstance</span><span class="token punctuation">(</span>namespaceId<span class="token punctuation">,</span> serviceName<span class="token punctuation">,</span> instance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token string">"ok"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">registerInstance</span><span class="token punctuation">(</span>String namespaceId<span class="token punctuation">,</span> String serviceName<span class="token punctuation">,</span> Instance instance<span class="token punctuation">)</span> <span class="token keyword">throws</span> NacosException <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 创建内存注册表结构 这里面其实挺重要的</span>
+        <span class="token function">createEmptyService</span><span class="token punctuation">(</span>namespaceId<span class="token punctuation">,</span> serviceName<span class="token punctuation">,</span> instance<span class="token punctuation">.</span><span class="token function">isEphemeral</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token comment" spellcheck="true">// 省略代码</span>
+        <span class="token comment" spellcheck="true">// 将实例放进空服务中去</span>
+        <span class="token function">addInstance</span><span class="token punctuation">(</span>namespaceId<span class="token punctuation">,</span> serviceName<span class="token punctuation">,</span> instance<span class="token punctuation">.</span><span class="token function">isEphemeral</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> instance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+</code></pre>
+<h4 id="createEmptyService-gt-putServiceAndInit（健康检查）"><a href="#createEmptyService-gt-putServiceAndInit（健康检查）" class="headerlink" title="createEmptyService->putServiceAndInit（健康检查）"></a>createEmptyService-&gt;putServiceAndInit（健康检查）</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">putServiceAndInit</span><span class="token punctuation">(</span>Service service<span class="token punctuation">)</span> <span class="token keyword">throws</span> NacosException <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 看这里面其实就可以看到我们nacos内存注册表结构到底长什么样了</span>
+    <span class="token function">putService</span><span class="token punctuation">(</span>service<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment" spellcheck="true">// 开启健康检查定时线程  ClientBeatCheckTask  这个也会在后面的健康检查目录</span>
+    service<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consistencyService
+            <span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span>KeyBuilder<span class="token punctuation">.</span><span class="token function">buildInstanceListKey</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">getNamespaceId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> service<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">,</span> service<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consistencyService
+            <span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span>KeyBuilder<span class="token punctuation">.</span><span class="token function">buildInstanceListKey</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">getNamespaceId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> service<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span> service<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    Loggers<span class="token punctuation">.</span>SRV_LOG<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"[NEW-SERVICE] {}"</span><span class="token punctuation">,</span> service<span class="token punctuation">.</span><span class="token function">toJson</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 内存注册表结构，serviceMap == Map&lt;String,Map&lt;String,Service></span>
+<span class="token comment" spellcheck="true">// 转化为实际存储 -- Map&lt;namespace,Mao&lt;group::serviceName,Service>></span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">putService</span><span class="token punctuation">(</span>Service service<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>serviceMap<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">getNamespaceId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>putServiceLock<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>serviceMap<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">getNamespaceId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        serviceMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">getNamespaceId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">ConcurrentSkipListMap</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  serviceMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">getNamespaceId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> service<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="addInstance"><a href="#addInstance" class="headerlink" title="addInstance"></a>addInstance</h4><p>将实例放进注册表结构中</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addInstance</span><span class="token punctuation">(</span>String namespaceId<span class="token punctuation">,</span> String serviceName<span class="token punctuation">,</span> <span class="token keyword">boolean</span> ephemeral<span class="token punctuation">,</span> Instance<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> ips<span class="token punctuation">)</span>
+        <span class="token keyword">throws</span> NacosException <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 构建实例key , 通过实例key可区分临时节点还是持久节点</span>
+    String key <span class="token operator">=</span> KeyBuilder<span class="token punctuation">.</span><span class="token function">buildInstanceListKey</span><span class="token punctuation">(</span>namespaceId<span class="token punctuation">,</span> serviceName<span class="token punctuation">,</span> ephemeral<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 获取服务</span>
+    Service service <span class="token operator">=</span> <span class="token function">getService</span><span class="token punctuation">(</span>namespaceId<span class="token punctuation">,</span> serviceName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 将实例丢进服务里</span>
+    <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>service<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment" spellcheck="true">// 获取原来的服务实例列表然后将新实例放进去</span>
+        List<span class="token operator">&lt;</span>Instance<span class="token operator">></span> instanceList <span class="token operator">=</span> <span class="token function">addIpAddresses</span><span class="token punctuation">(</span>service<span class="token punctuation">,</span> ephemeral<span class="token punctuation">,</span> ips<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        Instances instances <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Instances</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        instances<span class="token punctuation">.</span><span class="token function">setInstanceList</span><span class="token punctuation">(</span>instanceList<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 这里调的是DelegateConsistencyServiceImpl  因为spring注入的就是它</span>
+          <span class="token comment" spellcheck="true">// 核心方法，这里会根据生成的key是否是临时实例调用不同的服务同步方法</span>
+        consistencyService<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> instances<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="临时实例服务同步"><a href="#临时实例服务同步" class="headerlink" title="临时实例服务同步"></a>临时实例服务同步</h3><p>consistencyService.put(key, instances)-&gt;mapConsistencyService(key).put(key, value);</p>
+<p>临时实例服务–ephemeralConsistencyService<br>持久实例服务–persistentConsistencyService</p>
+<p>这里我们仅仅先看临时实例是怎么做的，持久实例CP架构较为复杂</p>
+<p>临时实例这里调用的是DistroConsistencyServiceImpl#put()</p>
+<h4 id="DistroConsistencyServiceImpl-put"><a href="#DistroConsistencyServiceImpl-put" class="headerlink" title="DistroConsistencyServiceImpl#put()"></a>DistroConsistencyServiceImpl#put()</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">put</span><span class="token punctuation">(</span>String key<span class="token punctuation">,</span> Record value<span class="token punctuation">)</span> <span class="token keyword">throws</span> NacosException <span class="token punctuation">{</span>
+    <span class="token function">onPut</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment" spellcheck="true">// 集群服务同步节点数据</span>
+    distroProtocol<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">DistroKey</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> KeyBuilder<span class="token punctuation">.</span>INSTANCE_LIST_KEY_PREFIX<span class="token punctuation">)</span><span class="token punctuation">,</span> DataOperation<span class="token punctuation">.</span>CHANGE<span class="token punctuation">,</span>
+            globalConfig<span class="token punctuation">.</span><span class="token function">getTaskDispatchPeriod</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="onPut"><a href="#onPut" class="headerlink" title="onPut"></a>onPut</h4><p>这里的方法并没有真正的将实例放进服务里面去，而是放进一个阻塞队列里面去</p>
+<p><strong>这里这样处理的一个关键原因想必是通过异步操作提升性能，但同时会有一个问题就是不会写入立即生效，会与一定的延迟，但nacos认为这种延迟其实并不是影响很严重，性能要求优先于一致性要求</strong></p>
+<pre class=" language-java"><code class="language-java">notifier<span class="token punctuation">.</span><span class="token function">addTask</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> DataOperation<span class="token punctuation">.</span>CHANGE<span class="token punctuation">)</span>
+
+<span class="token keyword">private</span> BlockingQueue<span class="token operator">&lt;</span>Pair<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> DataOperation<span class="token operator">>></span> tasks <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayBlockingQueue</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addTask</span><span class="token punctuation">(</span>String datumKey<span class="token punctuation">,</span> DataOperation action<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>services<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>datumKey<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> action <span class="token operator">==</span> DataOperation<span class="token punctuation">.</span>CHANGE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>action <span class="token operator">==</span> DataOperation<span class="token punctuation">.</span>CHANGE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        services<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>datumKey<span class="token punctuation">,</span> StringUtils<span class="token punctuation">.</span>EMPTY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+      <span class="token comment" spellcheck="true">// 别被名字误导了这里不是定时任务，而是一个阻塞队列，现在问题是从哪里从队列获取数据并放入实例里面去呢</span>
+    tasks<span class="token punctuation">.</span><span class="token function">offer</span><span class="token punctuation">(</span>Pair<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>datumKey<span class="token punctuation">,</span> action<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="阻塞队列取数据并放入注册表"><a href="#阻塞队列取数据并放入注册表" class="headerlink" title="阻塞队列取数据并放入注册表"></a>阻塞队列取数据并放入注册表</h4><p>在DistroConsistencyServiceImpl类的init方法，我们发现它上面有注解@PostConstruct可知它会在spring容器启动后调用</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@PostConstruct</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 开启一个线程,线程执行Notifier，从阻塞队列取数据并放入内存注册表</span>
+    GlobalExecutor<span class="token punctuation">.</span><span class="token function">submitDistroNotifyTask</span><span class="token punctuation">(</span>notifier<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Notifier#run</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Loggers<span class="token punctuation">.</span>DISTRO<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"distro notifier started"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span> <span class="token punctuation">;</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+              <span class="token comment" spellcheck="true">// 从阻塞队列取数据</span>
+            Pair<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> DataOperation<span class="token operator">></span> pair <span class="token operator">=</span> tasks<span class="token punctuation">.</span><span class="token function">take</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">handle</span><span class="token punctuation">(</span>pair<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            Loggers<span class="token punctuation">.</span>DISTRO<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"[NACOS-DISTRO] Error while handling notifying task"</span><span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+
+<span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">handle</span><span class="token punctuation">(</span>Pair<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> DataOperation<span class="token operator">></span> pair<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  String datumKey <span class="token operator">=</span> pair<span class="token punctuation">.</span><span class="token function">getValue0</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  DataOperation action <span class="token operator">=</span> pair<span class="token punctuation">.</span><span class="token function">getValue1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  services<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>datumKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">int</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>listeners<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>datumKey<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">for</span> <span class="token punctuation">(</span>RecordListener listener <span class="token operator">:</span> listeners<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>datumKey<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    count<span class="token operator">++</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>action <span class="token operator">==</span> DataOperation<span class="token punctuation">.</span>CHANGE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 核心方法 它下面的updateIPs是真正的更新实例的地方</span>
+      listener<span class="token punctuation">.</span><span class="token function">onChange</span><span class="token punctuation">(</span>datumKey<span class="token punctuation">,</span> dataStore<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>datumKey<span class="token punctuation">)</span><span class="token punctuation">.</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">continue</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>action <span class="token operator">==</span> DataOperation<span class="token punctuation">.</span>DELETE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      listener<span class="token punctuation">.</span><span class="token function">onDelete</span><span class="token punctuation">(</span>datumKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">continue</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>updateIps</p>
+<p><strong>这里运用了CopyOnWrite思想防止并发读写冲突, 把原内存结构复制一份，在复制的结构里面进行操作，操作完成后在合并回真正的注册表内存里去。</strong></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">updateIPs</span><span class="token punctuation">(</span>Collection<span class="token operator">&lt;</span>Instance<span class="token operator">></span> instances<span class="token punctuation">,</span> <span class="token keyword">boolean</span> ephemeral<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 构建一个空结构</span>
+    Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> List<span class="token operator">&lt;</span>Instance<span class="token operator">>></span> ipMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span>clusterMap<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>String clusterName <span class="token operator">:</span> clusterMap<span class="token punctuation">.</span><span class="token function">keySet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        ipMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>clusterName<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 将实例都放进刚刚构建的ipMap中去</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>Instance instance <span class="token operator">:</span> instances<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>StringUtils<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getClusterName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        instance<span class="token punctuation">.</span><span class="token function">setClusterName</span><span class="token punctuation">(</span>UtilsAndCommons<span class="token punctuation">.</span>DEFAULT_CLUSTER_NAME<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>clusterMap<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getClusterName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Cluster cluster <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Cluster</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getClusterName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        cluster<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">getClusterMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getClusterName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> cluster<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      List<span class="token operator">&lt;</span>Instance<span class="token operator">></span> clusterIPs <span class="token operator">=</span> ipMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getClusterName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>clusterIPs <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        clusterIPs <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LinkedList</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ipMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">getClusterName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> clusterIPs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      clusterIPs<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>instance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>Map<span class="token punctuation">.</span>Entry<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> List<span class="token operator">&lt;</span>Instance<span class="token operator">>></span> entry <span class="token operator">:</span> ipMap<span class="token punctuation">.</span><span class="token function">entrySet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//make every ip mine</span>
+        List<span class="token operator">&lt;</span>Instance<span class="token operator">></span> entryIPs <span class="token operator">=</span> entry<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token comment" spellcheck="true">// 更新ipMap中实例</span>
+        clusterMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>entry<span class="token punctuation">.</span><span class="token function">getKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">updateIps</span><span class="token punctuation">(</span>entryIPs<span class="token punctuation">,</span> ephemeral<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token function">setLastModifiedMillis</span><span class="token punctuation">(</span>System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment" spellcheck="true">// 服务变更，发布事件ServiceChangeEvent</span>
+    <span class="token function">getPushService</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">serviceChanged</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    StringBuilder stringBuilder <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StringBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>Instance instance <span class="token operator">:</span> <span class="token function">allIPs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        stringBuilder<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">toIpAddr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"_"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">isHealthy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="服务心跳"><a href="#服务心跳" class="headerlink" title="服务心跳"></a>服务心跳</h2><p>之前我们在客户端注册服务时发现会开启一个BeatTask任务去进行服务心跳</p>
+<p>我们直接跳到BeatTask</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">BeatTask</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">{</span>
+
+    BeatInfo beatInfo<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token function">BeatTask</span><span class="token punctuation">(</span>BeatInfo beatInfo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>beatInfo <span class="token operator">=</span> beatInfo<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>beatInfo<span class="token punctuation">.</span><span class="token function">isStopped</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+          <span class="token comment" spellcheck="true">// 发送服务心跳请求</span>
+        <span class="token keyword">long</span> result <span class="token operator">=</span> serverProxy<span class="token punctuation">.</span><span class="token function">sendBeat</span><span class="token punctuation">(</span>beatInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">long</span> nextTime <span class="token operator">=</span> result <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">?</span> result <span class="token operator">:</span> beatInfo<span class="token punctuation">.</span><span class="token function">getPeriod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executorService<span class="token punctuation">.</span><span class="token function">schedule</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">BeatTask</span><span class="token punctuation">(</span>beatInfo<span class="token punctuation">)</span><span class="token punctuation">,</span> nextTime<span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>MILLISECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">long</span> <span class="token function">sendBeat</span><span class="token punctuation">(</span>BeatInfo beatInfo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> String<span class="token operator">></span> params <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token operator">&lt;</span>String<span class="token punctuation">,</span> String<span class="token operator">></span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"beat"</span><span class="token punctuation">,</span> JSON<span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span>beatInfo<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>CommonParams<span class="token punctuation">.</span>NAMESPACE_ID<span class="token punctuation">,</span> namespaceId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    params<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>CommonParams<span class="token punctuation">.</span>SERVICE_NAME<span class="token punctuation">,</span> beatInfo<span class="token punctuation">.</span><span class="token function">getServiceName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment" spellcheck="true">// 路由 /nacos/v1/ns/instance/beat</span>
+    String result <span class="token operator">=</span> <span class="token function">reqAPI</span><span class="token punctuation">(</span>UtilAndComs<span class="token punctuation">.</span>NACOS_URL_BASE <span class="token operator">+</span> <span class="token string">"/instance/beat"</span><span class="token punctuation">,</span> params<span class="token punctuation">,</span> HttpMethod<span class="token punctuation">.</span>PUT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    JSONObject jsonObject <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">parseObject</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>jsonObject <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> jsonObject<span class="token punctuation">.</span><span class="token function">getLong</span><span class="token punctuation">(</span><span class="token string">"clientBeatInterval"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> 0L<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/202111131636800357597.png" alt="202111131636800357597" style="zoom:30%;">
+
+<h2 id="健康检查"><a href="#健康检查" class="headerlink" title="健康检查"></a>健康检查</h2><p>之前我们在服务端注册服务时发现会开启一个ClientBeatCheckTask任务去进行服务心跳</p>
+<p>我们直接跳到ClientBeatCheckTask</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  List<span class="token operator">&lt;</span>Instance<span class="token operator">></span> instances <span class="token operator">=</span> service<span class="token punctuation">.</span><span class="token function">allIPs</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// 遍历所有实例，不满足要求的标记为不健康</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span>Instance instance <span class="token operator">:</span> instances<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 当前时间-最后心跳时间 > 15秒 可配置 -- preserved.heart.beat.timeout</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> instance<span class="token punctuation">.</span><span class="token function">getLastBeat</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> instance<span class="token punctuation">.</span><span class="token function">getInstanceHeartBeatTimeOut</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>instance<span class="token punctuation">.</span><span class="token function">isMarked</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token function">isHealthy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          instance<span class="token punctuation">.</span><span class="token function">setHealthy</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token function">getPushService</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">serviceChanged</span><span class="token punctuation">(</span>service<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          ApplicationUtils<span class="token punctuation">.</span><span class="token function">publishEvent</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">InstanceHeartbeatTimeoutEvent</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> instance<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">getGlobalConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isExpireInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">// 遍历所有实例，不满足要求的剔除服务</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span>Instance instance <span class="token operator">:</span> instances<span class="token punctuation">)</span> <span class="token punctuation">{</span>  
+    <span class="token comment" spellcheck="true">// 当前时间-最后心跳时间 > 30秒 可配置 -- preserved.ip.delete.timeout</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> instance<span class="token punctuation">.</span><span class="token function">getLastBeat</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> instance<span class="token punctuation">.</span><span class="token function">getIpDeleteTimeout</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 剔除实例</span>
+      <span class="token function">deleteIp</span><span class="token punctuation">(</span>instance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span> 
+<span class="token punctuation">}</span>
+</code></pre>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">dm</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://dmsupine.com/2021/09/28/nacos-zhu-ce-zhong-xin-yuan-ma-fen-xi/">https://dmsupine.com/2021/09/28/nacos-zhu-ce-zhong-xin-yuan-ma-fen-xi/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">dm</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E6%BA%90%E7%A0%81/">
+                                    <span class="chip bg-color">源码</span>
+                                </a>
+                            
+                                <a href="/tags/Nacos/">
+                                    <span class="chip bg-color">Nacos</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+                                    <span class="chip bg-color">微服务</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
+                                    <span class="chip bg-color">分布式</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: 'a7dae2457ac8bb52ca25',
+        clientSecret: '6de9aaae9875b4a5bee3f6e27b98494639bbcd8a',
+        repo: 'dm13579.github.io',
+        owner: 'dm13579',
+        admin: "dm13579",
+        id: '2021-09-28T20-15-00',
+        distractionFreeMode: false,  // Facebook-like distraction free mode
+        proxy:'https://aqueous-journey-79823.herokuapp.com/https://github.com/login/oauth/access_token'
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2021/09/28/nacos-zhu-ce-zhong-xin-yuan-ma-fen-xi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/41.jpg" class="responsive-img" alt="Nacos服务注册源码分析">
+                        
+                        <span class="card-title">Nacos服务注册源码分析</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            源码构建版本：1.4.1
+源码地址
+git 下载git clone -b 1.4.1 https://github.com/alibaba/nacos.git
+
+maven编译mvn -Prelease-nacos -Dmaven.test
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-28
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%BA%90%E7%A0%81/" class="post-category">
+                                    源码
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%BA%90%E7%A0%81/">
+                        <span class="chip bg-color">源码</span>
+                    </a>
+                    
+                    <a href="/tags/Nacos/">
+                        <span class="chip bg-color">Nacos</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+                        <span class="chip bg-color">微服务</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
+                        <span class="chip bg-color">分布式</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/09/20/nacos-zhu-ce-zhong-xin-ji-ben-gai-nian-he-shi-yong/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/0.jpg" class="responsive-img" alt="Nacos注册中心基本概念和使用">
+                        
+                        <span class="card-title">Nacos注册中心基本概念和使用</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            前言Nacos 致力于帮助您发现、配置和管理微服务。Nacos 提供了一组简单易用的特性集，帮助您快速实现动态服务发现、服务配置、服务元数据及流量管理。
+Nacos 帮助您更敏捷和容易地构建、交付和管理微服务平台。 Nacos 是构建以“服
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-20
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Nacos/">
+                        <span class="chip bg-color">Nacos</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+                        <span class="chip bg-color">微服务</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
+                        <span class="chip bg-color">分布式</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 泉涸<br />'
+            + '文章作者: dm<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2020-2020 DongMing. 版权所有
+
+            
+            &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+            <span class="white-color">135.2k</span>
+            
+
+            <br>
+            <span id="sitetime"></span>
+
+            
+            
+            <br>
+            
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <i class="fa fa-heart-o"></i>
+                本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv" style='display:none'>
+                人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+            </span>
+            
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/dm13579" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:dongming053021@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1903959864" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 1903959864" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+        var t1 = Date.UTC(2020, 08, 20, 00, 00, 00); //北京时间2018-2-13 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/search.xml", 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+    <script type="text/javascript" color="122 103 238"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-2" count="200"
+        src="/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "别走啊！", clearTimeout(st)) : (document.title = "回来喽！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) }) </script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+
+</html>
