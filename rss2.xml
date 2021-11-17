@@ -9,8 +9,41 @@
     <atom:link href="https://dmsupine.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description></description>
-    <pubDate>Wed, 06 Oct 2021 12:15:00 GMT</pubDate>
+    <pubDate>Thu, 14 Oct 2021 12:15:00 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Nacos单机以及集群搭建</title>
+      <link>https://dmsupine.com/2021/10/14/nacos-dan-ji-yi-ji-ji-qun-da-jian/</link>
+      <guid>https://dmsupine.com/2021/10/14/nacos-dan-ji-yi-ji-ji-qun-da-jian/</guid>
+      <pubDate>Thu, 14 Oct 2021 12:15:00 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;环境准备&quot;&gt;&lt;a href=&quot;#环境准备&quot; class=&quot;headerlink&quot; title=&quot;环境准备&quot;&gt;&lt;/a&gt;环境准备&lt;/h2&gt;&lt;p&gt;操作系统：CentOS7&lt;/p&gt;
+&lt;p&gt;nacos：1.4.2&lt;/p&gt;
+&lt;p&gt;git地址：&lt;a</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://dmsupine.com/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/">安装手册</category>
+      
+      
+      <category domain="https://dmsupine.com/tags/%E5%AE%89%E8%A3%85/">安装</category>
+      
+      <category domain="https://dmsupine.com/tags/Linux/">Linux</category>
+      
+      <category domain="https://dmsupine.com/tags/Nacos/">Nacos</category>
+      
+      
+      <comments>https://dmsupine.com/2021/10/14/nacos-dan-ji-yi-ji-ji-qun-da-jian/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Nacos配置中心使用以及源码分析</title>

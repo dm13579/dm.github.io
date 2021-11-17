@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 	<meta name="baidu-site-verification" content="lElrePz9Qe" />
 	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
-    <meta name="keywords" content="RocketMQ,消息队列">
+    <meta name="keywords" content="Nacos单机以及集群搭建, 泉涸">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -29,7 +29,7 @@
 </script>
 
 
-    <title>RocketMQ生产问题实践 | 泉涸</title>
+    <title>Nacos单机以及集群搭建 | 泉涸</title>
     <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -328,12 +328,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/7.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/5.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">RocketMQ生产问题实践</h1>
+                    <h1 class="description center-align post-title">Nacos单机以及集群搭建</h1>
                 </div>
             </div>
         </div>
@@ -450,16 +450,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">
-                                <span class="chip bg-color">生产实践</span>
+                            <a href="/tags/%E5%AE%89%E8%A3%85/">
+                                <span class="chip bg-color">安装</span>
                             </a>
                         
-                            <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                                <span class="chip bg-color">消息队列</span>
+                            <a href="/tags/Linux/">
+                                <span class="chip bg-color">Linux</span>
                             </a>
                         
-                            <a href="/tags/RocketMQ/">
-                                <span class="chip bg-color">RocketMQ</span>
+                            <a href="/tags/Nacos/">
+                                <span class="chip bg-color">Nacos</span>
                             </a>
                         
                     </div>
@@ -470,8 +470,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                笔记
+                            <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
+                                安装手册
                             </a>
                         
                     </div>
@@ -483,28 +483,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-01-12
+                    2021-10-14
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-01-12
+                    2021-10-14
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.5k
+                    268
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    8 分
+                    1 分
                 </div>
                 
 
@@ -519,67 +519,55 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="RocketMQ如何保证消息不丢失"><a href="#RocketMQ如何保证消息不丢失" class="headerlink" title="RocketMQ如何保证消息不丢失"></a>RocketMQ如何保证消息不丢失</h2><p>RocketMQ的一个发送消息流程</p>
-<p>生产者 =&gt; Broker =&gt; 消费者     Broker master =&gt; slave =&gt; 磁盘</p>
-<ol>
-<li>生产者发送消息给到Broker</li>
-<li>Broker进行主从同步</li>
-<li>Broker不管Master还是Slave进行刷盘操作</li>
-<li>Broker将消息投递给消费者</li>
-</ol>
-<p>在上面4个步骤任何一个步骤都将会出现消息丢失的情况，当然别的MQ也会有同样的情况出现。其实还有第5种情况NameServer挂了。</p>
-<p>下面针对这5种情况进行分析</p>
-<h3 id="生产者发送消息"><a href="#生产者发送消息" class="headerlink" title="生产者发送消息"></a>生产者发送消息</h3><p>所有网络请求都是不可靠的，走网络请求都有一定的消息丢失的可能性。</p>
-<p>同步发送是一个好办法，发送等Broker有应答了表示Broker接收成功进行下一步操作。</p>
-<p>但这样有问题,我消息发送出去了，但本地代码执行异常了怎么办。或许有人说可以本地代码执行完成再去进行消息发送操作，但这样消息发送失败了怎么办。这些都有各种各样的问题。RocketMQ对于这些场景提供了事务消息的思路。</p>
-<p>事务消息其实相当于给我们很多次反悔的操作。</p>
-<h4 id="事务消息实现机制"><a href="#事务消息实现机制" class="headerlink" title="事务消息实现机制"></a>事务消息实现机制</h4><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210107112452.png"></p>
-<p>步骤：</p>
-<ol>
-<li>发送方将half事务消息发送到broker</li>
-<li>broker把消息持久化成功，向发送方返回ACK确认收到消息。</li>
-<li>发送方开始执行本地事务</li>
-<li>发送方根据本地事务执行结果向broker发送二次确认</li>
-<li>broker收到发送方commit状态则将half事务消息标记为可投递，订阅方可以收到消息。。发送方rollback状态，则删除half事务消息。。如果步骤4的二次确认没有发送到broker则会过一段时间broker会对发送方进行消息回查，发送方收到消息回查，检查对应消息的本地事务执行结果。发送方根据回查结果继续步骤5。</li>
-</ol>
-<h4 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A:"></a>Q&amp;A:</h4><p><strong>半事务消息发送失败怎么办？</strong></p>
-<p>要想回答这个问题，首先得了解半事务消息有什么作用。半事务消息主要作用是一个探测功能，证明RocketMQ是可用的。如果没有启动事务消息我们通常的操作是执行本地然后发消息，这样就可能出现一个尴尬的情况，本地都执行成功了，写消息失败了。而引入了半事务消息机制，半事务消息写入失败，没事，我们这时一般认为MQ服务不可用，给要执行的本地代码一个标记，等MQ服务正常重新执行流程。</p>
-<p><strong>本地事务执行失败怎么办？</strong></p>
-<p>比如本地事务需要执行Mysql,刚好这时候Mysql宕了。我们一般可以把数据缓存起来，给Broker一个UNKNOW状态，等待Broker的回查，回查的时候吧缓存起来的数据继续执行本地事务。</p>
-<h3 id="Broker主从同步"><a href="#Broker主从同步" class="headerlink" title="Broker主从同步"></a>Broker主从同步</h3><p>之前2m-2s-async集群的搭建方式其实是不推荐的，生产上一般是使用Dledger搭建集群。因为2m-2s有个生来就有的问题就是不会主从切换，主节点挂了从节点不会顶上去。直到RocketMQ4.5以后的版本才支持Dledger集群。</p>
-<p>Dledger集群会托管CommitLog文件，所以不是像之前配置brokerRole解决主从同步数据丢失的情况。</p>
-<h4 id="Dledger文件同步"><a href="#Dledger文件同步" class="headerlink" title="Dledger文件同步"></a>Dledger文件同步</h4><p>Dledger会通过两阶段提交解决文件同步问题，具体流程如下</p>
-<p>数据同步会通过两个阶段，一个是uncommitted阶段，一个是commited阶段</p>
-<ol>
-<li>Leader Broker上的Dledger收到一条数据后，会标记为uncommitted状态，然后他通过自己的DledgerServer组件把这个uncommitted数据发给Follower Broker的DledgerServer组件</li>
-<li>Follower Broker的DledgerServer收到uncommitted消息之后，必须返回一个ack给Leader Broker的Dledger。然后如果Leader Broker收到超过半数的Follower Broker返回的ack之后，就会把消息标记为committed状态</li>
-<li>Leader Broker上的DledgerServer就会发送committed消息给Follower Broker上的DledgerServer，让他们把消息也标记为committed状态。这样，就基于Raft协议完成了两阶段的数据同步</li>
-</ol>
-<h3 id="Broker同步刷盘"><a href="#Broker同步刷盘" class="headerlink" title="Broker同步刷盘"></a>Broker同步刷盘</h3><p>RocketMQ的刷盘方式flushDiskType配置成同步刷盘就可以保证消息在刷盘过程中不会丢失了</p>
-<h3 id="Broker投递消息"><a href="#Broker投递消息" class="headerlink" title="Broker投递消息"></a>Broker投递消息</h3><p>Broker投递消息本身就是看你的ack来解决的，只要不使用异步消费，一般消息是不会丢失的。但返回ack给broker的时候可能失败，下次就会再次消费消息，出现了重复消费的问题，下面会对重复消费进行解读。</p>
-<h3 id="NameServer挂了"><a href="#NameServer挂了" class="headerlink" title="NameServer挂了"></a>NameServer挂了</h3><p>大家都知道RocketMQ是通过NameServer进行路由转发的，如果集群中所有NameServer都挂了怎么办。</p>
-<p>在这种情况下，RocketMQ相当于整个服务都不可用了，那他本身肯定无法给我们保证消息不丢失了。我们只能自己设计一个降级方案来处理这个问题了。例如在订单系统中，如果多次尝试发送RocketMQ不成功，那就只能另外找给地方(Redis、文件或者内存等)把订单消息缓存下来，然后起一个线程定时的扫描这些失败的订单消息，尝试往RocketMQ发送。这样等RocketMQ的服务恢复过来后，就能第一时间把这些消息重新发送出去。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>完整分析过后，整个RocketMQ消息零丢失的方案就是</p>
-<ul>
-<li>生产者使用事务消息机制</li>
-<li>Broker配置同步刷盘+Dledger主从架构</li>
-<li>消费者不要使用异步消费</li>
-<li>整个MQ挂了之后准备降级方案</li>
-</ul>
-<h2 id="重复消费"><a href="#重复消费" class="headerlink" title="重复消费"></a>重复消费</h2><p>消费者消费消息的时候业务代码执行完毕正准备给Broker一个ack的时候突然就崩了，这时候ack没有给Broker,offset没有变，之前消费的消息一定会被再次消费，这样就带来了重复消费的问题。解决这种问题的根本就是通过一个全局唯一的编号，记录在Mysql中，消费了增加一条记录，消费前查询一下数据路有没有消费过这条消息。</p>
-<h2 id="消息顺序"><a href="#消息顺序" class="headerlink" title="消息顺序"></a>消息顺序</h2><p>在有些业务场景下可能要保证消息的顺序性。比如消息之间有依赖关系，只有前一个消费过了，后一个才能消费。</p>
-<h3 id="如何保证消息顺序"><a href="#如何保证消息顺序" class="headerlink" title="如何保证消息顺序"></a>如何保证消息顺序</h3><p>消息顺序有2种，全局有序，局部有序</p>
-<ul>
-<li>全局有序：整个MQ系统的所有消息严格按照队列先入先出顺序进行消费。</li>
-<li>局部有序：部分消息有序</li>
-</ul>
-<p>在大部分的MQ业务场景，我们只需要能够保证局部有序</p>
-<p>解决办法：</p>
-<p>发送者发送消息时，会通过MessageQueue轮询的方式保证消息尽量均匀的分布到所有的MessageQueue上，而消费者也就同样需要从多个MessageQueue上消费消息。而MessageQueue是RocketMQ存储消息的最小单元，他们之间的消息都是互相隔离的，在这种情况下，是无法保证消息全局有序</p>
-<p>局部有序：只需要将有序的一组消息都存入同一个MessageQueue里，这样MessageQueue的FIFO设计天生就可以保证这一组消息的有序。RocketMQ中，可以在发送者发送消息时指定一个MessageSelector对象，让这个对象来决定消息发入哪一个MessageQueue。这样就可以保证一组有序的消息能够发到同一个MessageQueue里。</p>
-<p>全局有序：Topic配置成只有一个MessageQueue队列。这样天生就能保证消息全局有序了</p>
-<h2 id="消息积压问题"><a href="#消息积压问题" class="headerlink" title="消息积压问题"></a>消息积压问题</h2><p>在正常情况下，使用MQ都会要尽量保证他的消息生产速度和消费速度整体上是平衡的，但是如果部分消费者系统出现故障，就会造成大量的消息积累。这类问题通常在实际工作中会出现得比较隐蔽。由于网络波动或数据库故障等情况，会导致消息大量的积累。这在一些大型的互联网项目中，消息积压的速度是相当恐怖的。所以消息积压是个需要时时关注的问题。</p>
-<h3 id="如何处理消息积压问题"><a href="#如何处理消息积压问题" class="headerlink" title="如何处理消息积压问题"></a>如何处理消息积压问题</h3><p>如果Topic下的MessageQueue配置得是足够多的，那每个Consumer实际上会分配多个MessageQueue来进行消费。这个时候，就可以简单的通过增加Consumer的服务节点数量来加快消息的消费，等积压消息消费完了，再恢复成正常情况。最极限的情况是把Consumer的节点个数设置成跟MessageQueue的个数相同。但是如果此时再继续增加Consumer的服务节点就没有用了。<br>而如果Topic下的MessageQueue配置得不够多的话，那就不能用上面这种增加Consumer节点个数的方法了。这时怎么办呢？ 这时如果要快速处理积压的消息，可以创建一个新的Topic，配置足够多的MessageQueue。然后把所有消费者节点的目标Topic转向新的Topic，并紧急上线一组新的消费者，只负责消费旧Topic中的消息，并转储到新的Topic中，这个速度是可以很快的。然后在新的Topic上，就可以通过增加消费者个数来提高消费速度了。之后再根据情况恢复成正常情况。</p>
+                <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>操作系统：CentOS7</p>
+<p>nacos：1.4.2</p>
+<p>git地址：<a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a></p>
+<h2 id="nacos单机搭建"><a href="#nacos单机搭建" class="headerlink" title="nacos单机搭建"></a>nacos单机搭建</h2><pre class=" language-shell"><code class="language-shell">## 下载
+wget https://github.com/alibaba/nacos/releases/download/1.4.2/nacos-server-1.4.2.tar.gz
+## 解压
+tar -zxvf nacos-server-1.4.2.tar.gz -C /nacoscluster
+## 重命名
+mv nacos /nacoscluster/
+</code></pre>
+<h3 id="application-properties"><a href="#application-properties" class="headerlink" title="application.properties"></a>application.properties</h3><p>修改端口</p>
+<pre class=" language-properties"><code class="language-properties"><span class="token attr-name">server.port</span><span class="token punctuation">=</span><span class="token attr-value">8091</span>
+</code></pre>
+<p>修改db持久化配置</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211116160146.png"></p>
+<h3 id="单机启动"><a href="#单机启动" class="headerlink" title="单机启动"></a>单机启动</h3><pre class=" language-shell"><code class="language-shell">bin/startup.sh -m standalone
+</code></pre>
+<h2 id="nacos集群搭建"><a href="#nacos集群搭建" class="headerlink" title="nacos集群搭建"></a>nacos集群搭建</h2><p>同样单机搭建，为了方便直接搭建了伪集群进行测试端口为8091、8092、8093</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211116164015.png"></p>
+<p>以8091为例</p>
+<pre class=" language-shell"><code class="language-shell">## 重命名示例文件
+mv cluster.conf.example cluster.conf
+vim cluster.conf
+</code></pre>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211116164409.png"></p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211116170825.png"></p>
+<p>全部启动</p>
+<pre class=" language-shell"><code class="language-shell">nacos8091/bin/startup.sh
+nacos8092/bin/startup.sh
+nacos8093/bin/startup.sh
+</code></pre>
+<p>访问页面成功</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211116170947.png"></p>
+<h2 id="通过nginx负载均衡"><a href="#通过nginx负载均衡" class="headerlink" title="通过nginx负载均衡"></a>通过nginx负载均衡</h2><pre class=" language-nginx"><code class="language-nginx"><span class="token keyword">upstream</span> nacoscluster<span class="token punctuation">{</span>
+    <span class="token keyword">server</span> <span class="token number">172.17</span><span class="token punctuation">.</span><span class="token number">0.2</span><span class="token punctuation">:</span><span class="token number">8091</span><span class="token punctuation">;</span>
+    <span class="token keyword">server</span> <span class="token number">172.17</span><span class="token punctuation">.</span><span class="token number">0.2</span><span class="token punctuation">:</span><span class="token number">8092</span><span class="token punctuation">;</span>
+    <span class="token keyword">server</span> <span class="token number">172.17</span><span class="token punctuation">.</span><span class="token number">0.2</span><span class="token punctuation">:</span><span class="token number">8093</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">server</span><span class="token punctuation">{</span>
+    <span class="token keyword">listen</span>   <span class="token number">8890</span><span class="token punctuation">;</span>
+    <span class="token keyword">server_name</span> localhost<span class="token punctuation">;</span>
+
+    <span class="token keyword">location</span> <span class="token operator">/</span>nacos<span class="token operator">/</span><span class="token punctuation">{</span>
+        <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>nacoscluster<span class="token operator">/</span>nacos<span class="token operator">/</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>访问<a target="_blank" rel="noopener" href="http://ip:8890/nacos/#/login%E6%97%A2%E5%8F%AF%E4%BB%A5%E8%AE%BF%E9%97%AE%E4%BA%86">http://ip:8890/nacos/#/login既可以访问了</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -623,7 +611,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://dmsupine.com/2021/01/12/rocketmq-sheng-chan-wen-ti/">https://dmsupine.com/2021/01/12/rocketmq-sheng-chan-wen-ti/</a>
+                    <a href="https://dmsupine.com/2021/10/14/nacos-dan-ji-yi-ji-ji-qun-da-jian/">https://dmsupine.com/2021/10/14/nacos-dan-ji-yi-ji-ji-qun-da-jian/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -661,16 +649,16 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">
-                                    <span class="chip bg-color">生产实践</span>
+                                <a href="/tags/%E5%AE%89%E8%A3%85/">
+                                    <span class="chip bg-color">安装</span>
                                 </a>
                             
-                                <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                                    <span class="chip bg-color">消息队列</span>
+                                <a href="/tags/Linux/">
+                                    <span class="chip bg-color">Linux</span>
                                 </a>
                             
-                                <a href="/tags/RocketMQ/">
-                                    <span class="chip bg-color">RocketMQ</span>
+                                <a href="/tags/Nacos/">
+                                    <span class="chip bg-color">Nacos</span>
                                 </a>
                             
                         </div>
@@ -841,7 +829,7 @@
         repo: 'dm13579.github.io',
         owner: 'dm13579',
         admin: "dm13579",
-        id: '2021-01-12T20-15-00',
+        id: '2021-10-14T20-15-00',
         distractionFreeMode: false,  // Facebook-like distraction free mode
         proxy:'https://aqueous-journey-79823.herokuapp.com/https://github.com/login/oauth/access_token'
     });
@@ -866,33 +854,34 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/01/19/kafka-dan-ji-yi-ji-ji-qun-da-jian/">
+                <a href="/2021/10/14/nacos-dan-ji-yi-ji-ji-qun-da-jian/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/13.jpg" class="responsive-img" alt="KafKa单机、集群、控制台搭建">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/5.jpg" class="responsive-img" alt="Nacos单机以及集群搭建">
                         
-                        <span class="card-title">KafKa单机、集群、控制台搭建</span>
+                        <span class="card-title">Nacos单机以及集群搭建</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            环境准备java版本：1.8
-操作系统：CentOS7
-zookeeper：3.5.8
-安装包：https://kafka.apache.org/downloads
-我这里选择的是kafka_2.11-2.4.1版本的KafKa，2.11是
+                            环境准备操作系统：CentOS7
+nacos：1.4.2
+git地址：https://github.com/alibaba/nacos
+nacos单机搭建## 下载
+wget https://github.com/alibaba/nacos
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-01-19
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-14
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -905,6 +894,7 @@ zookeeper：3.5.8
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -916,12 +906,8 @@ zookeeper：3.5.8
                         <span class="chip bg-color">Linux</span>
                     </a>
                     
-                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                        <span class="chip bg-color">消息队列</span>
-                    </a>
-                    
-                    <a href="/tags/KafKa/">
-                        <span class="chip bg-color">KafKa</span>
+                    <a href="/tags/Nacos/">
+                        <span class="chip bg-color">Nacos</span>
                     </a>
                     
                 </div>
@@ -935,34 +921,33 @@ zookeeper：3.5.8
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/01/04/rocketmq-zheng-ti-li-jie-he-xiao-xi-yang-li/">
+                <a href="/2021/10/06/nacos-pei-zhi-zhong-xin-shi-yong-yi-ji-yuan-ma-fen-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/23.jpg" class="responsive-img" alt="RocketMQ整体理解和消息样例">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/2.jpg" class="responsive-img" alt="Nacos配置中心使用以及源码分析">
                         
-                        <span class="card-title">RocketMQ整体理解和消息样例</span>
+                        <span class="card-title">Nacos配置中心使用以及源码分析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            RocketMQ架构设计
-在RocketMQ上主要分为4部分，Producer、Consumer、NameServer、Broker
-
-Producer：消息生产者，Producer通过NameServer拉取所有Broker集群，通过负载
+                            Nacos不仅仅只是用于做注册中心，它还可以做配置中心使用。那么什么是配置中心呢？配置中心就是为分布式系统提供统一的外部配置服务端。
+简单使用引入依赖&lt;dependency>
+    &lt;groupId>com.alibaba.c
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-04
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-06
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
+                            <a href="/categories/%E6%BA%90%E7%A0%81/" class="post-category">
+                                    源码
                                 </a>
                             
                             
@@ -972,16 +957,20 @@ Producer：消息生产者，Producer通过NameServer拉取所有Broker集群，
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Java/">
-                        <span class="chip bg-color">Java</span>
+                    <a href="/tags/%E6%BA%90%E7%A0%81/">
+                        <span class="chip bg-color">源码</span>
                     </a>
                     
-                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                        <span class="chip bg-color">消息队列</span>
+                    <a href="/tags/Nacos/">
+                        <span class="chip bg-color">Nacos</span>
                     </a>
                     
-                    <a href="/tags/RocketMQ/">
-                        <span class="chip bg-color">RocketMQ</span>
+                    <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+                        <span class="chip bg-color">微服务</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
+                        <span class="chip bg-color">分布式</span>
                     </a>
                     
                 </div>

@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Nacos单机以及集群搭建</title>
+      <link href="/2021/10/14/nacos-dan-ji-yi-ji-ji-qun-da-jian/"/>
+      <url>/2021/10/14/nacos-dan-ji-yi-ji-ji-qun-da-jian/</url>
+      
+        <content type="html"><![CDATA[<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>操作系统：CentOS7</p><p>nacos：1.4.2</p><p>git地址：<a href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a></p><h2 id="nacos单机搭建"><a href="#nacos单机搭建" class="headerlink" title="nacos单机搭建"></a>nacos单机搭建</h2><pre class=" language-shell"><code class="language-shell">## 下载wget https://github.com/alibaba/nacos/releases/download/1.4.2/nacos-server-1.4.2.tar.gz## 解压tar -zxvf nacos-server-1.4.2.tar.gz -C /nacoscluster## 重命名mv nacos /nacoscluster/</code></pre><h3 id="application-properties"><a href="#application-properties" class="headerlink" title="application.properties"></a>application.properties</h3><p>修改端口</p><pre class=" language-properties"><code class="language-properties"><span class="token attr-name">server.port</span><span class="token punctuation">=</span><span class="token attr-value">8091</span></code></pre><p>修改db持久化配置</p><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211116160146.png"></p><h3 id="单机启动"><a href="#单机启动" class="headerlink" title="单机启动"></a>单机启动</h3><pre class=" language-shell"><code class="language-shell">bin/startup.sh -m standalone</code></pre><h2 id="nacos集群搭建"><a href="#nacos集群搭建" class="headerlink" title="nacos集群搭建"></a>nacos集群搭建</h2><p>同样单机搭建，为了方便直接搭建了伪集群进行测试端口为8091、8092、8093</p><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211116164015.png"></p><p>以8091为例</p><pre class=" language-shell"><code class="language-shell">## 重命名示例文件mv cluster.conf.example cluster.confvim cluster.conf</code></pre><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211116164409.png"></p><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211116170825.png"></p><p>全部启动</p><pre class=" language-shell"><code class="language-shell">nacos8091/bin/startup.shnacos8092/bin/startup.shnacos8093/bin/startup.sh</code></pre><p>访问页面成功</p><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20211116170947.png"></p><h2 id="通过nginx负载均衡"><a href="#通过nginx负载均衡" class="headerlink" title="通过nginx负载均衡"></a>通过nginx负载均衡</h2><pre class=" language-nginx"><code class="language-nginx"><span class="token keyword">upstream</span> nacoscluster<span class="token punctuation">{</span>    <span class="token keyword">server</span> <span class="token number">172.17</span><span class="token punctuation">.</span><span class="token number">0.2</span><span class="token punctuation">:</span><span class="token number">8091</span><span class="token punctuation">;</span>    <span class="token keyword">server</span> <span class="token number">172.17</span><span class="token punctuation">.</span><span class="token number">0.2</span><span class="token punctuation">:</span><span class="token number">8092</span><span class="token punctuation">;</span>    <span class="token keyword">server</span> <span class="token number">172.17</span><span class="token punctuation">.</span><span class="token number">0.2</span><span class="token punctuation">:</span><span class="token number">8093</span><span class="token punctuation">;</span><span class="token punctuation">}</span><span class="token keyword">server</span><span class="token punctuation">{</span>    <span class="token keyword">listen</span>   <span class="token number">8890</span><span class="token punctuation">;</span>    <span class="token keyword">server_name</span> localhost<span class="token punctuation">;</span>    <span class="token keyword">location</span> <span class="token operator">/</span>nacos<span class="token operator">/</span><span class="token punctuation">{</span>        <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>nacoscluster<span class="token operator">/</span>nacos<span class="token operator">/</span><span class="token punctuation">;</span>    <span class="token punctuation">}</span><span class="token punctuation">}</span></code></pre><p>访问<a href="http://ip:8890/nacos/#/login%E6%97%A2%E5%8F%AF%E4%BB%A5%E8%AE%BF%E9%97%AE%E4%BA%86">http://ip:8890/nacos/#/login既可以访问了</a></p><script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
+      
+      
+      <categories>
+          
+          <category> 安装手册 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 安装 </tag>
+            
+            <tag> Linux </tag>
+            
+            <tag> Nacos </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Nacos配置中心使用以及源码分析</title>
       <link href="/2021/10/06/nacos-pei-zhi-zhong-xin-shi-yong-yi-ji-yuan-ma-fen-xi/"/>
       <url>/2021/10/06/nacos-pei-zhi-zhong-xin-shi-yong-yi-ji-yuan-ma-fen-xi/</url>
