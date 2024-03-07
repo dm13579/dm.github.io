@@ -1,0 +1,1903 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+	<meta name="baidu-site-verification" content="lElrePz9Qe" />
+	<meta name="google-site-verification" content="SZfjmV6tI0M3Dqkj0JDcIS-JmijUpx2oWzDJB4MwQww" />
+    <meta name="keywords" content="RocketMQ,消息队列">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', '');
+</script>
+
+
+    <title>RocketMQ整体理解和消息样例 | 泉涸</title>
+    <link rel="icon" type="image/png" href="https://blog-dm.oss-cn-shanghai.aliyuncs.com/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/rss2.xml" title="泉涸" type="application/rss+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">泉涸</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags/" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories/" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+
+      
+      <i class="fas fa-list" style="zoom: 0.6;"></i>
+      
+      <span>媒体</span>
+      <i class="fas fa-chevron-down" aria-hidden="true" style="zoom: 0.6;"></i>
+    </a>
+    <ul class="sub-nav menus_item_child ">
+      
+      <li>
+        <a href="/books/">
+          
+          <i class="fas fa-book" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>书单</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/movies/">
+          
+          <i class="fas fa-film" style="margin-top: -20px; zoom: 0.6;"></i>
+          
+          <span>观影</span>
+        </a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives/" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about/" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact/" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends/" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">泉涸</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="javascript:;">
+			
+				<i class="fa-fw fas fa-list"></i>
+			
+			媒体
+			<span class="m-icon"><i class="fas fa-chevron-right"></i></span>
+		</a>
+            <ul  style="background:  ;" >
+              
+                <li>
+
+                  <a href="/books/ " style="margin-left:75px">
+				  
+				   <i class="fa fas fa-book" style="position: absolute;left:50px" ></i>
+			      
+		          <span>书单</span>
+                  </a>
+                </li>
+              
+                <li>
+
+                  <a href="/movies/ " style="margin-left:75px">
+				  
+				   <i class="fa fas fa-film" style="position: absolute;left:50px" ></i>
+			      
+		          <span>观影</span>
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/23.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">RocketMQ整体理解和消息样例</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Java/">
+                                <span class="chip bg-color">Java</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                                <span class="chip bg-color">消息队列</span>
+                            </a>
+                        
+                            <a href="/tags/RocketMQ/">
+                                <span class="chip bg-color">RocketMQ</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                笔记
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2023-12-28
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2023-12-28
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    6.8k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    28 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="RocketMQ架构设计"><a href="#RocketMQ架构设计" class="headerlink" title="RocketMQ架构设计"></a>RocketMQ架构设计</h2><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210104103017.png"></p>
+<p>在RocketMQ上主要分为4部分，Producer、Consumer、NameServer、Broker</p>
+<ul>
+<li>Producer：消息生产者，Producer通过NameServer拉取所有Broker集群，通过负载均衡择相对应的Broker进行消息投递。</li>
+<li>Consumer：消息消费者，Consumer通过NameServer拉取所有Broker集群，通过pull和push2种模式对消息进行消费。</li>
+<li>NameServer：NameServer是一个简化版的注册中心，无状态节点，主要主持Broker的动态注册与发现，功能主要包括对Broker的管理。接受Broker集群的注册信息并且保存下来作为路由信息的基本数据。然后提供心跳检测机制，检查Broker是否还存活。<strong>每个NameServer之间不进行通信，他们都存储了整个Broker集群的数据</strong></li>
+<li>Broker：消息中转角色，负责存储消息，转发消息；为生产者，消费者提供服务。</li>
+</ul>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="生产者组"><a href="#生产者组" class="headerlink" title="生产者组"></a>生产者组</h3><p>同一类Producer组成一个集合，这类Producer发送同一类消息且发送逻辑一致。如果发送的是事务消息且原始生产者在发送之后崩溃，则Broker服务器会联系同一生产者组的其他生产者实例以提交或回溯消费。</p>
+<h3 id="消息生产者"><a href="#消息生产者" class="headerlink" title="消息生产者"></a>消息生产者</h3><p>消息生产者会把业务应用系统里产生的消息发送，到broker服务器。RocketMQ提供多种发送方式，<strong>同步发送、异步发送、顺序发送、单向发送</strong>。同步和异步方式均需要Broker返回确认信息，单向发送不需要。</p>
+<h3 id="消费者组"><a href="#消费者组" class="headerlink" title="消费者组"></a>消费者组</h3><p>同一类Consumer组成一个集合，这类Consumer通常消费同一类消息且消费逻辑一致。</p>
+<p>注：消费者组的消费者实例必须订阅完全相同的Topic。RocketMQ 支持两种消息模式：<strong>集群消费和广播消费</strong>。</p>
+<ul>
+<li>集群消费：相同消费者组的每个Consumer实例平均分摊消息。</li>
+<li>广播消费：相同消费者组的每个Consumer实例都接收全量的消息。</li>
+</ul>
+<h3 id="消息消费者"><a href="#消息消费者" class="headerlink" title="消息消费者"></a>消息消费者</h3><p>负责消费消息，一般是后台系统负责异步消费。消息消费者会从Broker服务器拉取消息、并将其提供给应用程序。消息消费者提供了两种消费形式：<strong>拉取式消费、推动式消费</strong>。</p>
+<ul>
+<li>拉取式消费：通常主动调用Consumer的拉消息方法从Broker服务器拉消息、主动权由应用控制。一旦获取了批量消息，应用就会启动消费过程。</li>
+<li>推动式消费：Broker收到数据后会主动推送给消费端，该消费模式一般实时性较高。推动式消费其底层就是对拉取式消费进行了一次封装，是长连接。</li>
+</ul>
+<h3 id="主题（Topic）"><a href="#主题（Topic）" class="headerlink" title="主题（Topic）"></a>主题（Topic）</h3><p>一类消息的集合，每个主题包含若干条消息，每条消息只能属于一个主题，是RocketMQ进行消息订阅的基本单位。</p>
+<p>同一个Topic下的数据，会分片保存到不同的Broker上，而每一个分片单位，就叫做MessageQueue。MessageQueue是生产者发送消息与消费者消费消息的最小单位。</p>
+<h3 id="服务器（Broker）"><a href="#服务器（Broker）" class="headerlink" title="服务器（Broker）"></a>服务器（Broker）</h3><p>消息中转角色，负责存储消息、转发消息。代理服务器在RocketMQ系统中负责接收从生产者发送来的消息并存储、同时为消费者的拉取请求作准备。代理服务器也存储消息相关的元数据，包括消费者组、消费进度偏移和主题和队列消息等。</p>
+<h3 id="NameServer"><a href="#NameServer" class="headerlink" title="NameServer"></a>NameServer</h3><p>NameServer充当路由消息的提供者。Broker Server会在启动时向所有的NameServer注册自己的服务信息，并且后续通过心跳请求的方式保证这个服务信息的实时性。生产者或消费者能够通过NameServer查找各主题相应的Broker列表。</p>
+<p><strong>多个NameServer实例组成无状态集群，相互独立，没有信息交换。这种特性也就意味着NameServer中任意的节点挂了，只要有一台服务节点正常，整个路由服务就不会有影响。</strong></p>
+<h3 id="消息"><a href="#消息" class="headerlink" title="消息"></a>消息</h3><p>消息系统所传输信息的物理载体，生产和消费数据的最小单位，每条消息必须属于一个主题Topic。RocketMQ中每个消息拥有唯一的Message ID，且可以携带具有业务标识的Key。系统提供了通过Message ID和Key查询消息的功能。</p>
+<p>并且Message上有一个为消息设置的标志，Tag标签。用于同一主题下区分不同类型的消息。来自同一业务单元的消息，可以根据不同业务目的在同一主题下设置不同标签。标签能够有效地保持代码的清晰度和连贯性，并优化RocketMQ提供的查询系统。消费者可以根据Tag实现对不同子主题的不同消费逻辑，实现更好的扩展性。</p>
+<h2 id="Broker集群模式"><a href="#Broker集群模式" class="headerlink" title="Broker集群模式"></a>Broker集群模式</h2><p>集群在RocketMQ中分为2种，<strong>普通集群和Dledger高可用集群</strong>。Dledger高可用集群是在4.5版本后引入的高可用集群。</p>
+<h3 id="普通集群"><a href="#普通集群" class="headerlink" title="普通集群"></a>普通集群</h3><p>普通集群会给每个节点分配一个固定的角色，master负责响应客户端的请求，并存储消息。slave则只负责对master的消息进行同步保存，并响应部分客户端的读请求。消息同步方式分为同步同步和异步同步。</p>
+<p><strong>这种集群模式下各个节点的角色无法进行切换，也就是说，master节点挂了，这一组Broker就不可用了。</strong></p>
+<h3 id="Dledger高可用集群"><a href="#Dledger高可用集群" class="headerlink" title="Dledger高可用集群"></a>Dledger高可用集群</h3><p>普通集群有个致命的缺点就是不能高可用。就是master一挂，集群就不可用了。Dledger集群为了解决高可用问题引入的一种技术。</p>
+<p>在这个集群模式下如果master挂了会选举一个新的master提供服务。Dledger都是通过<strong>Raft协议</strong>解决的选举和副本同步问题。</p>
+<h4 id="Dledger的职责"><a href="#Dledger的职责" class="headerlink" title="Dledger的职责"></a>Dledger的职责</h4><ol>
+<li>接管Broker的CommitLog消息存储</li>
+<li>从集群中选举出master节点</li>
+<li>完成master节点往slave节点的消息同步</li>
+</ol>
+<h4 id="Dledger选举"><a href="#Dledger选举" class="headerlink" title="Dledger选举"></a>Dledger选举</h4><p>Dledger是使用Raft算法来进行节点选举</p>
+<p>每个节点有三个状态，leader，follower和candidate。正常运行的情况下，集群中会有一个leader，其他都是follower，而客户端的请求全部由leader处理，即使有客户端请求到了一个follower，也会将请求转发到leader。</p>
+<p>集群启动阶段：</p>
+<p>集群刚启动时，每个节点都是follower状态，之后集群内部会发送一个timeout信号，所有follower就转成candidate去拉取选票，获得大多数选票的节点选为leader，其他候选人转为follower。如果一个timeout信号发出时，没有选出leader，将会重新开始一次新的选举。而Leader节点会往其他节点发送心跳信号，确认他的leader状态</p>
+<p>集群运行阶段：</p>
+<p>集群启动后每个节点都会启动一个定时器，一段时间没有收到leader心跳，就转化为candidate状态。然后向其他成员发起投票请求，如果收到半数以上成员的投票，则Candidate会晋升为leader。然后leader也有可能会退化成follower。</p>
+<h3 id="Dledger多副本消息同步"><a href="#Dledger多副本消息同步" class="headerlink" title="Dledger多副本消息同步"></a>Dledger多副本消息同步</h3><p>数据同步会通过两个阶段，一个是uncommitted阶段，一个是commited阶段。</p>
+<ol>
+<li><p>Leader Broker上的Dledger收到一条数据后，会标记为uncommitted状态，然后他通过自己的DledgerServer组件把这个uncommitted数据发给Follower Broker的DledgerServer组件。</p>
+</li>
+<li><p>Follower Broker的DledgerServer收到uncommitted消息之后，必须返回一个ack给Leader Broker的Dledger。然后如果Leader Broker收到超过半数的Follower Broker返回的ack之后，就会把消息标记为committed状态。</p>
+</li>
+<li><p>Leader Broker上的DledgerServer就会发送committed消息给Follower Broker上的DledgerServer，让他们把消息也标记为committed状态。</p>
+</li>
+</ol>
+<p>这样，就基于Raft协议完成了两阶段的数据同步。</p>
+<h2 id="消息存储"><a href="#消息存储" class="headerlink" title="消息存储"></a>消息存储</h2><p>分布式消息中间件为了保证性能，读写操作基本都是通过内存来操作的，内存操作在服务器宕机的情况下就存在消息丢失的情况。这时候我们肯定是对消息会进行持久化的。而持久化MQ一般都是采用的文件存储。</p>
+<h3 id="磁盘文件读写（顺序写，零拷贝）"><a href="#磁盘文件读写（顺序写，零拷贝）" class="headerlink" title="磁盘文件读写（顺序写，零拷贝）"></a>磁盘文件读写（顺序写，零拷贝）</h3><p>文件存储必然带来的问题就是性能问题，文件存储性能一般而言都不高。但是RocketMQ大家都知道性能是很好的，是可以支持到百万级QPS的。它的优良性能是顺序写和零拷贝带来的。</p>
+<ol>
+<li><p>顺序写：目前的高性能磁盘，顺序写速度可以达到600MB/s， 超过了一般网卡的传输速度。但是磁盘随机写的速度只有大概100KB/s，和顺序写的性能相差6000倍！因为有如此巨大的速度差别，好的消息队列系统会比普通的消息队列系统速度快多个数量级。RocketMQ的消息用顺序写,保证了消息存储的速度。RocketMQ会提前分配1个G的磁盘空间给commitLog.之后生产者发送的消息直接分配到这个commitLog上去。这就是顺序写。</p>
+</li>
+<li><p>零拷贝：Linux操作系统分为用户态和内核态。IO操作不可避免的都会涉及到这2种状态的切换。</p>
+<p>假设一台服务器发送了一条数据给客户端，通常会进行4次数据复制。</p>
+<ol>
+<li>从磁盘文件复制数据到内核态内存</li>
+<li>从内核态内存复制数据到用户态客户端的内存上，如果是Java就是JVM虚拟内存</li>
+<li>从用户态客户端内存复制数据到内核态内存</li>
+<li>最后从网络驱动的内核态内存复制到网卡中进行传输。</li>
+</ol>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210111164005.png"></p>
+<p>而RocketMQ中用来mmap技术，不在将文件复制到用户内存中去。直接将内核内存进行映射。而这种零拷贝技术有一个限制，一次只能映射1.5~2G 的文件至用户态的虚拟内存，这也是为何RocketMQ默认设置单个CommitLog日志数据文件为1G的原因了</p>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210111164032.png"></p>
+</li>
+</ol>
+<h3 id="消息结构"><a href="#消息结构" class="headerlink" title="消息结构"></a>消息结构</h3><p>RocketMQ消息的存储分为三个部分：commitlog、consumerqueue、index</p>
+<ul>
+<li>commitlog：生产者发送的消息存入到commitlog，commitlog有多个文件，每个文件固定大小1G。以第一条消息的偏移量为文件名。</li>
+<li>consumerqueue：consumerqueue文件夹下是按Topic来分的，一个Topic一个文件夹。topic文件夹下是按队列来分的，一个队列一个文件夹。队列文件记录当前队列被哪些消费者组消费到了哪一条commitlog,记录的commitlog中的索引。</li>
+<li>index：为了消息查询提供了一种通过key或时间区间来查询消息的方法</li>
+</ul>
+<p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210111165049.png"></p>
+<h2 id="消息主从复制"><a href="#消息主从复制" class="headerlink" title="消息主从复制"></a>消息主从复制</h2><p>Broker以集群启动必然包含一个功能便是主从复制方式。RocketMQ消息复制得方式有2个,同步复制和异步复制。</p>
+<h3 id="同步复制"><a href="#同步复制" class="headerlink" title="同步复制"></a>同步复制</h3><p>同步复制就是等Master和Slave全部写入消息成功，反馈给客户端消息写入成功。</p>
+<p>优势：数据更加完整，Slave有全部的数据备份，即使Master挂了也没事。</p>
+<p>劣势：会增加数据写入延迟，降低系统吞吐量。</p>
+<h3 id="异步复制"><a href="#异步复制" class="headerlink" title="异步复制"></a>异步复制</h3><p>异步复制只要Master复制成功直接返回客户端消息写入成功，然后异步复制消息给Slave</p>
+<p>优势：数据写入延迟低，系统吞吐量高。</p>
+<p>劣势：消息丢失可能性高。Master节点故障，可能会有数据没有同步到Slave,导致消息丢失。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>消息复制方式是通过Broker配置文件里的brokerRole参数进行设置的，这个参数可以被设置成ASYNC_MASTER、 SYNC_MASTER、SLAVE三个值中的一个</p>
+<h2 id="消息刷盘机制"><a href="#消息刷盘机制" class="headerlink" title="消息刷盘机制"></a>消息刷盘机制</h2><p>上面有副本同步方式，但只涉及到消息到服务端，此时消息并没有写入磁盘，写磁盘与另一个刷盘机制有关。</p>
+<h3 id="同步刷盘"><a href="#同步刷盘" class="headerlink" title="同步刷盘"></a>同步刷盘</h3><p>在返回写成功状态时，消息已经被写入磁盘。</p>
+<p>具体流程是，消息写入内存的PAGECACHE后，立刻通知刷盘线程刷盘， 然后等待刷盘完成，刷盘线程执行完成后唤醒等待的线程，返回消息写成功的状态。</p>
+<p>优势：数据更加完整，Slave有全部的数据备份，即使Master挂了也没事。</p>
+<p>劣势：会增加数据写入延迟，降低系统吞吐量。</p>
+<h3 id="异步刷盘"><a href="#异步刷盘" class="headerlink" title="异步刷盘"></a>异步刷盘</h3><p>在返回写成功状态时，消息可能只是被写入了内存的PAGECACHE，写操作的返回快，吞吐量大；当内存里的消息量积累到一定程度时，统一触发写磁盘动作，快速写入。</p>
+<p>优势：数据写入延迟低，系统吞吐量高。</p>
+<p>劣势：消息丢失可能性高。Master节点故障，可能会有数据没有同步到Slave,导致消息丢失。</p>
+<h3 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h3><p>消息复制方式是通过Broker配置文件里的flushDiskType参数进行设置的，这个参数可以被设置成ASYNC_FLUSH：异步刷盘</p>
+<p>SYNC_FLUSH：同步刷盘。</p>
+<h2 id="生产者发送方式"><a href="#生产者发送方式" class="headerlink" title="生产者发送方式"></a>生产者发送方式</h2><h3 id="同步发送（等待消息返回继续操作）"><a href="#同步发送（等待消息返回继续操作）" class="headerlink" title="同步发送（等待消息返回继续操作）"></a>同步发送（等待消息返回继续操作）</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> MQClientException<span class="token punctuation">,</span> UnsupportedEncodingException<span class="token punctuation">,</span> RemotingException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> MQBrokerException <span class="token punctuation">{</span>
+    DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"sync_msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    String message <span class="token operator">=</span> <span class="token string">"Hello dm"</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Message msg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Message</span><span class="token punctuation">(</span><span class="token string">"TopicSync"</span><span class="token punctuation">,</span><span class="token string">"TagS"</span><span class="token punctuation">,</span><span class="token punctuation">(</span>message<span class="token operator">+</span>i<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span>RemotingHelper<span class="token punctuation">.</span>DEFAULT_CHARSET<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        SendResult sendResult <span class="token operator">=</span> producer<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s%n"</span><span class="token punctuation">,</span> sendResult<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）"><a href="#异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）" class="headerlink" title="异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）"></a>异步发送（消息发完直接进行后续操作，但会提供一个消息发送完成的回调方法）</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+    DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"async_msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//设置发送失败重试机制</span>
+    producer<span class="token punctuation">.</span><span class="token function">setRetryTimesWhenSendAsyncFailed</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    String message <span class="token operator">=</span> <span class="token string">"Hello dm async "</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> messageCount <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> CountDownLatch countDownLatch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CountDownLatch</span><span class="token punctuation">(</span>messageCount<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> messageCount<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">final</span> <span class="token keyword">int</span> index <span class="token operator">=</span> i<span class="token punctuation">;</span>
+        Message msg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Message</span><span class="token punctuation">(</span><span class="token string">"TopicTest"</span><span class="token punctuation">,</span><span class="token string">"TagSendOne"</span><span class="token punctuation">,</span><span class="token string">"OrderID188"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>message <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span>RemotingHelper<span class="token punctuation">.</span>DEFAULT_CHARSET<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//消息发送成功后，执行回调函数</span>
+        producer<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>msg<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">SendCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token annotation punctuation">@Override</span>
+            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onSuccess</span><span class="token punctuation">(</span>SendResult sendResult<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                countDownLatch<span class="token punctuation">.</span><span class="token function">countDown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%-10d OK %s %n"</span><span class="token punctuation">,</span> index<span class="token punctuation">,</span> sendResult<span class="token punctuation">.</span><span class="token function">getMsgId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token annotation punctuation">@Override</span>
+            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onException</span><span class="token punctuation">(</span>Throwable e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                countDownLatch<span class="token punctuation">.</span><span class="token function">countDown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%-10d Exception %s %n"</span><span class="token punctuation">,</span> index<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    countDownLatch<span class="token punctuation">.</span><span class="token function">await</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="单向发送（消息发完就不管了）"><a href="#单向发送（消息发完就不管了）" class="headerlink" title="单向发送（消息发完就不管了）"></a>单向发送（消息发完就不管了）</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception<span class="token punctuation">{</span>
+    DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"oneway_msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    String message <span class="token operator">=</span> <span class="token string">"Hello dm oneway "</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">1</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Message msg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Message</span><span class="token punctuation">(</span><span class="token string">"TopicTest"</span><span class="token punctuation">,</span><span class="token string">"TagSendOne"</span><span class="token punctuation">,</span><span class="token string">"OrderID188"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>message <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span>RemotingHelper<span class="token punctuation">.</span>DEFAULT_CHARSET<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        producer<span class="token punctuation">.</span><span class="token function">sendOneway</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="消费者消费方式"><a href="#消费者消费方式" class="headerlink" title="消费者消费方式"></a>消费者消费方式</h2><h3 id="推模式-消费者等待Broker把消息推送过来"><a href="#推模式-消费者等待Broker把消息推送过来" class="headerlink" title="推模式(消费者等待Broker把消息推送过来)"></a>推模式(消费者等待Broker把消息推送过来)</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException<span class="token punctuation">,</span> MQClientException <span class="token punctuation">{</span>
+    DefaultMQPushConsumer consumer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQPushConsumer</span><span class="token punctuation">(</span><span class="token string">"msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token string">"TopicStudent"</span><span class="token punctuation">,</span> <span class="token string">"*"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">registerMessageListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MessageListenerConcurrently</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> ConsumeConcurrentlyStatus <span class="token function">consumeMessage</span><span class="token punctuation">(</span>List<span class="token operator">&lt;</span>MessageExt<span class="token operator">></span> msgs<span class="token punctuation">,</span> ConsumeConcurrentlyContext context<span class="token punctuation">)</span>           <span class="token punctuation">{</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span>MessageExt msg <span class="token operator">:</span> msgs<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span>msg<span class="token punctuation">.</span><span class="token function">getBody</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">return</span> ConsumeConcurrentlyStatus<span class="token punctuation">.</span>CONSUME_SUCCESS<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="拉模式-消费者主动去Broker上拉取消息"><a href="#拉模式-消费者主动去Broker上拉取消息" class="headerlink" title="拉模式(消费者主动去Broker上拉取消息)"></a>拉模式(消费者主动去Broker上拉取消息)</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> MQClientException <span class="token punctuation">{</span>
+    DefaultMQPullConsumer consumer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQPullConsumer</span><span class="token punctuation">(</span><span class="token string">"async_msg_simple_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.Xx.Xx.Xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    Set<span class="token operator">&lt;</span>MessageQueue<span class="token operator">></span> mqs <span class="token operator">=</span> consumer<span class="token punctuation">.</span><span class="token function">fetchSubscribeMessageQueues</span><span class="token punctuation">(</span><span class="token string">"TopicSync"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>MessageQueue mq <span class="token operator">:</span> mqs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>err<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Consume from the queue: "</span> <span class="token operator">+</span> mq<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        SINGLE_MQ<span class="token operator">:</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                PullResult pullResult <span class="token operator">=</span> consumer<span class="token punctuation">.</span><span class="token function">pullBlockIfNotFound</span><span class="token punctuation">(</span>mq<span class="token punctuation">,</span> null<span class="token punctuation">,</span> <span class="token function">getMessageQueueOffset</span><span class="token punctuation">(</span>mq<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>pullResult<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token function">putMessageQueueOffset</span><span class="token punctuation">(</span>mq<span class="token punctuation">,</span> pullResult<span class="token punctuation">.</span><span class="token function">getNextBeginOffset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                <span class="token keyword">switch</span> <span class="token punctuation">(</span>pullResult<span class="token punctuation">.</span><span class="token function">getPullStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">case</span> FOUND<span class="token operator">:</span>
+                        List<span class="token operator">&lt;</span>MessageExt<span class="token operator">></span> messageExtList <span class="token operator">=</span> pullResult<span class="token punctuation">.</span><span class="token function">getMsgFoundList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token keyword">for</span> <span class="token punctuation">(</span>MessageExt m <span class="token operator">:</span> messageExtList<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                            System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span>m<span class="token punctuation">.</span><span class="token function">getBody</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">}</span>
+                        <span class="token keyword">break</span><span class="token punctuation">;</span>
+                    <span class="token keyword">case</span> NO_MATCHED_MSG<span class="token operator">:</span>
+                        <span class="token keyword">break</span><span class="token punctuation">;</span>
+                    <span class="token keyword">case</span> NO_NEW_MSG<span class="token operator">:</span>
+                        <span class="token keyword">break</span> SINGLE_MQ<span class="token punctuation">;</span>
+                    <span class="token keyword">case</span> OFFSET_ILLEGAL<span class="token operator">:</span>
+                        <span class="token keyword">break</span><span class="token punctuation">;</span>
+                    <span class="token keyword">default</span><span class="token operator">:</span>
+                        <span class="token keyword">break</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    consumer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="顺序消息"><a href="#顺序消息" class="headerlink" title="顺序消息"></a>顺序消息</h2><p>生产者往topic上面发送消息，消息会分配到不同的queue上，而且消费者消费消息也是一个队列取一个进行消费，这时候消费者消费消息就不是顺序的了，要想顺序消费就让它你想顺序的放在同一个队列上。消费者再注册MessageListenerOrderly，按队列消费，一个队列消费完在换下一个队列，这样消费就是顺序的。但是这样是局部有序，要想全局有序就让所有消息放在一个队列消费，但这样性能瓶颈会较大，一般局部有序就可以满足需求了。</p>
+<h3 id="生产者"><a href="#生产者" class="headerlink" title="生产者"></a>生产者</h3><p>这里的逻辑就是通过订单编号对mqs(队列个数)进行取模，分配到队列上去。这样就是相同订单编号进入相同队列</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+        DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"ordered_group_name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        String<span class="token punctuation">[</span><span class="token punctuation">]</span> tags <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token string">"TagA"</span><span class="token punctuation">,</span> <span class="token string">"TagC"</span><span class="token punctuation">,</span> <span class="token string">"TagD"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 订单列表</span>
+        List<span class="token operator">&lt;</span>OrderStep<span class="token operator">></span> orderList <span class="token operator">=</span> <span class="token function">buildOrders</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Date date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        SimpleDateFormat sdf <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SimpleDateFormat</span><span class="token punctuation">(</span><span class="token string">"yyyy-MM-dd HH:mm:ss"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        String dateStr <span class="token operator">=</span> sdf<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 加个时间前缀</span>
+            String body <span class="token operator">=</span> dateStr <span class="token operator">+</span> <span class="token string">" Hello RocketMQ "</span><span class="token operator">+</span> i <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> orderList<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            Message msg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Message</span><span class="token punctuation">(</span><span class="token string">"TopicTest"</span><span class="token punctuation">,</span> tags<span class="token punctuation">[</span>i <span class="token operator">%</span> tags<span class="token punctuation">.</span>length<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">"KEY"</span> <span class="token operator">+</span> i<span class="token punctuation">,</span>
+                    body<span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span>RemotingHelper<span class="token punctuation">.</span>DEFAULT_CHARSET<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            SendResult sendResult <span class="token operator">=</span> producer<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>msg<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">MessageQueueSelector</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token annotation punctuation">@Override</span>
+                <span class="token keyword">public</span> MessageQueue <span class="token function">select</span><span class="token punctuation">(</span>List<span class="token operator">&lt;</span>MessageQueue<span class="token operator">></span> mqs<span class="token punctuation">,</span> Message msg<span class="token punctuation">,</span> Object arg<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    Long id <span class="token operator">=</span> <span class="token punctuation">(</span>Long<span class="token punctuation">)</span> arg<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//根据订单id选择发送queue</span>
+                    <span class="token keyword">long</span> index <span class="token operator">=</span> id <span class="token operator">%</span> mqs<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token keyword">return</span> mqs<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span> index<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span> orderList<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getOrderId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//订单id</span>
+
+            System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">"SendResult status:%s, queueId:%d, body:%s"</span><span class="token punctuation">,</span>
+                    sendResult<span class="token punctuation">.</span><span class="token function">getSendStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                    sendResult<span class="token punctuation">.</span><span class="token function">getMessageQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getQueueId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                    body<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">/**
+     * 生成模拟订单数据
+     */</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> List<span class="token operator">&lt;</span>OrderStep<span class="token operator">></span> <span class="token function">buildOrders</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        List<span class="token operator">&lt;</span>OrderStep<span class="token operator">></span> orderList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token operator">&lt;</span>OrderStep<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        OrderStep orderDemo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OrderStep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setOrderId</span><span class="token punctuation">(</span>15103111039L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setDesc</span><span class="token punctuation">(</span><span class="token string">"创建"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderDemo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        orderDemo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OrderStep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setOrderId</span><span class="token punctuation">(</span>15103111065L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setDesc</span><span class="token punctuation">(</span><span class="token string">"创建"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderDemo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        orderDemo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OrderStep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setOrderId</span><span class="token punctuation">(</span>15103111039L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setDesc</span><span class="token punctuation">(</span><span class="token string">"付款"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderDemo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        orderDemo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OrderStep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setOrderId</span><span class="token punctuation">(</span>15103117235L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setDesc</span><span class="token punctuation">(</span><span class="token string">"创建"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderDemo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        orderDemo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OrderStep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setOrderId</span><span class="token punctuation">(</span>15103111065L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setDesc</span><span class="token punctuation">(</span><span class="token string">"付款"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderDemo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        orderDemo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OrderStep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setOrderId</span><span class="token punctuation">(</span>15103117235L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setDesc</span><span class="token punctuation">(</span><span class="token string">"付款"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderDemo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        orderDemo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OrderStep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setOrderId</span><span class="token punctuation">(</span>15103111065L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setDesc</span><span class="token punctuation">(</span><span class="token string">"完成"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderDemo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        orderDemo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OrderStep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setOrderId</span><span class="token punctuation">(</span>15103111039L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setDesc</span><span class="token punctuation">(</span><span class="token string">"推送"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderDemo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        orderDemo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OrderStep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setOrderId</span><span class="token punctuation">(</span>15103117235L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setDesc</span><span class="token punctuation">(</span><span class="token string">"完成"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderDemo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        orderDemo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OrderStep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setOrderId</span><span class="token punctuation">(</span>15103111039L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderDemo<span class="token punctuation">.</span><span class="token function">setDesc</span><span class="token punctuation">(</span><span class="token string">"购物车"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        orderList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderDemo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> orderList<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@ToString</span>
+    <span class="token annotation punctuation">@Data</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">OrderStep</span> <span class="token punctuation">{</span>
+        <span class="token keyword">private</span> <span class="token keyword">long</span> orderId<span class="token punctuation">;</span>
+        <span class="token keyword">private</span> String desc<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+</code></pre>
+<h3 id="消费者"><a href="#消费者" class="headerlink" title="消费者"></a>消费者</h3><p>消费者这里主要改动了监听的方法，消费者注册了监听-MessageListenerOrderly，可以顺序消费每一条队列</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+        DefaultMQPushConsumer consumer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQPushConsumer</span><span class="token punctuation">(</span><span class="token string">"ordered_group_name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        consumer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">/**
+         * 设置消费位置
+         */</span>
+        consumer<span class="token punctuation">.</span><span class="token function">setConsumeFromWhere</span><span class="token punctuation">(</span>ConsumeFromWhere<span class="token punctuation">.</span>CONSUME_FROM_FIRST_OFFSET<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        consumer<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token string">"TopicTest"</span><span class="token punctuation">,</span> <span class="token string">"*"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        consumer<span class="token punctuation">.</span><span class="token function">registerMessageListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MessageListenerOrderly</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+            AtomicLong consumeTimes <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AtomicLong</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            <span class="token keyword">public</span> ConsumeOrderlyStatus <span class="token function">consumeMessage</span><span class="token punctuation">(</span>List<span class="token operator">&lt;</span>MessageExt<span class="token operator">></span> msgs<span class="token punctuation">,</span>
+                                                       ConsumeOrderlyContext context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                context<span class="token punctuation">.</span><span class="token function">setAutoCommit</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                Random random <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">for</span> <span class="token punctuation">(</span>MessageExt msg <span class="token operator">:</span> msgs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token comment" spellcheck="true">// 可以看到每个queue有唯一的consume来消费, 订单对每个queue(分区)有序</span>
+                    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"consumeThread="</span> <span class="token operator">+</span> Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">", queueId="</span> <span class="token operator">+</span> msg<span class="token punctuation">.</span><span class="token function">getQueueId</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">", content:"</span> <span class="token operator">+</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span>msg<span class="token punctuation">.</span><span class="token function">getBody</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> RemotingHelper<span class="token punctuation">.</span>DEFAULT_CHARSET<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">UnsupportedEncodingException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span>
+                <span class="token punctuation">}</span>
+                <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                    <span class="token comment" spellcheck="true">//模拟业务逻辑处理中...</span>
+                    TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span>random<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                <span class="token keyword">return</span> ConsumeOrderlyStatus<span class="token punctuation">.</span>SUCCESS<span class="token punctuation">;</span>
+
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        consumer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Consumer Started.%n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+</code></pre>
+<h2 id="延迟消息"><a href="#延迟消息" class="headerlink" title="延迟消息"></a>延迟消息</h2><p>在其他的消息中间件中，对延迟消息都没有支持，只能通过其他的方法实现延迟队列，比如RabbitMQ一般通过TTL+死信或者延迟插件实现延迟队列。而RocketMQ原生支持延时队列,就是调用producer.send,消息不会直接发送出去而是会等待一段时间。不过开源版只支持18个级别；messageDelayLevel=1s 5s 10s 30s 1m 2m 3m 4m 5m<br>6m 7m 8m 9m 10m 20m 30m 1h 2h。商业版本是支持任意时刻的设置。</p>
+<h3 id="生产者-1"><a href="#生产者-1" class="headerlink" title="生产者"></a>生产者</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+    DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"ExampleConsumer"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> totalMessagesToSend <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> totalMessagesToSend<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Message message <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Message</span><span class="token punctuation">(</span><span class="token string">"TestTopic"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"Hello scheduled message "</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//延时消费-设置延迟级别为6  2min</span>
+        message<span class="token punctuation">.</span><span class="token function">setDelayTimeLevel</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        producer<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"message send is completed .%n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="广播消息"><a href="#广播消息" class="headerlink" title="广播消息"></a>广播消息</h2><p>集群消费模式下，每一条消息只会被一个消费组的一个消费者消费，而广播模式，是把消息发送给所有订阅了该Topic的消费者，不管消费者是不是同一个消费组。</p>
+<h3 id="消费者-1"><a href="#消费者-1" class="headerlink" title="消费者"></a>消费者</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException<span class="token punctuation">,</span> MQClientException <span class="token punctuation">{</span>
+    DefaultMQPushConsumer consumer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQPushConsumer</span><span class="token punctuation">(</span><span class="token string">"please_rename_unique_group_name_1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">setConsumeFromWhere</span><span class="token punctuation">(</span>ConsumeFromWhere<span class="token punctuation">.</span>CONSUME_FROM_LAST_OFFSET<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 设置为广播消息</span>
+    consumer<span class="token punctuation">.</span><span class="token function">setMessageModel</span><span class="token punctuation">(</span>MessageModel<span class="token punctuation">.</span>BROADCASTING<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token string">"TopicTest"</span><span class="token punctuation">,</span> <span class="token string">"*"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">registerMessageListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MessageListenerConcurrently</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> ConsumeConcurrentlyStatus <span class="token function">consumeMessage</span><span class="token punctuation">(</span>List<span class="token operator">&lt;</span>MessageExt<span class="token operator">></span> msgs<span class="token punctuation">,</span>
+                                                        ConsumeConcurrentlyContext context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s Receive New Messages: %s %n"</span><span class="token punctuation">,</span> Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> msgs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> ConsumeConcurrentlyStatus<span class="token punctuation">.</span>CONSUME_SUCCESS<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Broadcast Consumer Started.%n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="批量消息"><a href="#批量消息" class="headerlink" title="批量消息"></a>批量消息</h2><p>批量消息是将多个消息组合成一条批量消息发送出去，是为了减少网络IO,提升系统吞吐量。</p>
+<p>注意：官方对于批量消息大小的限制是1M，实际使用时，这个1MB的限制可以稍微扩大点，实际最大的限制是4194304字节，大概4MB。但是使用批量消息时，这个消息长度确实是必须考虑的一个问题。而且批量消息的使用是有一定限制的，这些消息应该有相同的Topic，相同的waitStoreMsgOK。而且不能是延迟消息、事务消息等。</p>
+<h3 id="生产者-2"><a href="#生产者-2" class="headerlink" title="生产者"></a>生产者</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+    DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"batch_group"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    String topic <span class="token operator">=</span> <span class="token string">"BatchTest"</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 模拟消息</span>
+    List<span class="token operator">&lt;</span>Message<span class="token operator">></span> messages <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    messages<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Message</span><span class="token punctuation">(</span>topic<span class="token punctuation">,</span> <span class="token string">"TagA"</span><span class="token punctuation">,</span> <span class="token string">"OrderID001"</span><span class="token punctuation">,</span> <span class="token string">"Hello world 0"</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    messages<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Message</span><span class="token punctuation">(</span>topic<span class="token punctuation">,</span> <span class="token string">"TagA"</span><span class="token punctuation">,</span> <span class="token string">"OrderID002"</span><span class="token punctuation">,</span> <span class="token string">"Hello world 1"</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    messages<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Message</span><span class="token punctuation">(</span>topic<span class="token punctuation">,</span> <span class="token string">"TagA"</span><span class="token punctuation">,</span> <span class="token string">"OrderID003"</span><span class="token punctuation">,</span> <span class="token string">"Hello world 2"</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    ListSplitter splitter <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ListSplitter</span><span class="token punctuation">(</span>messages<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment" spellcheck="true">// 对批量消息进行拆分</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>splitter<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            List<span class="token operator">&lt;</span>Message<span class="token operator">></span>  listItem <span class="token operator">=</span> splitter<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            producer<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>listItem<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   
+<span class="token punctuation">}</span>
+</code></pre>
+<p>消息拆分</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ListSplitter</span> <span class="token keyword">implements</span> <span class="token class-name">Iterator</span><span class="token operator">&lt;</span>List<span class="token operator">&lt;</span>Message<span class="token operator">>></span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 一个批量消息大小</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token keyword">int</span> SIZE_LIMIT <span class="token operator">=</span> <span class="token number">1000</span> <span class="token operator">*</span> <span class="token number">1000</span> <span class="token operator">*</span> <span class="token number">1</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//1MB</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> List<span class="token operator">&lt;</span>Message<span class="token operator">></span> messages<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">int</span> currIndex<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token function">ListSplitter</span><span class="token punctuation">(</span>List<span class="token operator">&lt;</span>Message<span class="token operator">></span> messages<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>messages <span class="token operator">=</span> messages<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> currIndex <span class="token operator">&lt;</span> messages<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> List<span class="token operator">&lt;</span>Message<span class="token operator">></span> <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> nextIndex <span class="token operator">=</span> currIndex<span class="token punctuation">;</span>
+        <span class="token keyword">int</span> totalSize <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//遍历消息准备拆分</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span> nextIndex <span class="token operator">&lt;</span> messages<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> nextIndex<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            Message message <span class="token operator">=</span> messages<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>nextIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">int</span> tmpSize <span class="token operator">=</span> message<span class="token punctuation">.</span><span class="token function">getTopic</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> message<span class="token punctuation">.</span><span class="token function">getBody</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+            Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> String<span class="token operator">></span> properties <span class="token operator">=</span> message<span class="token punctuation">.</span><span class="token function">getProperties</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span>Map<span class="token punctuation">.</span>Entry<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> String<span class="token operator">></span> entry <span class="token operator">:</span> properties<span class="token punctuation">.</span><span class="token function">entrySet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                tmpSize <span class="token operator">+=</span> entry<span class="token punctuation">.</span><span class="token function">getKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> entry<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            tmpSize <span class="token operator">=</span> tmpSize <span class="token operator">+</span> <span class="token number">20</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//for log overhead</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>tmpSize <span class="token operator">></span> SIZE_LIMIT<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>nextIndex <span class="token operator">-</span> currIndex <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    nextIndex<span class="token operator">++</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>tmpSize <span class="token operator">+</span> totalSize <span class="token operator">></span> SIZE_LIMIT<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                totalSize <span class="token operator">+=</span> tmpSize<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+        <span class="token punctuation">}</span>
+        List<span class="token operator">&lt;</span>Message<span class="token operator">></span> subList <span class="token operator">=</span> messages<span class="token punctuation">.</span><span class="token function">subList</span><span class="token punctuation">(</span>currIndex<span class="token punctuation">,</span> nextIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        currIndex <span class="token operator">=</span> nextIndex<span class="token punctuation">;</span>
+        <span class="token keyword">return</span> subList<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="过滤消息"><a href="#过滤消息" class="headerlink" title="过滤消息"></a>过滤消息</h2><p>RocketMQ设计了很多种消息过滤方式，简单的一般可以用Tag进行过滤。复杂一点的可以使用参数过滤加SQL92.</p>
+<p>消息过滤一般是在broker端进行过滤，性能上也是比较高的。</p>
+<p>注意：推模式的消费者才可以使用SQL过滤，拉模式不可以</p>
+<h3 id="SQL92语法"><a href="#SQL92语法" class="headerlink" title="SQL92语法"></a>SQL92语法</h3><ul>
+<li>数值比较：比如：&gt;、&gt;=、&lt;、&lt;=、BETWEEN、=</li>
+<li>字符比较：比如：=、&lt;&gt;、IN</li>
+<li>空串判断：IS NULL 、 IS NOT NULL</li>
+<li>逻辑符号：AND，OR，NOT；</li>
+<li>常量支持类型为：<br>数值，比如：123，3.1415；<br>字符，比如：’abc’，必须用单引号包裹起来；<br>NULL，特殊的常量<br>布尔值，TRUE 或 FALSE</li>
+</ul>
+<h3 id="生产者-3"><a href="#生产者-3" class="headerlink" title="生产者"></a>生产者</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+    DefaultMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQProducer</span><span class="token punctuation">(</span><span class="token string">"please_rename_unique_group_name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    String<span class="token punctuation">[</span><span class="token punctuation">]</span> tags <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token punctuation">{</span><span class="token string">"TagA"</span><span class="token punctuation">,</span> <span class="token string">"TagB"</span><span class="token punctuation">,</span> <span class="token string">"TagC"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">15</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Message msg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Message</span><span class="token punctuation">(</span><span class="token string">"SqlFilterTest"</span><span class="token punctuation">,</span>
+                                  tags<span class="token punctuation">[</span>i <span class="token operator">%</span> tags<span class="token punctuation">.</span>length<span class="token punctuation">]</span><span class="token punctuation">,</span>
+                                  <span class="token punctuation">(</span><span class="token string">"Hello RocketMQ "</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span>RemotingHelper<span class="token punctuation">.</span>DEFAULT_CHARSET<span class="token punctuation">)</span>
+                                 <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        msg<span class="token punctuation">.</span><span class="token function">putUserProperty</span><span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        SendResult sendResult <span class="token operator">=</span> producer<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s%n"</span><span class="token punctuation">,</span> sendResult<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="消费者-2"><a href="#消费者-2" class="headerlink" title="消费者"></a>消费者</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+
+    DefaultMQPushConsumer consumer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultMQPushConsumer</span><span class="token punctuation">(</span><span class="token string">"please_rename_unique_group_name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// SQL 过滤</span>
+    consumer<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token string">"SqlFilterTest"</span><span class="token punctuation">,</span>
+                       MessageSelector<span class="token punctuation">.</span><span class="token function">bySql</span><span class="token punctuation">(</span><span class="token string">"(TAGS is not null and TAGS in ('TagA', 'TagB'))"</span> <span class="token operator">+</span>
+                                             <span class="token string">"and (a is not null and a between 0 and 3)"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    consumer<span class="token punctuation">.</span><span class="token function">registerMessageListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MessageListenerConcurrently</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> ConsumeConcurrentlyStatus <span class="token function">consumeMessage</span><span class="token punctuation">(</span>List<span class="token operator">&lt;</span>MessageExt<span class="token operator">></span> msgs<span class="token punctuation">,</span>
+                                                        ConsumeConcurrentlyContext context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s Receive New Messages: %s %n"</span><span class="token punctuation">,</span> Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> msgs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> ConsumeConcurrentlyStatus<span class="token punctuation">.</span>CONSUME_SUCCESS<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    consumer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Consumer Started.%n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>    
+</code></pre>
+<h2 id="事务消息"><a href="#事务消息" class="headerlink" title="事务消息"></a>事务消息</h2><p>事务消息和延时消息一样都是RocketMQ特有的。事务消息官方解释是分布式系统中保持最终一致性的2阶段提交的消息实现。简单来说就是保证本地事务执行与发送消息到broker2个操作的原子性。</p>
+<p>注：事务消息只保证消息发送者的本地事务与发消息这两个操作的原子性，因此，事务消息的只涉及到消息发送者。</p>
+<h3 id="事务消息使用限制"><a href="#事务消息使用限制" class="headerlink" title="事务消息使用限制"></a><strong>事务消息使用限制</strong></h3><ol>
+<li>事务消息不支持延迟消息和批量消息</li>
+<li>为了避免单个消息被检查太多次而导致半队列消息累积，我们默认将单个消息的检查次数限制为15 次，但是用户可以通过 Broker 配置文件的 transactionCheckMax 参数来修改此限制。如果已经检查某条消息超过 N 次的话（ N = transactionCheckMax ） 则 Broker 将丢弃此消息，并在默认情况下同时打印错误日志。用户可以通过重写 AbstractTransactionCheckListener 类来修改这个行为</li>
+<li>事务消息将在 Broker 配置文件中的参数 transactionMsgTimeout 这样的特定时间长度之后被检查。当发送事务消息时，用户还可以通过设置用户属性 CHECK_IMMUNITY_TIME_IN_SECONDS 来改变这个限制，该参数优先于 transactionMsgTimeout 参数</li>
+<li>事务性消息可能不止一次被检查或消费</li>
+<li>提交给用户的目标主题消息可能会失败，目前这依日志的记录而定。它的高可用性通过RocketMQ 本身的高可用性机制来保证，如果希望确保事务消息不丢失、并且事务完整性得到保证，建议使用同步的双重写入机制</li>
+<li>事务消息的生产者 ID 不能与其他类型消息的生产者 ID 共享。与其他类型的消息不同，事务消息允许反向查询、MQ服务器能通过它们的生产者 ID 查询到消费者</li>
+</ol>
+<h3 id="实现机制"><a href="#实现机制" class="headerlink" title="实现机制"></a>实现机制</h3><p><img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/articleimage/20210107112452.png"></p>
+<p>步骤：</p>
+<ol>
+<li>发送方将half事务消息发送到broker</li>
+<li>broker把消息持久化成功，向发送方返回ACK确认收到消息。</li>
+<li>发送方开始执行本地事务</li>
+<li>发送方根据本地事务执行结果向broker发送二次确认</li>
+<li>broker收到发送方commit状态则将half事务消息标记为可投递，订阅方可以收到消息。。发送方rollback状态，则删除half事务消息。。如果步骤4的二次确认没有发送到broker则会过一段时间broker会对发送方进行消息回查，发送方收到消息回查，检查对应消息的本地事务执行结果。发送方根据回查结果继续步骤5。</li>
+</ol>
+<h3 id="生产者代码"><a href="#生产者代码" class="headerlink" title="生产者代码"></a>生产者代码</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> MQClientException<span class="token punctuation">,</span> InterruptedException <span class="token punctuation">{</span>
+        TransactionListener transactionListener <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TransactionListenerImpl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        TransactionMQProducer producer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TransactionMQProducer</span><span class="token punctuation">(</span><span class="token string">"please_rename_unique_group_name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        producer<span class="token punctuation">.</span><span class="token function">setNamesrvAddr</span><span class="token punctuation">(</span><span class="token string">"xx.xx.xx.Xx:9876"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ExecutorService executorService <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadPoolExecutor</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">ArrayBlockingQueue</span><span class="token operator">&lt;</span>Runnable<span class="token operator">></span><span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">ThreadFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token annotation punctuation">@Override</span>
+            <span class="token keyword">public</span> Thread <span class="token function">newThread</span><span class="token punctuation">(</span>Runnable r<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                Thread thread <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                thread<span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">"client-transaction-msg-check-thread"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> thread<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        producer<span class="token punctuation">.</span><span class="token function">setExecutorService</span><span class="token punctuation">(</span>executorService<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        producer<span class="token punctuation">.</span><span class="token function">setTransactionListener</span><span class="token punctuation">(</span>transactionListener<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        producer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        String<span class="token punctuation">[</span><span class="token punctuation">]</span> tags <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token punctuation">{</span><span class="token string">"TagA"</span><span class="token punctuation">,</span> <span class="token string">"TagB"</span><span class="token punctuation">,</span> <span class="token string">"TagC"</span><span class="token punctuation">,</span> <span class="token string">"TagD"</span><span class="token punctuation">,</span> <span class="token string">"TagE"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                Message msg <span class="token operator">=</span>
+                    <span class="token keyword">new</span> <span class="token class-name">Message</span><span class="token punctuation">(</span><span class="token string">"TopicTest"</span><span class="token punctuation">,</span> tags<span class="token punctuation">[</span>i <span class="token operator">%</span> tags<span class="token punctuation">.</span>length<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">"KEY"</span> <span class="token operator">+</span> i<span class="token punctuation">,</span>
+                        <span class="token punctuation">(</span><span class="token string">"Hello RocketMQ "</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span>RemotingHelper<span class="token punctuation">.</span>DEFAULT_CHARSET<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                SendResult sendResult <span class="token operator">=</span> producer<span class="token punctuation">.</span><span class="token function">sendMessageInTransaction</span><span class="token punctuation">(</span>msg<span class="token punctuation">,</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s%n"</span><span class="token punctuation">,</span> sendResult<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">MQClientException</span> <span class="token operator">|</span> UnsupportedEncodingException e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">100000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        producer<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+</code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TransactionListenerImpl</span> <span class="token keyword">implements</span> <span class="token class-name">TransactionListener</span> <span class="token punctuation">{</span>
+    
+    <span class="token comment" spellcheck="true">/**
+     * 在提交完事务消息后执行。
+     * 返回COMMIT_MESSAGE状态的消息会立即被消费者消费到。
+     * 返回ROLLBACK_MESSAGE状态的消息会被丢弃。
+     * 返回UNKNOWN状态的消息会由Broker过一段时间再来回查事务的状态。
+     */</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> LocalTransactionState <span class="token function">executeLocalTransaction</span><span class="token punctuation">(</span>Message msg<span class="token punctuation">,</span> Object arg<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        String tags <span class="token operator">=</span> msg<span class="token punctuation">.</span><span class="token function">getTags</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//TagA的消息会立即被消费者消费到</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>StringUtils<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>tags<span class="token punctuation">,</span> <span class="token string">"TagA"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> LocalTransactionState<span class="token punctuation">.</span>COMMIT_MESSAGE<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//TagB的消息会被丢弃</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>StringUtils<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>tags<span class="token punctuation">,</span> <span class="token string">"TagB"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> LocalTransactionState<span class="token punctuation">.</span>ROLLBACK_MESSAGE<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//其他消息会等待Broker进行事务状态回查。</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> LocalTransactionState<span class="token punctuation">.</span>UNKNOW<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">/**
+     * 在对UNKNOWN状态的消息进行状态回查时执行。返回的结果是一样的。
+     */</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> LocalTransactionState <span class="token function">checkLocalTransaction</span><span class="token punctuation">(</span>MessageExt msg<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        String tags <span class="token operator">=</span> msg<span class="token punctuation">.</span><span class="token function">getTags</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//TagC的消息过一段时间会被消费者消费到</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>StringUtils<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>tags<span class="token punctuation">,</span> <span class="token string">"TagC"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> LocalTransactionState<span class="token punctuation">.</span>COMMIT_MESSAGE<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//TagD的消息也会在状态回查时被丢弃掉</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>StringUtils<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>tags<span class="token punctuation">,</span> <span class="token string">"TagD"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> LocalTransactionState<span class="token punctuation">.</span>ROLLBACK_MESSAGE<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//剩下TagE的消息会在多次状态回查后最终丢弃</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> LocalTransactionState<span class="token punctuation">.</span>UNKNOW<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">dm</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://dmsupine.com/2023/12/28/rocketmq-zheng-ti-li-jie-he-xiao-xi-yang-li/">https://dmsupine.com/2023/12/28/rocketmq-zheng-ti-li-jie-he-xiao-xi-yang-li/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">dm</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Java/">
+                                    <span class="chip bg-color">Java</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                                    <span class="chip bg-color">消息队列</span>
+                                </a>
+                            
+                                <a href="/tags/RocketMQ/">
+                                    <span class="chip bg-color">RocketMQ</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: 'a7dae2457ac8bb52ca25',
+        clientSecret: '6de9aaae9875b4a5bee3f6e27b98494639bbcd8a',
+        repo: 'dm13579.github.io',
+        owner: 'dm13579',
+        admin: "dm13579",
+        id: '2023-12-28T20-15-00',
+        distractionFreeMode: false,  // Facebook-like distraction free mode
+        proxy:'https://aqueous-journey-79823.herokuapp.com/https://github.com/login/oauth/access_token'
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2024/01/12/rocketmq-sheng-chan-wen-ti/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/7.jpg" class="responsive-img" alt="RocketMQ生产问题实践">
+                        
+                        <span class="card-title">RocketMQ生产问题实践</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            RocketMQ如何保证消息不丢失RocketMQ的一个发送消息流程
+生产者 =&gt; Broker =&gt; 消费者     Broker master =&gt; slave =&gt; 磁盘
+
+生产者发送消息给到Broker
+Br
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-01-12
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                        <span class="chip bg-color">消息队列</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/">
+                        <span class="chip bg-color">生产实践</span>
+                    </a>
+                    
+                    <a href="/tags/RocketMQ/">
+                        <span class="chip bg-color">RocketMQ</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/12/05/rocketmq-an-zhuang/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/39.jpg" class="responsive-img" alt="RocketMQ集群搭建">
+                        
+                        <span class="card-title">RocketMQ集群搭建</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            环境准备java版本：1.8
+操作系统：CentOS7
+安装包：https://rocketmq.apache.org/dowloading/releases/
+我这里选择的是4.7.1版本的rocketMQ
+RocketMQ 集群搭建注：
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-05
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
+                                    安装手册
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%AE%89%E8%A3%85/">
+                        <span class="chip bg-color">安装</span>
+                    </a>
+                    
+                    <a href="/tags/Linux/">
+                        <span class="chip bg-color">Linux</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+                        <span class="chip bg-color">消息队列</span>
+                    </a>
+                    
+                    <a href="/tags/RocketMQ/">
+                        <span class="chip bg-color">RocketMQ</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 泉涸<br />'
+            + '文章作者: dm<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2020-2020 DongMing. 版权所有
+
+            
+            &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+            <span class="white-color">137k</span>
+            
+
+            <br>
+            <span id="sitetime"></span>
+
+            
+            
+            <br>
+            
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <i class="fa fa-heart-o"></i>
+                本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv" style='display:none'>
+                人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+            </span>
+            
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/dm13579" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:dongming053021@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1903959864" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 1903959864" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+        var t1 = Date.UTC(2020, 08, 20, 00, 00, 00); //北京时间2018-2-13 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/search.xml", 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+    <script type="text/javascript" color="122 103 238"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-2" count="200"
+        src="/libs/background/canvas-nest.js"></script>
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+	<script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "别走啊！", clearTimeout(st)) : (document.title = "回来喽！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) }) </script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+
+</html>

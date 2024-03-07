@@ -380,33 +380,34 @@
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2021/04/13/spring-zheng-he-mybatis-yuan-ma-pou-xi/">
+                    <a href="/2023/04/10/nacos-pei-zhi-zhong-xin-shi-yong-yi-ji-yuan-ma-fen-xi/">
                         <div class="card-image">
                             
                             
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/3.jpg" class="responsive-img" alt="Spring整合MyBatis源码剖析">
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/2.jpg" class="responsive-img" alt="Nacos配置中心使用以及源码分析">
                             
-                            <span class="card-title">Spring整合MyBatis源码剖析</span>
+                            <span class="card-title">Nacos配置中心使用以及源码分析</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                MyBatis整合MyBatis源码设计很多Spring IOC的内容，要想明白MyBatis如何整合进Spring需要对Spring IOC的加载流程和扩展点很熟悉，详情可以看SpringIOC容器加载流程和源码剖析
-Demo首先引入sp
+                                Nacos不仅仅只是用于做注册中心，它还可以做配置中心使用。那么什么是配置中心呢？配置中心就是为分布式系统提供统一的外部配置服务端。
+简单使用引入依赖&lt;dependency>
+    &lt;groupId>com.alibaba.c
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-04-13
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-04-10
                             </span>
                             <span class="publish-author">
                                 
                                 <i class="fas fa-bookmark fa-fw icon-category"></i>
                                 
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
+                                <a href="/categories/%E6%BA%90%E7%A0%81/" class="post-category">
+                                    源码
                                 </a>
                                 
                                 
@@ -417,20 +418,20 @@ Demo首先引入sp
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/Java/">
-                            <span class="chip bg-color">Java</span>
-                        </a>
-                        
                         <a href="/tags/%E6%BA%90%E7%A0%81/">
                             <span class="chip bg-color">源码</span>
                         </a>
                         
-                        <a href="/tags/Spring/">
-                            <span class="chip bg-color">Spring</span>
+                        <a href="/tags/Nacos/">
+                            <span class="chip bg-color">Nacos</span>
                         </a>
                         
-                        <a href="/tags/MyBatis/">
-                            <span class="chip bg-color">MyBatis</span>
+                        <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+                            <span class="chip bg-color">微服务</span>
+                        </a>
+                        
+                        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
+                            <span class="chip bg-color">分布式</span>
                         </a>
                         
                     </div>
@@ -440,28 +441,29 @@ Demo首先引入sp
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2021/04/07/mybatis-yuan-ma-pou-xi/">
+                    <a href="/2023/03/28/nacos-zhu-ce-zhong-xin-yuan-ma-fen-xi/">
                         <div class="card-image">
                             
                             
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/1.jpg" class="responsive-img" alt="MyBatis核心源码剖析">
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/41.jpg" class="responsive-img" alt="Nacos服务注册源码分析">
                             
-                            <span class="card-title">MyBatis核心源码剖析</span>
+                            <span class="card-title">Nacos服务注册源码分析</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                MyBatis是一款ORM框架，它解决的问题是针对JDBC操作数据库和封装数据集繁琐的问题。下面我们看一下传统JDBC来创建连接和获取数据集的方式。
-JDBCmaven依赖
-&lt;!-- mysql驱动 -->
-&lt;dependenc
+                                源码构建版本：1.4.1
+源码地址
+git 下载git clone -b 1.4.1 https://github.com/alibaba/nacos.git
+
+maven编译mvn -Prelease-nacos -Dmaven.test
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-04-07
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-28
                             </span>
                             <span class="publish-author">
                                 
@@ -479,16 +481,20 @@ JDBCmaven依赖
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/Java/">
-                            <span class="chip bg-color">Java</span>
-                        </a>
-                        
                         <a href="/tags/%E6%BA%90%E7%A0%81/">
                             <span class="chip bg-color">源码</span>
                         </a>
                         
-                        <a href="/tags/MyBatis/">
-                            <span class="chip bg-color">MyBatis</span>
+                        <a href="/tags/Nacos/">
+                            <span class="chip bg-color">Nacos</span>
+                        </a>
+                        
+                        <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+                            <span class="chip bg-color">微服务</span>
+                        </a>
+                        
+                        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
+                            <span class="chip bg-color">分布式</span>
                         </a>
                         
                     </div>
@@ -498,27 +504,26 @@ JDBCmaven依赖
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2021/03/26/springmvc-he-xin-yuan-ma-pou-xi/">
+                    <a href="/2023/03/12/nacos-zhu-ce-zhong-xin-ji-ben-gai-nian-he-shi-yong/">
                         <div class="card-image">
                             
                             
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/23.jpg" class="responsive-img" alt="SpringMVC核心源码剖析">
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/0.jpg" class="responsive-img" alt="Nacos注册中心基本概念和使用">
                             
-                            <span class="card-title">SpringMVC核心源码剖析</span>
+                            <span class="card-title">Nacos注册中心基本概念和使用</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                SpringMVC是基于MVC的架构模式，MVC是有Model(模型)，V(视图)，C(控制器)三部分组成的。C负责接收客户端请求，对请求进行处理然后转发到模型进行业务逻辑处理最后转发到相应的V进行显示处理。
-SpringMVC执行过程
-客
+                                前言Nacos 致力于帮助您发现、配置和管理微服务。Nacos 提供了一组简单易用的特性集，帮助您快速实现动态服务发现、服务配置、服务元数据及流量管理。
+Nacos 帮助您更敏捷和容易地构建、交付和管理微服务平台。 Nacos 是构建以“服
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-12
                             </span>
                             <span class="publish-author">
                                 
@@ -536,16 +541,16 @@ SpringMVC执行过程
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/Java/">
-                            <span class="chip bg-color">Java</span>
+                        <a href="/tags/Nacos/">
+                            <span class="chip bg-color">Nacos</span>
                         </a>
                         
-                        <a href="/tags/%E6%BA%90%E7%A0%81/">
-                            <span class="chip bg-color">源码</span>
+                        <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+                            <span class="chip bg-color">微服务</span>
                         </a>
                         
-                        <a href="/tags/Spring/">
-                            <span class="chip bg-color">Spring</span>
+                        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
+                            <span class="chip bg-color">分布式</span>
                         </a>
                         
                     </div>
@@ -555,33 +560,36 @@ SpringMVC执行过程
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2021/03/17/spring-shi-wu-guan-li-yuan-ma-pou-xi/">
+                    <a href="/2023/02/21/nacos-dan-ji-yi-ji-ji-qun-da-jian/">
                         <div class="card-image">
                             
                             
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/29.jpg" class="responsive-img" alt="Spring声明式事务源码剖析">
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/5.jpg" class="responsive-img" alt="Nacos单机以及集群搭建">
                             
-                            <span class="card-title">Spring声明式事务源码剖析</span>
+                            <span class="card-title">Nacos单机以及集群搭建</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                事务包含范围较广不仅仅包括数据库事务也包括事务消息。事务是使有限操作满足ACID属性，A:原子性，C:一致性，I:隔离性，D:持久性，严格遵循ACID规则的叫做刚性事务，事务执行的中间状态可以暂时不支持ACID的叫柔性事务。
-关于MySQL
+                                环境准备操作系统：CentOS7
+nacos：1.4.2
+git地址：https://github.com/alibaba/nacos
+nacos单机搭建## 下载
+wget https://github.com/alibaba/nacos
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-17
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-02-21
                             </span>
                             <span class="publish-author">
                                 
                                 <i class="fas fa-bookmark fa-fw icon-category"></i>
                                 
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
+                                <a href="/categories/%E5%AE%89%E8%A3%85%E6%89%8B%E5%86%8C/" class="post-category">
+                                    安装手册
                                 </a>
                                 
                                 
@@ -592,16 +600,16 @@ SpringMVC执行过程
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/Java/">
-                            <span class="chip bg-color">Java</span>
+                        <a href="/tags/%E5%AE%89%E8%A3%85/">
+                            <span class="chip bg-color">安装</span>
                         </a>
                         
-                        <a href="/tags/%E6%BA%90%E7%A0%81/">
-                            <span class="chip bg-color">源码</span>
+                        <a href="/tags/Linux/">
+                            <span class="chip bg-color">Linux</span>
                         </a>
                         
-                        <a href="/tags/Spring/">
-                            <span class="chip bg-color">Spring</span>
+                        <a href="/tags/Nacos/">
+                            <span class="chip bg-color">Nacos</span>
                         </a>
                         
                     </div>
@@ -611,25 +619,28 @@ SpringMVC执行过程
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2021/03/10/springaop/">
+                    <a href="/2023/02/05/sentinel-ke-hu-duan-chi-jiu-hua-yuan-ma-gai-zao/">
                         <div class="card-image">
                             
                             
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/37.jpg" class="responsive-img" alt="Spring AOP原理解析">
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/9.jpg" class="responsive-img" alt="Sentinel持久化改造">
                             
-                            <span class="card-title">Spring AOP原理解析</span>
+                            <span class="card-title">Sentinel持久化改造</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                Spring AOP 具体应用就是面向切面编程。AOP就是在我们原先的目标类上面进行一定程度的封装，在方法执行前、方法执行后、方法抛出异常，方法返回后调用某个方法。Spring AOP是基于动态代理实现的，默认使用JDK动态代理（可以强制使
+                                前言使用过Sentinel的都知道，只要服务一重启，在sentinel dashboard上编写的规则就会失效。这种现象在生产上肯定是不允许存在的。那么我们有什么办法规避掉这种情况呢。
+首先我们有2种思路，
+
+在sentinel dashb
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-10
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-02-05
                             </span>
                             <span class="publish-author">
                                 
@@ -647,16 +658,16 @@ SpringMVC执行过程
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/Java/">
-                            <span class="chip bg-color">Java</span>
-                        </a>
-                        
                         <a href="/tags/%E6%BA%90%E7%A0%81/">
                             <span class="chip bg-color">源码</span>
                         </a>
                         
-                        <a href="/tags/Spring/">
-                            <span class="chip bg-color">Spring</span>
+                        <a href="/tags/%E9%99%90%E6%B5%81/">
+                            <span class="chip bg-color">限流</span>
+                        </a>
+                        
+                        <a href="/tags/Sentinel/">
+                            <span class="chip bg-color">Sentinel</span>
                         </a>
                         
                     </div>
@@ -666,26 +677,26 @@ SpringMVC执行过程
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2021/03/05/spring-jie-jue-xun-huan-yi-lai-yu-sheng-ming-zhou-qi/">
+                    <a href="/2023/01/14/sentinel-yuan-ma-jie-xi/">
                         <div class="card-image">
                             
                             
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/15.jpg" class="responsive-img" alt="Spring解决循环依赖">
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/34.jpg" class="responsive-img" alt="Sentinel源码解析">
                             
-                            <span class="card-title">Spring解决循环依赖</span>
+                            <span class="card-title">Sentinel源码解析</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                前言这篇文章是接着前一篇SpringIOC容器加载流程和源码剖析一起的。主要内容Spring  Bean定义到Bean的过程以及源码剖析和部分Spring的扩展节点。
-这里我们从refresh-&gt;finishBeanFactoryIn
+                                入口在Springcloud中引入sentinel我们发现只是引入了一个jar包就完事了，说明肯定是通过SpringBoot自动装配将sentinel引入进来，既然这样，那么我没找到spring.factories就能找到自动装配的类
+sp
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-14
                             </span>
                             <span class="publish-author">
                                 
@@ -703,16 +714,16 @@ SpringMVC执行过程
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/Java/">
-                            <span class="chip bg-color">Java</span>
-                        </a>
-                        
                         <a href="/tags/%E6%BA%90%E7%A0%81/">
                             <span class="chip bg-color">源码</span>
                         </a>
                         
-                        <a href="/tags/Spring/">
-                            <span class="chip bg-color">Spring</span>
+                        <a href="/tags/%E9%99%90%E6%B5%81/">
+                            <span class="chip bg-color">限流</span>
+                        </a>
+                        
+                        <a href="/tags/Sentinel/">
+                            <span class="chip bg-color">Sentinel</span>
                         </a>
                         
                     </div>

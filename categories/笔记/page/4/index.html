@@ -420,24 +420,24 @@
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/11/05/atomic-unsafe-mo-fa-lei/">
+                    <a href="/2022/03/10/springaop/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/29.jpg" class="responsive-img" alt="Unsafe魔法类解析及应用">
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/37.jpg" class="responsive-img" alt="Spring AOP原理解析">
                             
-                            <span class="card-title">Unsafe魔法类解析及应用</span>
+                            <span class="card-title">Spring AOP原理解析</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                Unsafe类提供了一些极度不安全的方法，这些方法会直接访问系统内存和对系统内存进行操作。，由于它是直接对内存进行的操作，所以从他的命名也可以看出它是不安全的。Unsafe类的使用必须慎重；juc包中大量运用了Unsafe类，对Unsafe
+                                Spring AOP 具体应用就是面向切面编程。AOP就是在我们原先的目标类上面进行一定程度的封装，在方法执行前、方法执行后、方法抛出异常，方法返回后调用某个方法。Spring AOP是基于动态代理实现的，默认使用JDK动态代理（可以强制使
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-10
                             </span>
                             <span class="publish-author">
                                 
@@ -455,16 +455,16 @@
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/%E5%B9%B6%E5%8F%91/">
-                            <span class="chip bg-color">并发</span>
+                        <a href="/tags/Java/">
+                            <span class="chip bg-color">Java</span>
                         </a>
                         
-                        <a href="/tags/Atomic/">
-                            <span class="chip bg-color">Atomic</span>
+                        <a href="/tags/%E6%BA%90%E7%A0%81/">
+                            <span class="chip bg-color">源码</span>
                         </a>
                         
-                        <a href="/tags/Unsafe/">
-                            <span class="chip bg-color">Unsafe</span>
+                        <a href="/tags/Spring/">
+                            <span class="chip bg-color">Spring</span>
                         </a>
                         
                     </div>
@@ -474,7 +474,173 @@
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/10/26/java-guan-jian-zi-synchronized-volatile/">
+                    <a href="/2022/02/26/springmvc-he-xin-yuan-ma-pou-xi/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/23.jpg" class="responsive-img" alt="SpringMVC核心源码剖析">
+                            
+                            <span class="card-title">SpringMVC核心源码剖析</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                SpringMVC是基于MVC的架构模式，MVC是有Model(模型)，V(视图)，C(控制器)三部分组成的。C负责接收客户端请求，对请求进行处理然后转发到模型进行业务逻辑处理最后转发到相应的V进行显示处理。
+SpringMVC执行过程
+客
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-02-26
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Java/">
+                            <span class="chip bg-color">Java</span>
+                        </a>
+                        
+                        <a href="/tags/%E6%BA%90%E7%A0%81/">
+                            <span class="chip bg-color">源码</span>
+                        </a>
+                        
+                        <a href="/tags/Spring/">
+                            <span class="chip bg-color">Spring</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/02/05/spring-jie-jue-xun-huan-yi-lai-yu-sheng-ming-zhou-qi/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/15.jpg" class="responsive-img" alt="Spring解决循环依赖">
+                            
+                            <span class="card-title">Spring解决循环依赖</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                前言这篇文章是接着前一篇SpringIOC容器加载流程和源码剖析一起的。主要内容Spring  Bean定义到Bean的过程以及源码剖析和部分Spring的扩展节点。
+这里我们从refresh-&gt;finishBeanFactoryIn
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-02-05
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Java/">
+                            <span class="chip bg-color">Java</span>
+                        </a>
+                        
+                        <a href="/tags/%E6%BA%90%E7%A0%81/">
+                            <span class="chip bg-color">源码</span>
+                        </a>
+                        
+                        <a href="/tags/Spring/">
+                            <span class="chip bg-color">Spring</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/01/15/springioc-rong-qi-jia-zai-liu-cheng-he-yuan-ma-pou-xi/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/11.jpg" class="responsive-img" alt="SpringIOC容器加载流程和源码剖析">
+                            
+                            <span class="card-title">SpringIOC容器加载流程和源码剖析</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                前言说道SpringIOC大家想到的都是控制反转，依赖注入。控制反转是将Bean的创建过程由Spring接手，由Spring创建而不需要我们自己来创建。而依赖注入就是实现控制反转的方式。
+SpringIOC基本概念BeanFactorySp
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-01-15
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Java/">
+                            <span class="chip bg-color">Java</span>
+                        </a>
+                        
+                        <a href="/tags/%E6%BA%90%E7%A0%81/">
+                            <span class="chip bg-color">源码</span>
+                        </a>
+                        
+                        <a href="/tags/Spring/">
+                            <span class="chip bg-color">Spring</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/12/26/java-guan-jian-zi-synchronized-volatile/">
                         <div class="card-image tag-image">
                             
                             
@@ -492,7 +658,7 @@
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-10-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-26
                             </span>
                             <span class="publish-author">
                                 
@@ -525,54 +691,7 @@
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/10/08/xiao-xi-dui-lie/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/39.jpg" class="responsive-img" alt="消息队列常见问题及解决方案">
-                            
-                            <span class="card-title">消息队列常见问题及解决方案</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                当前市场常见的几种消息中间件就有比如说RabbitMQ、RocketMQ、Kafka，他们都各有优势，下面会介绍他们之间的差别和优缺点。这里不针对某种消息队列，常见消息队列糅杂在一起谈谈
-常用消息中间件简单介绍只是简单介绍几种常用消息中间件
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-10-08
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
-                            <span class="chip bg-color">消息队列</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/09/16/concurrenthashmap/">
+                    <a href="/2021/11/16/concurrenthashmap/">
                         <div class="card-image tag-image">
                             
                             
@@ -589,7 +708,7 @@
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-16
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-16
                             </span>
                             <span class="publish-author">
                                 
@@ -626,106 +745,7 @@
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/09/08/zookeeper-chu-tan-ji-shi-yong-chang-jing/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/17.jpg" class="responsive-img" alt="ZooKeeper初探及使用场景">
-                            
-                            <span class="card-title">ZooKeeper初探及使用场景</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                认识ZooKeeperZooKeeper是一个分布式调度协调服务，分布式应用的产生必定会带来多节点之间的协调问题，这个时候ZooKeeper就出现了。很多开源中间件都用到了ZooKeeper,比如KafKa就是强依赖于ZooKeeper.它
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-08
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/ZooKeeper/">
-                            <span class="chip bg-color">ZooKeeper</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/09/07/netty-xian-cheng-mo-xing-chu-tan-he-netty-de-chang-jian-wen-ti/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/8.jpg" class="responsive-img" alt="Netty线程模型初探和Netty的常见问题">
-                            
-                            <span class="card-title">Netty线程模型初探和Netty的常见问题</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                前言Netty是现在比较流行的NIO框架。它的健壮性、可扩展性、性能方面都得到了很多项目的验证。
-要想了解Netty，首先得了解IO模型。Java支持三种IO模型分别是BIO,NIO,AIO。
-
-BIO：同步阻塞模型，连接一个请求就会有一个
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-07
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/Netty/">
-                            <span class="chip bg-color">Netty</span>
-                        </a>
-                        
-                        <a href="/tags/IO%E6%A8%A1%E5%9E%8B/">
-                            <span class="chip bg-color">IO模型</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/09/01/hashmap/">
+                    <a href="/2021/11/05/hashmap/">
                         <div class="card-image tag-image">
                             
                             
@@ -742,7 +762,7 @@ BIO：同步阻塞模型，连接一个请求就会有一个
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-01
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-05
                             </span>
                             <span class="publish-author">
                                 
@@ -775,7 +795,61 @@ BIO：同步阻塞模型，连接一个请求就会有一个
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/08/27/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/">
+                    <a href="/2021/10/05/atomic-unsafe-mo-fa-lei/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/29.jpg" class="responsive-img" alt="Unsafe魔法类解析及应用">
+                            
+                            <span class="card-title">Unsafe魔法类解析及应用</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                Unsafe类提供了一些极度不安全的方法，这些方法会直接访问系统内存和对系统内存进行操作。，由于它是直接对内存进行的操作，所以从他的命名也可以看出它是不安全的。Unsafe类的使用必须慎重；juc包中大量运用了Unsafe类，对Unsafe
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-05
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
+                                    笔记
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/%E5%B9%B6%E5%8F%91/">
+                            <span class="chip bg-color">并发</span>
+                        </a>
+                        
+                        <a href="/tags/Atomic/">
+                            <span class="chip bg-color">Atomic</span>
+                        </a>
+                        
+                        <a href="/tags/Unsafe/">
+                            <span class="chip bg-color">Unsafe</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/08/27/duo-xian-cheng-jie-shao-yu-xian-cheng-chi-di-ceng-shi-xian-yuan-li/">
                         <div class="card-image tag-image">
                             
                             
@@ -792,7 +866,7 @@ BIO：同步阻塞模型，连接一个请求就会有一个
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-27
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-27
                             </span>
                             <span class="publish-author">
                                 
@@ -816,59 +890,6 @@ BIO：同步阻塞模型，连接一个请求就会有一个
                         
                         <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
                             <span class="chip bg-color">线程池</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/08/25/mysql-shi-wu-xi-tong-jie-xi/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="https://blog-dm.oss-cn-shanghai.aliyuncs.com/featureimages/9.jpg" class="responsive-img" alt="MySQL事务系统解析">
-                            
-                            <span class="card-title">MySQL事务系统解析</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                前言最近啃MySQL相关的知识，了解到事务以及事务隔离机制，想要深入了解下事务是如何实现的下面是此次主要探讨的几点方向。这里先推荐几篇文章
-数据库内核月报 － 2017 / 12
-数据库内核月报 － 2017 / 10
-数据库内核月报 － 
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-25
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E7%AC%94%E8%AE%B0/" class="post-category">
-                                    笔记
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/MySQL/">
-                            <span class="chip bg-color">MySQL</span>
-                        </a>
-                        
-                        <a href="/tags/%E4%BA%8B%E5%8A%A1/">
-                            <span class="chip bg-color">事务</span>
                         </a>
                         
                     </div>
