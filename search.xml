@@ -22,11 +22,11 @@
             
             <tag> Java </tag>
             
-            <tag> 消息队列 </tag>
-            
             <tag> Kafka </tag>
             
             <tag> 生产实践 </tag>
+            
+            <tag> 消息队列 </tag>
             
         </tags>
       
@@ -55,9 +55,9 @@
             
             <tag> Linux </tag>
             
-            <tag> KafKa </tag>
-            
             <tag> 消息队列 </tag>
+            
+            <tag> KafKa </tag>
             
         </tags>
       
@@ -84,9 +84,9 @@
             
             <tag> Java </tag>
             
-            <tag> 消息队列 </tag>
-            
             <tag> Kafka </tag>
+            
+            <tag> 消息队列 </tag>
             
         </tags>
       
@@ -111,9 +111,9 @@
       
         <tags>
             
-            <tag> 消息队列 </tag>
-            
             <tag> 生产实践 </tag>
+            
+            <tag> 消息队列 </tag>
             
             <tag> RocketMQ </tag>
             
