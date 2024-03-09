@@ -22,7 +22,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;Kafka如何保证消息不丢失&quot;&gt;&lt;a href=&quot;#Kafka如何保证消息不丢失&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -55,7 +55,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;环境准备&quot;&gt;&lt;a href=&quot;#环境准备&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -88,7 +88,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -119,7 +119,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;RocketMQ如何保证消息不丢失&quot;&gt;&lt;a href=&quot;#RocketMQ如何保证消息不丢失&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -150,7 +150,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;RocketMQ架构设计&quot;&gt;&lt;a href=&quot;#RocketMQ架构设计&quot; class=&quot;headerlink&quot; title=&quot;RocketMQ架构设计&quot;&gt;&lt;/a&gt;RocketMQ架构设计&lt;/h2&gt;&lt;p&gt;&lt;img</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -181,9 +181,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;环境准备&quot;&gt;&lt;a href=&quot;#环境准备&quot; class=&quot;headerlink&quot; title=&quot;环境准备&quot;&gt;&lt;/a&gt;环境准备&lt;/h2&gt;&lt;p&gt;java版本：1.8&lt;/p&gt;
-&lt;p&gt;操作系统：CentOS7&lt;/p&gt;
-&lt;p&gt;安装包：&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -216,9 +214,7 @@
         
           
           
-      <description>&lt;p&gt;ShardingSphere数据分片这一部分内核主要是解析引擎、路由引擎、改写引擎、执行引擎、归并引擎五部分。这里主要是对这五部分进行剖析。&lt;/p&gt;
-&lt;p&gt;在数据分片这块Sharding-JDBC和Sharding-Proxy内核原理这一块是一致的。&lt;/p&gt;
-&lt;p&gt;官方文档</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -249,7 +245,7 @@
         
           
           
-      <description>&lt;p&gt;Apache ShardingSphere 是一套开源的分布式数据库解决方案组成的生态圈，它由 JDBC、Proxy 和 Sidecar（规划中）这 3 款既能够独立部署，又支持混合部署配合使用的产品组成。</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -280,7 +276,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;ShardingProxy搭建&quot;&gt;&lt;a href=&quot;#ShardingProxy搭建&quot; class=&quot;headerlink&quot; title=&quot;ShardingProxy搭建&quot;&gt;&lt;/a&gt;ShardingProxy搭建&lt;/h2&gt;&lt;h3</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -313,8 +309,7 @@
         
           
           
-      <description>&lt;p&gt;当前市场常见的几种消息中间件就有比如说RabbitMQ、RocketMQ、Kafka，他们都各有优势，下面会介绍他们之间的差别和优缺点。这里不针对某种消息队列，常见消息队列糅杂在一起谈谈&lt;/p&gt;
-&lt;h2 id=&quot;常用消息中间件简单介绍&quot;&gt;&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -341,7 +336,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;认识ZooKeeper&quot;&gt;&lt;a href=&quot;#认识ZooKeeper&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -368,8 +363,7 @@
         
           
           
-      <description>&lt;p&gt;发现zookeeper3.5.3之后出了许多新特性，就趁此时机安装一下较新版本zookeeper，顺便记录一下安装步骤，方便以后查验。&lt;/p&gt;
-&lt;p&gt;首先准备zookeeper,在这里我使用的是centos7，java环境是1.8.安装的zookeeper是3.5.8.首先</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -400,7 +394,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;前面对于服务导出和服务引入有了比较详细的解释，这里主要是对服务的整个调用过程进行解析。首先我们看一下Dubbo在整个调用过程情况。&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -431,7 +425,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;入口&quot;&gt;&lt;a href=&quot;#入口&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -462,7 +456,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;在&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -491,7 +485,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;Demo&quot;&gt;&lt;a href=&quot;#Demo&quot; class=&quot;headerlink&quot; title=&quot;Demo&quot;&gt;&lt;/a&gt;Demo&lt;/h2&gt;&lt;p&gt;SpringBoot整合Dubbo只需加个依赖，服务提供者加注解@Service </description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -526,7 +520,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;什么是-SPI&quot;&gt;&lt;a href=&quot;#什么是-SPI&quot; class=&quot;headerlink&quot; title=&quot;什么是 SPI&quot;&gt;&lt;/a&gt;什么是 SPI&lt;/h2&gt;&lt;p&gt;SPI全称是Service provider</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -557,8 +551,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Dubbo作为一个强大的RPC框架，他的功能和特性很多。这里针对其中使用比较多的功能和特性进行测试和记录。&lt;/p&gt;
-&lt;h2</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -587,8 +580,7 @@
         
           
           
-      <description>&lt;p&gt;Nacos不仅仅只是用于做注册中心，它还可以做配置中心使用。那么什么是配置中心呢？配置中心就是为分布式系统提供统一的外部配置服务端。&lt;/p&gt;
-&lt;h2 id=&quot;简单使用&quot;&gt;&lt;a href=&quot;#简单使用&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -621,8 +613,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;源码构建&quot;&gt;&lt;a href=&quot;#源码构建&quot; class=&quot;headerlink&quot; title=&quot;源码构建&quot;&gt;&lt;/a&gt;源码构建&lt;/h2&gt;&lt;p&gt;版本：1.4.1&lt;/p&gt;
-&lt;p&gt;&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -655,7 +646,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Nacos 致力于帮助您发现、配置和管理微服务。Nacos</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -686,9 +677,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;环境准备&quot;&gt;&lt;a href=&quot;#环境准备&quot; class=&quot;headerlink&quot; title=&quot;环境准备&quot;&gt;&lt;/a&gt;环境准备&lt;/h2&gt;&lt;p&gt;操作系统：CentOS7&lt;/p&gt;
-&lt;p&gt;nacos：1.4.2&lt;/p&gt;
-&lt;p&gt;git地址：&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -719,7 +708,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;使用过Sentinel的都知道，只要服务一重启，在sentinel</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -750,7 +739,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;入口&quot;&gt;&lt;a href=&quot;#入口&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -781,8 +770,7 @@
         
           
           
-      <description>&lt;p&gt;这篇博文主要是针对Sentinel中间件中常用算法进行源码解析和进行一些简易实现代码&lt;/p&gt;
-&lt;h2 id=&quot;计数器限流算法&quot;&gt;&lt;a href=&quot;#计数器限流算法&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -813,7 +801,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -842,7 +830,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;Redis持久化&quot;&gt;&lt;a href=&quot;#Redis持久化&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -873,7 +861,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;缓存穿透&quot;&gt;&lt;a href=&quot;#缓存穿透&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -906,7 +894,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;Redis单机搭建&quot;&gt;&lt;a href=&quot;#Redis单机搭建&quot; class=&quot;headerlink&quot; title=&quot;Redis单机搭建&quot;&gt;&lt;/a&gt;Redis单机搭建&lt;/h2&gt;&lt;h3 id=&quot;Redis下载&quot;&gt;&lt;a href=&quot;#Redis下载&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -939,9 +927,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;环境准备&quot;&gt;&lt;a href=&quot;#环境准备&quot; class=&quot;headerlink&quot; title=&quot;环境准备&quot;&gt;&lt;/a&gt;环境准备&lt;/h2&gt;&lt;p&gt;java版本：无需准备（es7.x内置JDK12）&lt;/p&gt;
-&lt;p&gt;操作系统：CentOS7&lt;/p&gt;
-&lt;p&gt;安装包：&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -972,7 +958,7 @@
         
           
           
-      <description>&lt;p&gt;MyBatis整合MyBatis源码设计很多Spring IOC的内容，要想明白MyBatis如何整合进Spring需要对Spring IOC的加载流程和扩展点很熟悉，详情可以看&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1005,8 +991,7 @@
         
           
           
-      <description>&lt;p&gt;MyBatis是一款ORM框架，它解决的问题是针对JDBC操作数据库和封装数据集繁琐的问题。下面我们看一下传统JDBC来创建连接和获取数据集的方式。&lt;/p&gt;
-&lt;h2 id=&quot;JDBC&quot;&gt;&lt;a href=&quot;#JDBC&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1037,7 +1022,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1066,7 +1051,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1095,7 +1080,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;MySQL单机搭建&quot;&gt;&lt;a href=&quot;#MySQL单机搭建&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1124,7 +1109,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1157,7 +1142,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;大家都知道SpringBoot有内置Tomcat的功能，在&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1190,7 +1175,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;SpringBoot</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1223,8 +1208,7 @@
         
           
           
-      <description>&lt;p&gt;事务包含范围较广不仅仅包括数据库事务也包括事务消息。事务是使有限操作满足ACID属性，A:原子性，C:一致性，I:隔离性，D:持久性，严格遵循ACID规则的叫做刚性事务，事务执行的中间状态可以暂时不支持ACID的叫柔性事务。&lt;/p&gt;
-&lt;p&gt;关于MySQL的MVCC事务隔离级</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1255,7 +1239,7 @@
         
           
           
-      <description>&lt;p&gt;Spring AOP 具体应用就是面向切面编程。AOP就是在我们原先的目标类上面进行一定程度的封装，在方法执行前、方法执行后、方法抛出异常，方法返回后调用某个方法。Spring</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1286,8 +1270,7 @@
         
           
           
-      <description>&lt;p&gt;SpringMVC是基于MVC的架构模式，MVC是有Model(模型)，V(视图)，C(控制器)三部分组成的。C负责接收客户端请求，对请求进行处理然后转发到模型进行业务逻辑处理最后转发到相应的V进行显示处理。&lt;/p&gt;
-&lt;h2 id=&quot;SpringMVC执行过程&quot;&gt;&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1318,7 +1301,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;这篇文章是接着前一篇SpringIOC容器加载流程和源码剖析一起的。主要内容Spring </description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1349,7 +1332,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1380,8 +1363,7 @@
         
           
           
-      <description>&lt;p&gt;Java中有许多关键字，比如synchronized，volatile，transient，final，static，native等等，在这里我想针对对这些关键字进行一个统一的了解，并做一个系列。&lt;/p&gt;
-&lt;p&gt;在这些关键字中与并发息息相关的就是synchronized和v</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1410,7 +1392,7 @@
         
           
           
-      <description>&lt;p&gt;ConcurrentHashMap与HashMap在Api,参数,数据结构上面基本都是类似的，实现原理也基本都是一致的在这里就不做过多的说明了，若不清楚可以看下另一篇HashMap的对比博文&lt;a</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1441,7 +1423,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;常用API&quot;&gt;&lt;a href=&quot;#常用API&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1470,7 +1452,7 @@
         
           
           
-      <description>&lt;p&gt;Unsafe类提供了一些极度不安全的方法，这些方法会直接访问系统内存和对系统内存进行操作。，由于它是直接对内存进行的操作，所以从他的命名也可以看出它是不安全的。Unsafe类的使用必须&lt;strong&gt;慎重&lt;/strong&gt;；juc包中大量运用了Unsafe类，对Unsafe</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
@@ -1501,7 +1483,7 @@
         
           
           
-      <description>&lt;h2 id=&quot;Java线程跟操作系统的关系&quot;&gt;&lt;a href=&quot;#Java线程跟操作系统的关系&quot; class=&quot;headerlink&quot;</description>
+      <description>&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;</description>
           
         
       
